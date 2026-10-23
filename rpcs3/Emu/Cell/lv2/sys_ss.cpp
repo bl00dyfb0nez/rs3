@@ -6,6 +6,7 @@
 #include "Emu/Cell/timers.hpp"
 #include "Emu/Cell/PPUThread.h"
 #include "Emu/system_config.h"
+#include "Loader/ps3_identity.h"
 #include "util/sysinfo.hpp"
 
 #include <charconv>
@@ -201,6 +202,64 @@ error_code sys_ss_access_control_engine(u64 pkg_id, u64 a2, u64 a3)
 	return CELL_OK;
 }
 
+namespace
+{
+	// The console's own id and PSN id, as configured: a dump file if one is
+	// chosen, otherwise the value in the settings.  Read once, because a dump
+	// does not change while the emulator runs.
+	u128 console_idps()
+	{
+		static const u128 value = []() -> u128
+		{
+			ps3::identity::dump dump{};
+
+			if (const std::string path = g_cfg.sys.idps_dump.get(); !path.empty() && ps3::identity::read_dump(path, dump))
+			{
+				sys_ss.notice("Console IDPS read from %s", path);
+
+				u128 out = 0;
+
+				for (const u8 byte : dump)
+				{
+					out = (out << 8) | byte;
+				}
+
+				return out;
+			}
+
+			return g_cfg.sys.console_idps.get();
+		}();
+
+		return value;
+	}
+
+	u128 console_psid()
+	{
+		static const u128 value = []() -> u128
+		{
+			ps3::identity::dump dump{};
+
+			if (const std::string path = g_cfg.sys.psid_dump.get(); !path.empty() && ps3::identity::read_dump(path, dump))
+			{
+				sys_ss.notice("Console PSID read from %s", path);
+
+				u128 out = 0;
+
+				for (const u8 byte : dump)
+				{
+					out = (out << 8) | byte;
+				}
+
+				return out;
+			}
+
+			return g_cfg.sys.console_psid.get();
+		}();
+
+		return value;
+	}
+}
+
 error_code sys_ss_get_console_id(vm::ptr<u8> buf)
 {
 	sys_ss.notice("sys_ss_get_console_id(buf=*0x%x)", buf);
@@ -212,7 +271,7 @@ error_code sys_ss_get_open_psid(vm::ptr<CellSsOpenPSID> psid)
 {
 	sys_ss.notice("sys_ss_get_open_psid(psid=*0x%x)", psid);
 
-	const u128 configured_psid = g_cfg.sys.console_psid.get();
+	const u128 configured_psid = console_psid();
 
 	psid->high = static_cast<u64>(configured_psid >> 64);
 	psid->low = static_cast<u64>(configured_psid);
@@ -244,8 +303,8 @@ error_code sys_ss_appliance_info_manager(u32 code, vm::ptr<u8> buffer)
 	case 0x19003:
 	{
 		// AIM_get_device_id
-		constexpr u8 idps[] = { 0x00, 0x00, 0x00, 0x01, 0x00, 0x89, 0x00, 0x0B, 0x14, 0x00, 0xEF, 0xDD, 0xCA, 0x25, 0x52, 0x66 };
-		std::memcpy(buffer.get_ptr(), idps, 16);
+		const be_t<u128> idps = console_idps();
+		std::memcpy(buffer.get_ptr(), &idps, 16);
 		if (g_cfg.core.debug_console_mode)
 		{
 			buffer[5] = 0x81; // DECR
@@ -263,7 +322,7 @@ error_code sys_ss_appliance_info_manager(u32 code, vm::ptr<u8> buffer)
 	case 0x19005:
 	{
 		// AIM_get_open_ps_id
-		const be_t<u128> psid = g_cfg.sys.console_psid.get();
+		const be_t<u128> psid = console_psid();
 		std::memcpy(buffer.get_ptr(), &psid, 16);
 		break;
 	}

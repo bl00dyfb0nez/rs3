@@ -5,6 +5,17 @@ if (NOT USE_SYSTEM_LIBPNG)
 	set(PNG_SHARED OFF CACHE BOOL "Build shared lib")
 	set(PNG_TESTS OFF CACHE BOOL "Build libpng tests")
 	set(SKIP_INSTALL_ALL ON)
+
+	# libpng generates pnglibconf by preprocessing pnglibconf.c and passes
+	# ZLIB_INCLUDE_DIRS as its only zlib include path. With the builtin zlib the
+	# ZLIB::ZLIB target already carries those paths, so find_package(ZLIB) can
+	# return without setting the variable and the generation step fails with
+	# "Cannot open include file: 'zlib.h'". Point it at the builtin zlib.
+	if (NOT USE_SYSTEM_ZLIB AND NOT ZLIB_INCLUDE_DIRS)
+		set(ZLIB_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../zlib/zlib"
+		                      "${CMAKE_CURRENT_BINARY_DIR}/../zlib/zlib")
+	endif()
+
 	add_subdirectory(libpng EXCLUDE_FROM_ALL)
 	target_include_directories(png_static SYSTEM INTERFACE "${libpng_BINARY_DIR}" "${libpng_SOURCE_DIR}")
 

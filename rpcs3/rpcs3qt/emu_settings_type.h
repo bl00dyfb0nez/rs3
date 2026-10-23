@@ -224,6 +224,20 @@ enum class emu_settings_type
 	PSNCountry,
 	EnableClans,
 
+	// PS3 Dumps
+	IdpsDump,
+	PsidDump,
+	BootLoader,
+	FactoryServiceMode,
+	FanCurve,
+	RsxType,
+	CoreosPatch,
+	CoreosPatchSpan,
+	FlashChip,
+	ConsoleDex,
+	BarBackups,
+	BarBackupDir,
+
 	// System
 	LicenseArea,
 	Language,

@@ -137,6 +137,13 @@ target_sources(rpcs3_emu PRIVATE
     ../Loader/mself.cpp
     ../Loader/PSF.cpp
     ../Loader/PUP.cpp
+    ../Loader/ps3_boot_chain.cpp
+    ../Loader/ps3_identity.cpp
+    ../Loader/ps3_flash.cpp
+    ../Loader/ps3_bar.cpp
+    ../Loader/ps3_xreg.cpp
+    ../Loader/ps3_ufs2.cpp
+    ../Loader/ps3_qcow2.cpp
     ../Loader/TAR.cpp
     ../Loader/IRD.cpp
     ../Loader/IRD_validation.cpp
@@ -199,6 +206,7 @@ target_sources(rpcs3_emu PRIVATE
     Cell/SPUCommonRecompiler.cpp
     Cell/SPULLVMRecompiler.cpp
     Cell/SPUThread.cpp
+    Cell/lv1/lv1.cpp
     Cell/lv2/lv2.cpp
     Cell/lv2/sys_bdemu.cpp
     Cell/lv2/sys_bluetooth.cpp
@@ -219,6 +227,7 @@ target_sources(rpcs3_emu PRIVATE
     Cell/lv2/sys_io.cpp
     Cell/lv2/sys_lwcond.cpp
     Cell/lv2/sys_lwmutex.cpp
+    Cell/lv2/sys_cfw.cpp
     Cell/lv2/sys_memory.cpp
     Cell/lv2/sys_mmapper.cpp
     Cell/lv2/sys_mutex.cpp

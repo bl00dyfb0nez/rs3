@@ -235,6 +235,19 @@ const std::map<emu_settings_type, cfg_location> settings_location =
 	{ emu_settings_type::EnableClans,    get_cfg_location(local_cfg.net.clans_enabled) },
 
 	// System
+	{ emu_settings_type::IdpsDump,              get_cfg_location(local_cfg.sys.idps_dump) },
+	{ emu_settings_type::PsidDump,              get_cfg_location(local_cfg.sys.psid_dump) },
+	{ emu_settings_type::BootLoader,            get_cfg_location(local_cfg.sys.boot_loader) },
+	{ emu_settings_type::FactoryServiceMode,    get_cfg_location(local_cfg.sys.factory_service_mode) },
+	{ emu_settings_type::FanCurve,              get_cfg_location(local_cfg.sys.fan_curve) },
+	{ emu_settings_type::RsxType,               get_cfg_location(local_cfg.sys.rsx_type) },
+	{ emu_settings_type::CoreosPatch,           get_cfg_location(local_cfg.sys.coreos_patch) },
+	{ emu_settings_type::CoreosPatchSpan,       get_cfg_location(local_cfg.sys.coreos_patch_span) },
+	{ emu_settings_type::FlashChip,             get_cfg_location(local_cfg.sys.flash_chip) },
+	{ emu_settings_type::ConsoleDex,            get_cfg_location(local_cfg.sys.console_dex) },
+	{ emu_settings_type::BarBackups,            get_cfg_location(local_cfg.sys.bar_backups) },
+	{ emu_settings_type::BarBackupDir,          get_cfg_location(local_cfg.sys.bar_backup_dir) },
+
 	{ emu_settings_type::LicenseArea,           get_cfg_location(local_cfg.sys.license_area) },
 	{ emu_settings_type::Language,              get_cfg_location(local_cfg.sys.language) },
 	{ emu_settings_type::KeyboardType,          get_cfg_location(local_cfg.sys.keyboard_type) },

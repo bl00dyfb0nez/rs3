@@ -9,6 +9,10 @@
 #include "Emu/perf_meter.hpp"
 #include "Emu/perf_monitor.hpp"
 #include "Emu/vfs_config.h"
+#include "Loader/ps3_ufs2.h"
+#include "Loader/ps3_qcow2.h"
+#include "Emu/system_config.h"
+#include <filesystem>
 #include "Emu/IPC_config.h"
 #include "Emu/savestate_utils.hpp"
 #include "Emu/cache_utils.hpp"
@@ -39,6 +43,7 @@
 #include "Loader/ISO.h"
 #include "Loader/ELF.h"
 #include "Loader/disc.h"
+#include "Loader/ps3_identity.h"
 
 #include "rpcs3_version.h"
 
@@ -541,6 +546,54 @@ void Emulator::Init()
 	const std::string dev_flash = g_cfg_vfs.get_dev_flash();
 	const std::string dev_flash2 = g_cfg_vfs.get_dev_flash2();
 	const std::string dev_flash3 = g_cfg_vfs.get_dev_flash3();
+
+	// A configured HDD image is a console's own drive: unpack it, read it with
+	// the console's ERK and write what it holds into dev_hdd0 before the console
+	// mounts it, so a formatted image boots with that filesystem in place.
+	if (!g_cfg.sys.hdd_image.to_string().empty() && !g_cfg.sys.hdd_erk.to_string().empty())
+	{
+		sys_log.notice("HDD image: materialising %s into %s", g_cfg.sys.hdd_image.to_string(), dev_hdd0);
+
+		ps3::ufs2::erk key;
+		std::string why;
+
+		if (!ps3::ufs2::read_erk(g_cfg.sys.hdd_erk.to_string(), key))
+		{
+			sys_log.error("HDD image: the ERK in %s could not be read", g_cfg.sys.hdd_erk.to_string());
+		}
+		else
+		{
+			const std::string raw = g_cfg.sys.hdd_image.to_string() + ".raw.tmp";
+			std::uint64_t bytes = 0;
+
+			if (!ps3::qcow2::size(g_cfg.sys.hdd_image.to_string(), bytes, why) ||
+				!ps3::qcow2::unpack(g_cfg.sys.hdd_image.to_string(), raw, why))
+			{
+				sys_log.error("HDD image: %s could not be read: %s", g_cfg.sys.hdd_image.to_string(), why);
+			}
+			else
+			{
+				ps3::ufs2::volume disk;
+
+				if (!disk.open(raw, key, g_cfg.sys.hdd_layer.get() == 1 ? ps3::ufs2::layer::slim : ps3::ufs2::layer::phat, why))
+				{
+					sys_log.error("HDD image: %s could not be opened: %s", g_cfg.sys.hdd_image.to_string(), why);
+				}
+				else if (ps3::ufs2::materialise_result result{}; !disk.materialise(dev_hdd0, result, why))
+				{
+					sys_log.error("HDD image: the tree could not be written: %s", why);
+				}
+				else
+				{
+					sys_log.success("HDD image: wrote %llu files and %llu directories (%llu bytes)",
+						static_cast<unsigned long long>(result.files), static_cast<unsigned long long>(result.directories),
+						static_cast<unsigned long long>(result.bytes));
+				}
+
+				std::filesystem::remove(std::filesystem::path(raw));
+			}
+		}
+	}
 
 	vfs::mount("/dev_hdd0", dev_hdd0);
 	vfs::mount("/dev_flash", dev_flash);
@@ -2481,6 +2534,16 @@ game_boot_result Emulator::Load(const std::string& title_id, bool is_disc_patch,
 				return game_boot_result::firmware_version;
 			}
 		}
+
+		// The loader pair the emulated console presents.  There is no flash to
+		// read it from, so the settings choose it; it is what the boot-chain
+		// checks compare a firmware image against.
+		sys_log.notice("Console boot chain: %s (chosen in the settings, no flash is read)", ps3::identity::chain_name(ps3::identity::from_name(g_cfg.sys.boot_loader.get())));
+
+		// The RSX the emulated console carries, from the settings as well: the
+		// emulator emulates one RSX, and the choice says which part's heat the
+		// simulated thermal model adds (docs/rsxdef.txt).
+		sys_log.notice("Console RSX: %s (simulated thermal model)", g_cfg.sys.rsx_type.get());
 
 		// Set title to actual disc title if necessary
 		if (!disc_psf_obj.empty())

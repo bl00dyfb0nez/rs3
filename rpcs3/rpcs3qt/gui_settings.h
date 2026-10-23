@@ -256,6 +256,20 @@ namespace gui
 	const gui_save fs_games_list        = gui_save(fs, "games_list",        QStringList());
 	const gui_save fs_dev_usb_list      = gui_save(fs, "dev_usb00X_list",   QStringList()); // Used as a template for all usb paths
 
+	// How many USB ports the emulated console has: two on the .2 models, eight
+	// on the older ones (the USB tab hides the rows the console does not have).
+	const gui_save fs_usb_port_count = gui_save(fs, "usb_port_count", 2);
+
+	// The PS3 Dumps page: the HDD image the formatter writes, the ERK it is
+	// sealed with, and the physical device that is only reachable through the
+	// advanced wizard.
+	const gui_save dumps_hdd_image    = gui_save(fs, "dumps_hdd_image", "");
+	const gui_save dumps_hdd_erk      = gui_save(fs, "dumps_hdd_erk", "");
+	const gui_save dumps_hdd_gb       = gui_save(fs, "dumps_hdd_gb", 20);
+	const gui_save dumps_hdd_layer    = gui_save(fs, "dumps_hdd_layer", 1);
+	const gui_save dumps_hdd_physical = gui_save(fs, "dumps_hdd_physical", false);
+	const gui_save dumps_hdd_device   = gui_save(fs, "dumps_hdd_device", "");
+
 	const gui_save l_tty       = gui_save(logger, "TTY",       true);
 	const gui_save l_level     = gui_save(logger, "level",     static_cast<uchar>(logs::level::success));
 	const gui_save l_prefix    = gui_save(logger, "prefix_on", false);

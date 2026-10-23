@@ -117,12 +117,21 @@ private Q_SLOTS:
 	void RemoveFirmwareCache();
 	void CreateFirmwareCache();
 
+	// Re-reads the console's recorded state - a simulated brick, the Factory
+	// Service Mode flag - and puts the window's light and banner in step with it.
+	void RefreshConsoleState();
+
+	// The recovery menu of docs/recovery.txt, offered when the console soft
+	// bricks and reachable from the PS3 Dumps page.
+	void ShowRecoveryMenu();
+
 	void handle_shortcut(gui::shortcuts::shortcut shortcut_key, const QKeySequence& key_sequence);
 	void update_gui_pad_thread();
 
 protected:
 	void closeEvent(QCloseEvent* event) override;
 	void changeEvent(QEvent* event) override;
+	void resizeEvent(QResizeEvent* event) override;
 	void mouseDoubleClickEvent(QMouseEvent* event) override;
 	void dropEvent(QDropEvent* event) override;
 	void dragEnterEvent(QDragEnterEvent* event) override;

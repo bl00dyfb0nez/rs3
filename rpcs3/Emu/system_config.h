@@ -322,6 +322,7 @@ struct cfg_root : cfg::node
 	{
 		static std::string get_random_system_name();
 		static u128 get_random_psid();
+		static u128 default_idps();
 
 		node_sys(cfg::node* _this) : cfg::node(_this, "System") {}
 
@@ -334,6 +335,52 @@ struct cfg_root : cfg::node
 		cfg::_int<-60*60*24*365*100LL, 60*60*24*365*100LL> console_time_offset{ this, "Console time offset (s)", 0 }; // console time offset, limited to +/-100years
 		cfg::string system_name{this, "System Name", get_random_system_name()};
 		cfg::uint128 console_psid{this, "Console PSID", get_random_psid()};
+		cfg::uint128 console_idps{this, "Console IDPS", default_idps()};
+		cfg::string idps_dump{this, "Console IDPS dump", ""};
+		cfg::string hdd_image{this, "HDD image", ""};          // qcow2 holding a PS3 drive, materialised into dev_hdd0 at boot
+		cfg::string hdd_erk{this, "HDD ERK file", ""};         // the console's EID root key, 0x30 bytes or hex
+		cfg::_int<0, 1> hdd_layer{this, "HDD sealing layer", 1}; // 0 = phat AES-192-CBC, 1 = slim AES-128-XTS
+		cfg::string psid_dump{this, "Console PSID dump", ""};
+		// The loader pair the emulated console presents: "metldr" for the
+		// pre-3.60 chain, anything else for metldr.2 + lv0ldr.2.
+		cfg::string boot_loader{this, "Boot loader", "metldr.2"};
+		// A console whose boot chain does not boot: three beeps and a dark power
+		// LED.  Set when an image with such a chain is chosen for installation -
+		// the state it would leave the console in - and kept across a reboot;
+		// installing an image whose chain boots clears it.
+		cfg::_bool boot_bricked{this, "Boot bricked", false};
+		// Factory Service Mode, the flag the console keeps in its System Controller
+		// EEPROM at 0x48C07 (docs/fsm.txt): anything but 0xFF means the console
+		// boots into service mode, where lv2 runs dev_usb000/Lv2diag.self instead
+		// of GameOS.
+		cfg::_bool factory_service_mode{this, "Factory Service Mode", false};
+		// The fan table the emulated console's SYSCON thermal configuration
+		// carries (docs/thermal.txt): the duty steps the fan climbs as the cell
+		// temperature rises.  The emulator has no thermal sensors, so both the
+		// temperature and the fan it drives are simulated - the table only
+		// decides which board's steps are used.
+		cfg::string fan_curve{this, "Fan curve", "DYN-001"};
+		// The RSX the emulated console carries (docs/rsxdef.txt): the die process
+		// changed across the models - CXD2971 at 90 nm, CXD2982/CXD2991 at 65 nm,
+		// CXD5300/1/2 at 40 nm, D5305 at 28 nm - and a coarser part runs hotter.
+		// The emulator emulates one RSX; this only picks which console's part the
+		// simulated thermal model describes.
+		cfg::string rsx_type{this, "RSX type", "CXD2991 (65nm)"};
+		// The CoreOS patch the flash writer or bgtoolset installed into the
+		// emulated flash: the image it wrote, and how many bytes of it went into
+		// the bank.  Empty and zero when no patch is installed.
+		cfg::string coreos_patch{this, "CoreOS patch", ""};
+		cfg::_int<0, 0x400000> coreos_patch_span{this, "CoreOS patch span", 0};
+		// The chip the emulated flash dump describes: "nor" for the 16 MiB chip of
+		// the phat and slim models, "emmc" for the 256 MiB map a superslim's eMMC
+		// shares with NAND - which is where its /dev_flash and VSH live.
+		cfg::string flash_chip{this, "Flash chip", "nor"};
+		// A debug console (DEX): its /dev_flash is not sealed per console.
+		cfg::_bool console_dex{this, "Debug console (DEX)", false};
+		// The Backup And Restore container: the index the console keeps in a
+		// backup directory, and the directory it is read from.
+		cfg::_bool bar_backups{this, "BAR backups", false};
+		cfg::string bar_backup_dir{this, "BAR backup directory", ""};
 		cfg::string hdd_model{this, "HDD Model Name", ""};
 		cfg::string hdd_serial{this, "HDD Serial Number", ""};
 		cfg::node_map_entry sup_argv{ this, "Process ARGV" };

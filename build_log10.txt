@@ -1,0 +1,732 @@
+Using VS environment: C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvars64.bat
+Using CMake: C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
+Using Ninja: C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe
+Found Qt6 at: C:\Qt\6.12.0\msvc2022_64
+
+Cleaning SDL3 build cache to prevent export conflicts...
+SDL3 clean done.
+
+Skipping CMake configure (cache exists).
+To force a full reconfigure, delete: C:\Users\Thewoodsman\rpcs3\build\CMakeCache.txt
+
+Building with 16 cores...
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Using ccache: C:/usr/local/cell/host-win32/bin/ccache.exe
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+-- RPCS3: Using builtin ZLIB
+-- ZSTD VERSION: 1.5.7
+-- CMAKE_INSTALL_PREFIX: C:/Program Files (x86)/rpcs3
+-- CMAKE_INSTALL_LIBDIR: lib
+-- ZSTD_LEGACY_SUPPORT defined!
+-- ZSTD_MULTITHREAD_SUPPORT is enabled
+CMake Deprecation Warning at 3rdparty/protobuf/protobuf/CMakeLists.txt:7 (cmake_policy):
+  The OLD behavior for policy CMP0141 will be removed from a future version
+  of CMake.
+
+  The cmake-policies(7) manual explains that the OLD behaviors of all
+  policies are deprecated and that a policy should be set to OLD only under
+  specific short-term circumstances.  Projects should be ported to the NEW
+  behavior and not rely on setting a policy to OLD.
+
+
+-- protobuf version: 33.4.0
+-- Could NOT find absl (missing: absl_DIR)
+-- Fallback to downloading Abseil 20250512.1 from GitHub
+-- Building for target architecture: amd64
+-- Found AWK program: C:/Users/Thewoodsman/AppData/Local/Programs/@codebufffreebuff-desktop/resources/git/usr/bin/gawk.exe
+-- Creating standard configuration
+-- Generated configuration file in C:/Users/Thewoodsman/rpcs3/build/3rdparty/libusb/config.h
+-- Using static cubeb from 3rdparty
+-- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+-- Could NOT find Vulkan (missing: Vulkan_LIBRARY Vulkan_INCLUDE_DIR) (found version "")
+CMake Warning at 3rdparty/CMakeLists.txt:201 (message):
+  USE_VULKAN was enabled, but libvulkan was not found.  RPCS3 will be
+  compiled without Vulkan support.
+
+
+CMake Deprecation Warning at 3rdparty/asmjit/asmjit/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+Call Stack (most recent call first):
+  3rdparty/asmjit/CMakeLists.txt:9 (include)
+
+
+** AsmJit Summary **
+   ASMJIT_DIR=C:/Users/Thewoodsman/rpcs3/3rdparty/asmjit/asmjit
+   ASMJIT_TEST=FALSE
+   ASMJIT_TARGET_TYPE=EMBED
+   ASMJIT_DEPS=
+   ASMJIT_LIBS=
+   ASMJIT_CFLAGS=-DASMJIT_STATIC;-DASMJIT_NO_DEPRECATED
+   ASMJIT_PRIVATE_CFLAGS=-MP;-GF;-Zc:__cplusplus;-Zc:inline;-Zc:strictStrings;-Zc:threadSafeInit-;-W4;-DASMJIT_STATIC;-DASMJIT_NO_DEPRECATED
+   ASMJIT_PRIVATE_CFLAGS_DBG=-GS
+   ASMJIT_PRIVATE_CFLAGS_REL=-GS-;-O2;-Oi
+-- Using static SDL3 from 3rdparty
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+-- Could NOT find LibUSB (missing: LibUSB_LIBRARY LibUSB_INCLUDE_PATH) (found version "LibUSB_VERSION-NOTFOUND")
+-- 
+-- SDL3 was configured with the following options:
+-- 
+-- Platform: Windows-10.0.19045
+-- 64-bit:   TRUE
+-- Compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe
+-- Revision: SDL-3.4.18-release-3.4.18
+-- Vendor:   
+-- 
+-- Subsystems:
+--   Audio:    ON
+--   Video:    ON
+--   GPU:      ON
+--   Render:   ON
+--   Camera:   ON
+--   Joystick: ON
+--   Haptic:   ON
+--   Hidapi:   ON
+--   Power:    ON
+--   Sensor:   ON
+--   Dialog:   ON
+--   Tray:     ON
+-- 
+-- Options:
+--   SDL_ALSA                    (Wanted: OFF): OFF
+--   SDL_ALSA_SHARED             (Wanted: OFF): OFF
+--   SDL_ALTIVEC                 (Wanted: OFF): OFF
+--   SDL_ARMNEON                 (Wanted: OFF): OFF
+--   SDL_ASAN                    (Wanted: OFF): OFF
+--   SDL_ASSEMBLY                (Wanted: ON): ON
+--   SDL_ASSERTIONS              (Wanted: auto): auto
+--   SDL_AVX                     (Wanted: ON): ON
+--   SDL_AVX2                    (Wanted: ON): ON
+--   SDL_AVX512F                 (Wanted: ON): ON
+--   SDL_BACKGROUNDING_SIGNAL    (Wanted: OFF): OFF
+--   SDL_CCACHE                  (Wanted: OFF): OFF
+--   SDL_CLANG_TIDY              (Wanted: OFF): OFF
+--   SDL_CLOCK_GETTIME           (Wanted: OFF): OFF
+--   SDL_COCOA                   (Wanted: OFF): OFF
+--   SDL_DBUS                    (Wanted: OFF): OFF
+--   SDL_DEPS_SHARED             (Wanted: ON): OFF
+--   SDL_DIRECTX                 (Wanted: ON): ON
+--   SDL_DISKAUDIO               (Wanted: ON): ON
+--   SDL_DLOPEN_NOTES            (Wanted: OFF): OFF
+--   SDL_DUMMYAUDIO              (Wanted: ON): ON
+--   SDL_DUMMYCAMERA             (Wanted: ON): ON
+--   SDL_DUMMYVIDEO              (Wanted: ON): ON
+--   SDL_EXAMPLES                (Wanted: OFF): OFF
+--   SDL_EXAMPLES_LINK_SHARED    (Wanted: OFF): OFF
+--   SDL_FOREGROUNDING_SIGNAL    (Wanted: OFF): OFF
+--   SDL_FRIBIDI                 (Wanted: OFF): OFF
+--   SDL_FRIBIDI_SHARED          (Wanted: OFF): OFF
+--   SDL_GCC_ATOMICS             (Wanted: OFF): OFF
+--   SDL_HIDAPI                  (Wanted: ON): ON
+--   SDL_HIDAPI_JOYSTICK         (Wanted: ON): ON
+--   SDL_HIDAPI_LIBUSB           (Wanted: ON): OFF
+--   SDL_HIDAPI_LIBUSB_SHARED    (Wanted: ON): OFF
+--   SDL_IBUS                    (Wanted: OFF): OFF
+--   SDL_INSTALL                 (Wanted: OFF): OFF
+--   SDL_INSTALL_TESTS           (Wanted: OFF): OFF
+--   SDL_JACK                    (Wanted: OFF): OFF
+--   SDL_JACK_SHARED             (Wanted: OFF): OFF
+--   SDL_KMSDRM                  (Wanted: OFF): OFF
+--   SDL_KMSDRM_SHARED           (Wanted: OFF): OFF
+--   SDL_LASX                    (Wanted: OFF): OFF
+--   SDL_LIBC                    (Wanted: ON): ON
+--   SDL_LIBICONV                (Wanted: OFF): OFF
+--   SDL_LIBTHAI                 (Wanted: OFF): OFF
+--   SDL_LIBTHAI_SHARED          (Wanted: OFF): OFF
+--   SDL_LIBUDEV                 (Wanted: ON): OFF
+--   SDL_LIBURING                (Wanted: OFF): OFF
+--   SDL_LSX                     (Wanted: OFF): OFF
+--   SDL_METAL                   (Wanted: OFF): OFF
+--   SDL_MMX                     (Wanted: ON): OFF
+--   SDL_OFFSCREEN               (Wanted: ON): ON
+--   SDL_OPENGL                  (Wanted: ON): ON
+--   SDL_OPENGLES                (Wanted: ON): ON
+--   SDL_OPENVR                  (Wanted: OFF): OFF
+--   SDL_OSS                     (Wanted: OFF): OFF
+--   SDL_PIPEWIRE                (Wanted: OFF): OFF
+--   SDL_PIPEWIRE_SHARED         (Wanted: OFF): OFF
+--   SDL_PTHREADS                (Wanted: OFF): OFF
+--   SDL_PTHREADS_SEM            (Wanted: OFF): OFF
+--   SDL_PULSEAUDIO              (Wanted: OFF): OFF
+--   SDL_PULSEAUDIO_SHARED       (Wanted: OFF): OFF
+--   SDL_RENDER_D3D              (Wanted: ON): ON
+--   SDL_RENDER_D3D11            (Wanted: ON): ON
+--   SDL_RENDER_D3D12            (Wanted: ON): ON
+--   SDL_RENDER_GPU              (Wanted: ON): ON
+--   SDL_RENDER_METAL            (Wanted: OFF): OFF
+--   SDL_RENDER_VULKAN           (Wanted: ON): ON
+--   SDL_ROCKCHIP                (Wanted: OFF): OFF
+--   SDL_RPATH                   (Wanted: OFF): OFF
+--   SDL_RPI                     (Wanted: OFF): OFF
+--   SDL_SNDIO                   (Wanted: OFF): OFF
+--   SDL_SNDIO_SHARED            (Wanted: OFF): OFF
+--   SDL_SSE                     (Wanted: ON): ON
+--   SDL_SSE2                    (Wanted: ON): ON
+--   SDL_SSE3                    (Wanted: ON): ON
+--   SDL_SSE4_1                  (Wanted: ON): ON
+--   SDL_SSE4_2                  (Wanted: ON): ON
+--   SDL_SYSTEM_ICONV            (Wanted: OFF): OFF
+--   SDL_TESTS                   (Wanted: OFF): OFF
+--   SDL_TESTS_LINK_SHARED       (Wanted: OFF): OFF
+--   SDL_UNINSTALL               (Wanted: OFF): OFF
+--   SDL_VIRTUAL_JOYSTICK        (Wanted: ON): ON
+--   SDL_VIVANTE                 (Wanted: OFF): OFF
+--   SDL_VULKAN                  (Wanted: ON): ON
+--   SDL_WASAPI                  (Wanted: ON): ON
+--   SDL_WAYLAND                 (Wanted: OFF): OFF
+--   SDL_WAYLAND_LIBDECOR        (Wanted: OFF): OFF
+--   SDL_WAYLAND_LIBDECOR_SHARED (Wanted: OFF): OFF
+--   SDL_WAYLAND_SHARED          (Wanted: OFF): OFF
+--   SDL_X11                     (Wanted: OFF): OFF
+--   SDL_X11_SHARED              (Wanted: OFF): OFF
+--   SDL_X11_XCURSOR             (Wanted: OFF): OFF
+--   SDL_X11_XDBE                (Wanted: OFF): OFF
+--   SDL_X11_XFIXES              (Wanted: OFF): OFF
+--   SDL_X11_XINPUT              (Wanted: OFF): OFF
+--   SDL_X11_XRANDR              (Wanted: OFF): OFF
+--   SDL_X11_XSCRNSAVER          (Wanted: OFF): OFF
+--   SDL_X11_XSHAPE              (Wanted: OFF): OFF
+--   SDL_X11_XSYNC               (Wanted: OFF): OFF
+--   SDL_X11_XTEST               (Wanted: OFF): OFF
+--   SDL_XINPUT                  (Wanted: ON): ON
+-- 
+--  Build Shared Library: OFF
+--  Build Static Library: ON
+-- 
+-- Enabled backends:
+--   Video drivers: dummy offscreen windows
+--   Render drivers: d3d d3d11 d3d12 gpu ogl ogl_es2 vulkan
+--   GPU drivers: d3d12 vulkan
+--   Audio drivers: disk dsound dummy wasapi
+--   Joystick drivers: dinput gameinput hidapi rawinput virtual wgi xinput
+--   Camera drivers: dummy mediafoundation
+-- 
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+C++20 modules not supported with Ninja Multi-Config on CMake 4.3.1-msvc1
+-- {fmt} version: 11.2.0
+-- Build type: RelWithDebInfo
+-- Using DirectX SDK directory: C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/
+-- Could NOT find PulseAudio (missing: PULSEAUDIO_LIBRARY PULSEAUDIO_INCLUDE_DIR) 
+-- Could NOT find JACK (missing: JACK_LIBRARY JACK_INCLUDE_DIR) 
+-- Could NOT find OpenSL (missing: OPENSL_LIBRARY OPENSL_INCLUDE_DIR OPENSL_ANDROID_INCLUDE_DIR) 
+-- Could NOT find PortAudio (missing: PORTAUDIO_LIBRARY PORTAUDIO_INCLUDE_DIR) 
+-- 
+-- STL hardening level: Enabled
+-- 
+-- Building OpenAL with support for the following backends:
+--     WASAPI, DirectSound, WinMM, WaveFile, Null
+-- 
+-- Building with support for CPU extensions:
+--     Default, SSE, SSE2, SSE3, SSE4.1
+-- 
+-- Building with legacy EAX extension support
+-- 
+-- Embedding HRTF datasets
+-- 
+-- Installing library and headers
+-- Installing sample configuration
+-- Installing HRTF data files
+-- Installing AmbDec presets
+-- 
+-- RPCS3: Using builtin FAudio
+-- using TARGET SDL3::SDL3
+-- RPCS3: using builtin ffmpeg
+-- LLVM will be built from the submodule.
+-- Could NOT find LibXml2 (missing: LIBXML2_LIBRARY LIBXML2_INCLUDE_DIR) 
+-- Could NOT find Backtrace (missing: Backtrace_LIBRARY Backtrace_INCLUDE_DIR) 
+-- LLVM host triple: x86_64-pc-windows-msvc
+-- Native target architecture is X86
+-- Threads enabled.
+-- Doxygen disabled.
+-- Ninja version: 1.13.2
+-- Could NOT find OCaml (missing: OCAMLFIND OCAML_VERSION OCAML_STDLIB_PATH) 
+-- OCaml bindings disabled.
+-- LLVM default target triple: x86_64-pc-windows-msvc
+HEAD is now at c2a515b version increase
+-- Targeting AArch64
+-- Targeting X86
+-- Could NOT find LibXml2 (missing: LIBXML2_LIBRARY LIBXML2_INCLUDE_DIR) 
+-- C Compiler ID: MSVC
+-- WOLFSSL_HAVE_MLKEM not found in WOLFSSL_DEFINITIONS.
+-- Enabling WOLFSSL_HAVE_MLKEM
+-- Enabling WOLFSSL_HAVE_MLKEM - success
+-- WOLFSSL_SHA3 not found in WOLFSSL_DEFINITIONS.
+-- Enabling WOLFSSL_SHA3
+-- Enabling WOLFSSL_SHA3 - success
+-- WOLFSSL_SHAKE128 not found in WOLFSSL_DEFINITIONS.
+-- Enabling WOLFSSL_SHAKE128
+-- Enabling WOLFSSL_SHAKE128 - success
+-- WOLFSSL_SHAKE256 not found in WOLFSSL_DEFINITIONS.
+-- Enabling WOLFSSL_SHAKE256
+-- Enabling WOLFSSL_SHAKE256 - success
+-- Looking for WOLFSSL_EXPERIMENTAL
+-- Looking for WOLFSSL_EXPERIMENTAL - not found
+-- RNG fork handlers off: they need getpid
+-- Generating user options header...
+-- Static Libs: wolfcrypt/src/hmac.c;wolfcrypt/src/hash.c;wolfcrypt/src/cpuid.c;wolfcrypt/src/kdf.c;wolfcrypt/src/random.c;wolfcrypt/src/sha256.c;wolfcrypt/src/rsa.c;wolfcrypt/src/sp_int.c;wolfcrypt/src/aes.c;wolfcrypt/src/des3.c;wolfcrypt/src/sha.c;wolfcrypt/src/sha512.c;wolfcrypt/src/sha3.c;wolfcrypt/src/logging.c;wolfcrypt/src/wc_port.c;wolfcrypt/src/error.c;wolfcrypt/src/wc_encrypt.c;wolfcrypt/src/signature.c;wolfcrypt/src/wolfmath.c;wolfcrypt/src/memory.c;wolfcrypt/src/dh.c;wolfcrypt/src/asn.c;wolfcrypt/src/coding.c;wolfcrypt/src/poly1305.c;wolfcrypt/src/md5.c;wolfcrypt/src/pwdbased.c;wolfcrypt/src/pkcs12.c;wolfcrypt/src/chacha.c;wolfcrypt/src/chacha20_poly1305.c;wolfcrypt/src/tfm.c;wolfcrypt/src/integer.c;wolfcrypt/src/ecc.c;wolfcrypt/src/wc_mlkem.c;wolfcrypt/src/wc_mlkem_poly.c;src/internal.c;src/wolfio.c;src/keys.c;src/ssl.c;src/ocsp.c;src/tls.c;src/tls13.c
+-- WOLFSSL_INCLUDE_DIRS is blank. No additional directories will be added.
+Building on Windows/MSYS/MINGW
+-- RPCS3: building libcurl + wolfssl submodules
+-- Using CMake version 4.3.1-msvc1
+-- curl version=[8.23.0-DEV]
+-- CMake platform flags: WIN32 MSVC-1951
+-- Performing Test HAVE_WIN32_WINNT
+-- Performing Test HAVE_WIN32_WINNT - Success
+-- Found _WIN32_WINNT=0x0a00
+-- Picky compiler options: -W4 -Wall -wd4061 -wd4191 -wd4255 -wd4464 -wd4548 -wd4574 -wd4668 -wd4710 -wd4711 -wd4746 -wd4820 -wd5045
+-- Could NOT find Brotli (missing: BROTLI_INCLUDE_DIR BROTLIDEC_LIBRARY BROTLICOMMON_LIBRARY) 
+-- Could NOT find Zstd (missing: ZSTD_INCLUDE_DIR ZSTD_LIBRARY) 
+-- Could NOT find NGHTTP2 (missing: NGHTTP2_INCLUDE_DIR NGHTTP2_LIBRARY) 
+-- Protocols: dict file ftp ftps gopher gophers http https imap imaps ipfs ipns ldap ldaps mqtt mqtts pop3 pop3s rtsp smtp smtps telnet tftp ws wss
+-- Features: alt-svc AsynchDNS HSTS IPv6 Largefile libz SSL threadsafe Unicode UnixSockets
+-- Enabled SSL backends: wolfSSL
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+-- Compiling with support for: winmm
+-- Could NOT find WrapVulkanHeaders (missing: Vulkan_INCLUDE_DIR) 
+-- RPCS3_GIT_VERSION: 20365-8dc93f2e
+-- RPCS3_GIT_BRANCH: master
+-- RPCS3_GIT_FULL_BRANCH: local_build
+-- Configuring done (7.7s)
+-- Generating done (8.9s)
+-- Build files have been written to: C:/Users/Thewoodsman/rpcs3/build
+[0/4] Re-checking globbed directories...
+[1/1217] Generating CXX dyndep file 3rdparty\pugixml\CMakeFiles\pugixml-static.dir\Release\CXX.dd
+[2/1215] Generating CXX dyndep file 3rdparty\yaml-cpp\yaml-cpp\CMakeFiles\yaml-cpp.dir\Release\CXX.dd
+[3/1184] Generating CXX dyndep file 3rdparty\SoundTouch\CMakeFiles\soundtouch.dir\Release\CXX.dd
+[4/1173] Generating CXX dyndep file 3rdparty\asmjit\CMakeFiles\asmjit.dir\Release\CXX.dd
+[5/1114] Generating CXX dyndep file 3rdparty\OpenAL\openal-soft\CMakeFiles\OpenAL.dir\Release\CXX.dd
+[6/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\cmake_pch.c.obj
+[7/1012] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\cmake_pch.cxx.obj
+[8/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\sys_net_helpers.cpp for CXX dependencies
+[9/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net.cpp for CXX dependencies
+[10/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_native.cpp for CXX dependencies
+[11/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpSns.cpp for CXX dependencies
+[12/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\nt_p2p_port.cpp for CXX dependencies
+[13/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_p2p.cpp for CXX dependencies
+[14/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellNetCtl.cpp for CXX dependencies
+[15/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_p2ps.cpp for CXX dependencies
+[16/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNp2.cpp for CXX dependencies
+[17/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNp.cpp for CXX dependencies
+[18/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpClans.cpp for CXX dependencies
+[19/1012] Scanning C:\Users\Thewoodsman\rpcs3\3rdparty\libsdl-org\SDL\src\core\windows\SDL_gameinput.cpp for CXX dependencies
+[20/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpTrophy.cpp for CXX dependencies
+[21/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpCommerce2.cpp for CXX dependencies
+[22/1012] Scanning C:\Users\Thewoodsman\rpcs3\3rdparty\libsdl-org\SDL\src\core\windows\pch_cpp.cpp for CXX dependencies
+[23/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_error.c.obj
+[24/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_guid.c.obj
+[25/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL.c.obj
+[26/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_list.c.obj
+[27/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_hashtable.c.obj
+[28/1012] Scanning C:\Users\Thewoodsman\rpcs3\3rdparty\libsdl-org\SDL\src\joystick\gdk\SDL_gameinputjoystick.cpp for CXX dependencies
+[29/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_hints.c.obj
+[30/1012] Scanning C:\Users\Thewoodsman\rpcs3\3rdparty\libsdl-org\SDL\src\video\windows\SDL_windowsgameinput.cpp for CXX dependencies
+[31/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_properties.c.obj
+[32/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\atomic\SDL_atomic.c.obj
+[33/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_utils.c.obj
+[34/1012] Generating CXX dyndep file 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\CXX.dd
+[35/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_assert.c.obj
+[36/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\dynapi\SDL_dynapi.c.obj
+[37/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audiodev.c.obj
+[38/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audioqueue.c.obj
+[39/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audiocvt.c.obj
+[40/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_log.c.obj
+[41/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_mixer.c.obj
+[42/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audioresample.c.obj
+[43/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\atomic\SDL_spinlock.c.obj
+[44/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audiotypecvt.c.obj
+[45/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\SDL_core_unsupported.c.obj
+[46/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_wave.c.obj
+[47/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_categories.c.obj
+[48/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audio.c.obj
+[49/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_displayevents.c.obj
+[50/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_clipboardevents.c.obj
+[51/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_dropevents.c.obj
+[52/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_eventwatch.c.obj
+[53/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\cpuinfo\SDL_cpuinfo.c.obj
+[54/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\camera\SDL_camera.c.obj
+[55/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_keyboard.c.obj
+[56/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_keysym_to_keycode.c.obj
+[57/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_keysym_to_scancode.c.obj
+[58/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_keymap.c.obj
+[59/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_scancode_tables.c.obj
+[60/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_pen.c.obj
+[61/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_quit.c.obj
+[62/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\imKStoUCS.c.obj
+[63/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_windowevents.c.obj
+[64/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\filesystem\SDL_filesystem.c.obj
+[65/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_touch.c.obj
+[66/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\io\SDL_asyncio.c.obj
+[67/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\io\generic\SDL_asyncio_generic.c.obj
+[68/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_mouse.c.obj
+[69/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\SDL_haptic.c.obj
+[70/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_events.c.obj
+[71/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\gpu\SDL_gpu.c.obj
+[72/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\controller_type.c.obj
+[73/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\main\SDL_main_callbacks.c.obj
+[74/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\locale\SDL_locale.c.obj
+[75/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\misc\SDL_libusb.c.obj
+[76/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\main\SDL_runapp.c.obj
+[77/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\io\SDL_iostream.c.obj
+[78/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\SDL_steam_virtual_gamepad.c.obj
+[79/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\misc\SDL_url.c.obj
+[80/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\SDL_gamepad.c.obj
+[81/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\power\SDL_power.c.obj
+[82/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\SDL_render_unsupported.c.obj
+[83/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\SDL_joystick.c.obj
+[84/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\SDL_yuv_sw.c.obj
+[85/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\SDL_render.c.obj
+[86/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\gpu\SDL_pipeline_gpu.c.obj
+[87/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\ngage\SDL_render_ngage.c.obj
+[88/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\gpu\SDL_render_gpu.c.obj
+[89/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\gpu\SDL_shaders_gpu.c.obj
+[90/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\hidapi\SDL_hidapi.c.obj
+[91/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\opengles2\SDL_shaders_gles2.c.obj
+[92/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d\SDL_shaders_d3d.c.obj
+[93/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\opengles2\SDL_render_gles2.c.obj
+[94/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d\SDL_render_d3d.c.obj
+[95/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\ps2\SDL_render_ps2.c.obj
+[96/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\psp\SDL_render_psp.c.obj
+[97/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d11\SDL_shaders_d3d11.c.obj
+[98/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\opengl\SDL_shaders_gl.c.obj
+[99/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\opengl\SDL_render_gl.c.obj
+[100/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d11\SDL_render_d3d11.c.obj
+[101/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d12\SDL_shaders_d3d12.c.obj
+[102/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d12\SDL_render_d3d12.c.obj
+[103/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_drawpoint.c.obj
+[104/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_drawline.c.obj
+[105/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_blendpoint.c.obj
+[106/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vitagxm\SDL_render_vita_gxm.c.obj
+[107/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vitagxm\SDL_render_vita_gxm_memory.c.obj
+[108/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_render_sw.c.obj
+[109/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vulkan\SDL_shaders_vulkan.c.obj
+[110/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vitagxm\SDL_render_vita_gxm_tools.c.obj
+[111/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_triangle.c.obj
+[112/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_crc16.c.obj
+[113/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_crc32.c.obj
+[114/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\sensor\SDL_sensor.c.obj
+[115/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_malloc.c.obj
+[116/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_memmove.c.obj
+[117/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_memcpy.c.obj
+[118/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_iconv.c.obj
+[119/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_blendfillrect.c.obj
+[120/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_memset.c.obj
+[121/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_mslibc.c.obj
+[122/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_getenv.c.obj
+[123/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_random.c.obj
+[124/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_murmur3.c.obj
+[125/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_qsort.c.obj
+[126/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_stdlib.c.obj
+[127/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_blendline.c.obj
+[128/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_strtokr.c.obj
+[129/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_string.c.obj
+[130/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\storage\SDL_storage.c.obj
+[131/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\time\SDL_time.c.obj
+[132/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vulkan\SDL_render_vulkan.c.obj
+[133/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit.c.obj
+[134/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_0.c.obj
+[135/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_A.c.obj
+[136/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_RLEaccel.c.obj
+[137/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_N.c.obj
+[138/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\SDL_thread.c.obj
+[139/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\timer\SDL_timer.c.obj
+[140/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_copy.c.obj
+[141/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_bmp.c.obj
+[142/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_clipboard.c.obj
+[143/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_slow.c.obj
+[144/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_fillrect.c.obj
+[145/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_1.c.obj
+[146/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_pixels.c.obj
+[147/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_rotate.c.obj
+[148/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_video_unsupported.c.obj
+[149/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\yuv2rgb\yuv_rgb_lsx.c.obj
+[150/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_egl.c.obj
+[151/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_surface.c.obj
+[152/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_stretch.c.obj
+[153/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_rect.c.obj
+[154/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_exp.c.obj
+[155/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\yuv2rgb\yuv_rgb_std.c.obj
+[156/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\yuv2rgb\yuv_rgb_sse.c.obj
+[157/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_atan2.c.obj
+[158/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_auto.c.obj
+[159/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_fmod.c.obj
+[160/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_log.c.obj
+[161/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_log10.c.obj
+[162/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_video.c.obj
+[163/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_stb.c.obj
+[164/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_pow.c.obj
+[165/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_rem_pio2.c.obj
+[166/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\k_cos.c.obj
+[167/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_sqrt.c.obj
+[168/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_vulkan_utils.c.obj
+[169/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\k_sin.c.obj
+[170/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\k_tan.c.obj
+[171/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_atan.c.obj
+[172/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_cos.c.obj
+[173/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_yuv.c.obj
+[174/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_copysign.c.obj
+[175/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\k_rem_pio2.c.obj
+[176/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_fabs.c.obj
+[177/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_floor.c.obj
+[178/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_isnan.c.obj
+[179/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_isinf.c.obj
+[180/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_isnanf.c.obj
+[181/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_isinff.c.obj
+[182/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_scalbn.c.obj
+[183/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_sin.c.obj
+[184/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_modf.c.obj
+[185/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\dummy\SDL_dummyaudio.c.obj
+[186/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_tan.c.obj
+[187/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\camera\dummy\SDL_camera_dummy.c.obj
+[188/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\disk\SDL_diskaudio.c.obj
+[189/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\dummy\SDL_nullevents.c.obj
+[190/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\dummy\SDL_nullframebuffer.c.obj
+[191/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\virtual\SDL_virtualjoystick.c.obj
+[192/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\dummy\SDL_nullvideo.c.obj
+[193/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\pch.c.obj
+[194/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\io\windows\SDL_asyncio_windows_ioring.c.obj
+[195/1012] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\pch_cpp.cpp.obj
+[196/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_hid.c.obj
+[197/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_xinput.c.obj
+[198/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\main\windows\SDL_sysmain_runapp.c.obj
+[199/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\misc\windows\SDL_sysurl.c.obj
+[200/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_immdevice.c.obj
+[201/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_windows.c.obj
+[202/1012] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_gameinput.cpp.obj
+[203/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\directsound\SDL_directsound.c.obj
+[204/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsclipboard.c.obj
+[205/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\wasapi\SDL_wasapi.c.obj
+[206/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsframebuffer.c.obj
+[207/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowskeyboard.c.obj
+[208/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsmodes.c.obj
+[209/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsmessagebox.c.obj
+[210/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\generic\SDL_syscond.c.obj
+[211/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsmouse.c.obj
+[212/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\generic\SDL_sysrwlock.c.obj
+[213/1012] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsgameinput.cpp.obj
+[214/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsevents.c.obj
+[215/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsopengl.c.obj
+[216/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsopengles.c.obj
+[217/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsrawinput.c.obj
+[218/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_syscond_cv.c.obj
+[219/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsshape.c.obj
+[220/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsvulkan.c.obj
+[221/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_sysmutex.c.obj
+[222/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsvideo.c.obj
+[223/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_sysrwlock_srw.c.obj
+[224/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\storage\generic\SDL_genericstorage.c.obj
+[225/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_systhread.c.obj
+[226/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_systls.c.obj
+[227/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_syssem.c.obj
+[228/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\power\windows\SDL_syspower.c.obj
+[229/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowswindow.c.obj
+[230/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\storage\steam\SDL_steamstorage.c.obj
+[231/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\locale\windows\SDL_syslocale.c.obj
+[232/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\filesystem\windows\SDL_sysfsops.c.obj
+[233/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\time\windows\SDL_systime.c.obj
+[234/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_8bitdo.c.obj
+[235/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\sensor\windows\SDL_windowssensor.c.obj
+[236/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_combined.c.obj
+[237/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_gamecube.c.obj
+[238/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_flydigi.c.obj
+[239/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_lg4ff.c.obj
+[240/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\timer\windows\SDL_systimer.c.obj
+[241/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_gip.c.obj
+[242/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\filesystem\windows\SDL_sysfilesystem.c.obj
+[243/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\loadso\windows\SDL_sysloadso.c.obj
+[244/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_luna.c.obj
+[245/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\tray\windows\SDL_tray.c.obj
+[246/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_ps3.c.obj
+[247/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_ps5.c.obj
+[248/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_ps4.c.obj
+[249/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_sinput.c.obj
+[250/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_shield.c.obj
+[251/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_switch2.c.obj
+[252/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_stadia.c.obj
+[253/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_steamdeck.c.obj
+[254/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_steam_hori.c.obj
+[255/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_steam_triton.c.obj
+[256/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_steam.c.obj
+[257/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_xbox360.c.obj
+[258/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_xbox360w.c.obj
+[259/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_switch.c.obj
+[260/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_wii.c.obj
+[261/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_xboxone.c.obj
+[262/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_zuiki.c.obj
+[263/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_rumble.c.obj
+[264/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\hidapi\SDL_hidapihaptic.c.obj
+[265/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_report_descriptor.c.obj
+[266/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\hidapi\SDL_hidapihaptic_lg4ff.c.obj
+[267/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\dialog\SDL_dialog.c.obj
+[268/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapijoystick.c.obj
+[269/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\process\SDL_process.c.obj
+[270/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\dialog\SDL_dialog_utils.c.obj
+[271/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_dinputjoystick.c.obj
+[272/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_xinputjoystick.c.obj
+[273/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenevents.c.obj
+[274/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_windowsjoystick.c.obj
+[275/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenframebuffer.c.obj
+[276/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\windows\SDL_windowshaptic.c.obj
+[277/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\windows\SDL_dinputhaptic.c.obj
+[278/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\process\windows\SDL_windowsprocess.c.obj
+[279/1012] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\gdk\SDL_gameinputjoystick.cpp.obj
+[280/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenopengles.c.obj
+[281/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\camera\mediafoundation\SDL_camera_mediafoundation.c.obj
+[282/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\tray\SDL_tray_utils.c.obj
+[283/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\main\generic\SDL_sysmain_callbacks.c.obj
+[284/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenvulkan.c.obj
+[285/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenvideo.c.obj
+[286/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\dialog\windows\SDL_windowsdialog.c.obj
+[287/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenwindow.c.obj
+[288/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_cache.cpp for CXX dependencies
+[289/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpTus.cpp for CXX dependencies
+[290/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\gpu\vulkan\SDL_gpu_vulkan.c.obj
+[291/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_contexts.cpp for CXX dependencies
+[292/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_helpers.cpp for CXX dependencies
+[293/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_handler.cpp for CXX dependencies
+[294/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\clans_client.cpp for CXX dependencies
+[295/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_structs_extra.cpp for CXX dependencies
+[296/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\signaling_handler.cpp for CXX dependencies
+[297/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\gpu\d3d12\SDL_gpu_d3d12.c.obj
+[298/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_requests_gui.cpp for CXX dependencies
+[299/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_menu_main_menu.cpp for CXX dependencies
+[300/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_notifications.cpp for CXX dependencies
+[301/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\FriendsList\overlay_friends_list_dialog.cpp for CXX dependencies
+[302/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\Network\overlay_recvmessage_dialog.cpp for CXX dependencies
+[303/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\Network\overlay_sendmessage_dialog.cpp for CXX dependencies
+[304/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_requests.cpp for CXX dependencies
+[305/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_rawinputjoystick.c.obj
+[306/1012] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_windows_gaming_input.c.obj
+[307/1012] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\curl_sha512_256.c.obj
+[308/1012] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\md5.c.obj
+[309/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\rpcn_client.cpp for CXX dependencies
+[310/1012] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\Trophies\overlay_trophy_list_dialog.cpp for CXX dependencies
+[311/1012] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\sha256.c.obj
+[312/1012] Linking CXX static library 3rdparty\libsdl-org\SDL\Release\SDL3-static.lib
+[313/1012] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\vtls\vtls.c.obj
+[314/1012] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\vtls\wolfssl.c.obj
+[315/1012] Linking C static library 3rdparty\curl\curl\lib\Release\libcurl.lib
+[316/1012] Generating CXX dyndep file rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\CXX.dd
+[317/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_cache.cpp.obj
+[318/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\lv2_socket_p2p.cpp.obj
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(135): warning C4267: 'initializing': conversion from 'size_t' to '_Ty', possible loss of data
+        with
+        [
+            _Ty=u32
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(135): note: the template instantiation context (the oldest one first) is
+C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_p2p.cpp(209): note: see reference to function template instantiation 'std::tuple<s32,lv2_socket::sockopt_data,u32>::tuple<CellNotAnError,lv2_socket::sockopt_data&,size_t,0>(_This2 &&,lv2_socket::sockopt_data &,size_t &&) noexcept' being compiled
+        with
+        [
+            _This2=CellNotAnError
+        ]
+C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_p2p.cpp(209): note: see the first reference to 'std::tuple<s32,lv2_socket::sockopt_data,u32>::tuple' in 'lv2_socket_p2p::getsockopt'
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(368): note: see reference to function template instantiation 'std::tuple<s32,lv2_socket::sockopt_data,u32>::tuple<std::_Exact_args_t,_Ty,lv2_socket::sockopt_data&,unsigned __int64,0>(_Tag,_This2 &&,lv2_socket::sockopt_data &,unsigned __int64 &&)' being compiled
+        with
+        [
+            _Ty=CellNotAnError,
+            _Tag=std::_Exact_args_t,
+            _This2=CellNotAnError
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(320): note: see reference to function template instantiation 'std::tuple<lv2_socket::sockopt_data,u32>::tuple<std::_Exact_args_t,lv2_socket::sockopt_data&,_Ty,0>(_Tag,_This2,_Ty &&)' being compiled
+        with
+        [
+            _Ty=size_t,
+            _Tag=std::_Exact_args_t,
+            _This2=lv2_socket::sockopt_data &
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(320): note: see reference to function template instantiation 'std::tuple<u32>::tuple<std::_Exact_args_t,_Ty,,0>(_Tag,_This2 &&)' being compiled
+        with
+        [
+            _Ty=size_t,
+            _Tag=std::_Exact_args_t,
+            _This2=size_t
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(320): note: see reference to function template instantiation 'std::_Tuple_val<_This>::_Tuple_val<_Ty>(_Other &&)' being compiled
+        with
+        [
+            _This=u32,
+            _Ty=size_t,
+            _Other=size_t
+        ]
+[319/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_contexts.cpp.obj
+[320/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\lv2_socket_native.cpp.obj
+[321/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpSns.cpp.obj
+[322/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\nt_p2p_port.cpp.obj
+[323/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellNetCtl.cpp.obj
+[324/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\lv2_socket_p2ps.cpp.obj
+[325/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpCommerce2.cpp.obj
+[326/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpClans.cpp.obj
+[327/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpTus.cpp.obj
+[328/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\sys_net_helpers.cpp.obj
+[329/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNp2.cpp.obj
+[330/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net.cpp.obj
+[331/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpTrophy.cpp.obj
+[332/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNp.cpp.obj
+[333/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_helpers.cpp.obj
+[334/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_structs_extra.cpp.obj
+[335/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\Network\overlay_recvmessage_dialog.cpp.obj
+[336/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\Network\overlay_sendmessage_dialog.cpp.obj
+[337/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_menu_main_menu.cpp.obj
+[338/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\clans_client.cpp.obj
+[339/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\signaling_handler.cpp.obj
+[340/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\Trophies\overlay_trophy_list_dialog.cpp.obj
+[341/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\FriendsList\overlay_friends_list_dialog.cpp.obj
+[342/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_handler.cpp.obj
+[343/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_requests_gui.cpp.obj
+[344/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_notifications.cpp.obj
+[345/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_requests.cpp.obj
+[346/547] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\rpcn_client.cpp.obj
+[347/547] Linking CXX static library rpcs3\Emu\Release\rpcs3_emu.lib
+[348/547] Automatic MOC and UIC for target rpcs3_ui
+[349/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\pad_led_settings_dialog.cpp for CXX dependencies
+[350/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\pad_motion_settings_dialog.cpp for CXX dependencies
+[351/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\music_player_dialog.cpp for CXX dependencies
+[352/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\recording_settings_dialog.cpp for CXX dependencies
+[353/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\wiimote_settings_dialog.cpp for CXX dependencies
+[354/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\about_dialog.cpp for CXX dependencies
+[355/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\ps_move_tracker_dialog.cpp for CXX dependencies
+[356/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\camera_settings_dialog.cpp for CXX dependencies
+[357/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\patch_creator_dialog.cpp for CXX dependencies
+[358/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\pad_settings_dialog.cpp for CXX dependencies
+[359/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\patch_manager_dialog.cpp for CXX dependencies
+[360/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\settings_dialog.cpp for CXX dependencies
+[361/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\sendmessage_dialog_frame.cpp for CXX dependencies
+[362/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\recvmessage_dialog_frame.cpp for CXX dependencies
+[363/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\rpcn_settings_dialog.cpp for CXX dependencies
+[364/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\shortcut_dialog.cpp for CXX dependencies
+[365/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\welcome_dialog.cpp for CXX dependencies
+[366/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\main_window.cpp for CXX dependencies
+[367/547] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\trophy_manager_dialog.cpp for CXX dependencies
+[368/547] Generating CXX dyndep file rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\CXX.dd
+[369/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\pad_led_settings_dialog.cpp.obj
+[370/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\music_player_dialog.cpp.obj
+[371/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\pad_motion_settings_dialog.cpp.obj
+[372/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\wiimote_settings_dialog.cpp.obj
+[373/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\recording_settings_dialog.cpp.obj
+[374/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\about_dialog.cpp.obj
+[375/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\camera_settings_dialog.cpp.obj
+[376/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\sendmessage_dialog_frame.cpp.obj
+[377/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\recvmessage_dialog_frame.cpp.obj
+[378/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\ps_move_tracker_dialog.cpp.obj
+[379/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\rpcn_settings_dialog.cpp.obj
+[380/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\patch_creator_dialog.cpp.obj
+[381/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\patch_manager_dialog.cpp.obj
+[382/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\shortcut_dialog.cpp.obj
+[383/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\welcome_dialog.cpp.obj
+[384/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\pad_settings_dialog.cpp.obj
+[385/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\rpcs3_ui_autogen\mocs_compilation_Release.cpp.obj
+[386/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\main_window.cpp.obj
+[387/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\trophy_manager_dialog.cpp.obj
+[388/395] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\settings_dialog.cpp.obj
+[389/395] Linking CXX static library rpcs3\rpcs3qt\Release\rpcs3_ui.lib
+[390/395] Generating CXX dyndep file rpcs3\CMakeFiles\rpcs3.dir\Release\CXX.dd
+[391/394] Linking CXX executable bin\rpcs3.exe
+
+Build complete! Output is in "C:\Users\Thewoodsman\rpcs3\build\bin\"
+
+Total build time: 0h 4m 0s

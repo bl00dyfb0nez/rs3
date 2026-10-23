@@ -81,6 +81,8 @@
 #include "Crypto/decrypt_binaries.h"
 
 #include "Loader/PUP.h"
+#include "Loader/ps3_boot_chain.h"
+#include "Loader/ps3_identity.h"
 #include "Loader/TAR.h"
 #include "Loader/PSF.h"
 #include "Loader/ISO.h"
@@ -93,8 +95,14 @@
 
 #include "ui_main_window.h"
 
+#include <QApplication>
+#include <QDialog>
 #include <QEventLoop>
+#include <QLabel>
+#include <QPushButton>
+#include <QStatusBar>
 #include <QTimer>
+#include <QVBoxLayout>
 
 #ifdef _WIN32
 #include "raw_mouse_settings_dialog.h"
@@ -108,6 +116,32 @@ LOG_CHANNEL(gui_log, "GUI");
 
 // Holds the menu text of a recent boot action without the ampersand escaping applied to text()
 constexpr const char* recent_action_name = "shown_name";
+
+namespace
+{
+	// The power LED's state: green while the console runs, red in standby, dark
+	// when its boot chain does not boot.
+	enum class led_state
+	{
+		standby,
+		running,
+		bricked,
+	};
+
+	// Defined with the LED itself, further down: the window is in standby before
+	// anything runs.
+	void set_power_led(QMainWindow* window, led_state state);
+	void refresh_power_led(QMainWindow* window);
+	void answer_boot_refusal(QMainWindow* window, bool yellow);
+
+	// Whether this console answers in yellow - CECH-2001A and earlier, the
+	// metldr + lv0ldr pair.
+	bool failure_yellow();
+
+	// The Factory Service Mode banner, on while the console is in service mode.
+	void refresh_factory_banner(QMainWindow* window);
+	void place_factory_banner(QMainWindow* window);
+}
 
 extern atomic_t<bool> g_user_asked_for_frame_capture;
 extern atomic_t<bool> g_headless;
@@ -218,6 +252,13 @@ void main_window::Init()
 
 	Q_EMIT RequestGlobalStylesheetChange();
 	ConfigureGuiFromSettings();
+
+	// The console's power LED: red in standby, dark if the boot chain it holds
+	// does not boot.
+	refresh_power_led(this);
+
+	// And the Factory Service Mode banner, if the console is in service mode.
+	refresh_factory_banner(this);
 
 	m_shortcut_handler = new shortcut_handler(gui::shortcuts::shortcut_handler_id::main_window, this, m_gui_settings);
 	connect(m_shortcut_handler, &shortcut_handler::shortcut_activated, this, &main_window::handle_shortcut);
@@ -486,6 +527,43 @@ void main_window::Boot(const std::string& path, const std::string& title_id, boo
 {
 	if (Emu.IsBootingRestricted())
 	{
+		return;
+	}
+
+	if (g_cfg.sys.factory_service_mode)
+	{
+		// In service mode lv2 runs the application mounted at
+		// dev_usb000/Lv2diag.self instead of GameOS (docs/fsm.txt), so a normal
+		// boot is replaced by it - and without it there is nothing to run.
+		const std::string lv2diag = vfs::get("/dev_usb000/Lv2diag.self");
+
+		if (!lv2diag.empty() && path != lv2diag)
+		{
+			if (!fs::is_file(lv2diag))
+			{
+				gui_log.error("Factory Service Mode: no dev_usb000/Lv2diag.self to run.");
+				statusBar()->showMessage(tr("Factory Service Mode: place Lv2diag.self in the root of the emulated USB device."), 12000);
+				return;
+			}
+
+			gui_log.notice("Factory Service Mode: running %s", lv2diag);
+			Boot(lv2diag, "", true, refresh_list, config_mode, config_path);
+			return;
+		}
+	}
+
+	if (g_cfg.sys.boot_bricked)
+	{
+		// A console whose boot chain does not boot starts nothing at all: it
+		// answers with the three beeps and the dark light, and the window stays
+		// exactly where it is - no crash, and no game either.
+		gui_log.error("Boot refused: the console's boot chain does not boot (bricked console).");
+		answer_boot_refusal(this, failure_yellow());
+		statusBar()->showMessage(tr("This console is bricked: its boot chain does not boot, so nothing can be launched. Install firmware whose chain boots to clear it."), 12000);
+
+		// A console that cannot boot is a soft brick: it still answers, and the
+		// recovery menu is how it comes back.  Offered after the beeps.
+		QTimer::singleShot(1300, this, [this]() { ShowRecoveryMenu(); });
 		return;
 	}
 
@@ -1454,6 +1532,302 @@ void main_window::ExtractTar()
 	}
 }
 
+namespace
+{
+	// The console's power LED, in the corner of the content area: green while the
+	// console runs, red in standby (docs/sysconerr.txt: a solid red light is
+	// standby), and dark for a console whose boot chain does not boot.  A console
+	// that refuses a boot chain answers with three beeps and a flashing power
+	// LED, so the same light takes over for the same second and a bit, in step
+	// with the beeps: lit, then black, because the dark half of a blink is the
+	// light being off, not a dim colour.
+	//
+	// The failure colour is the console's: CECH-2001A and earlier - the metldr +
+	// lv0ldr generation, before 3.60 - flash yellow, the YLOD.  The later
+	// consoles, the default, flash red: the red light that replaced the yellow
+	// there (docs/sysconerr.txt, 1200 and 2024).
+	enum class led_colour
+	{
+		red,
+		green,
+		yellow,
+		off,
+	};
+
+	QString led_css(led_colour colour, bool lit)
+	{
+		// A dark light: no colour, just the unlit lens.
+		static const QString black = QStringLiteral("background-color: #000000; border: 1px solid #1a1a1a; border-radius: 8px;");
+
+		if (!lit || colour == led_colour::off)
+		{
+			return black;
+		}
+
+		switch (colour)
+		{
+		case led_colour::green:
+			return QStringLiteral("background-color: #20c040; border: 1px solid #0a5a1a; border-radius: 8px;");
+		case led_colour::yellow:
+			return QStringLiteral("background-color: #e0a020; border: 1px solid #6b4a00; border-radius: 8px;");
+		default:
+			return QStringLiteral("background-color: #e02020; border: 1px solid #700000; border-radius: 8px;");
+		}
+	}
+
+	QLabel* power_led(QMainWindow* window, bool create)
+	{
+		if (!window)
+		{
+			return nullptr;
+		}
+
+		// The corner of the content area, not of the frame: the menu bar and the
+		// toolbar own the very top of the window.
+		QWidget* const host = window->centralWidget() ? window->centralWidget() : window;
+
+		QLabel* led = host->findChild<QLabel*>(QStringLiteral("power_led"), Qt::FindDirectChildrenOnly);
+
+		if (!led && create)
+		{
+			led = new QLabel(host);
+			led->setObjectName(QStringLiteral("power_led"));
+			led->setFixedSize(16, 16);
+			led->setAttribute(Qt::WA_TransparentForMouseEvents);
+			led->move(8, 8);
+			led->raise();
+		}
+
+		return led;
+	}
+
+	// Steady state: green while emulation runs (a paused game is still on), red
+	// in standby, dark for a console whose boot chain does not boot.
+	void set_power_led(QMainWindow* window, led_state state)
+	{
+		QLabel* const led = power_led(window, true);
+
+		if (!led)
+		{
+			return;
+		}
+
+		// A failure flash in progress belongs to the previous state.
+		if (QTimer* timer = led->findChild<QTimer*>(QStringLiteral("power_led_timer")))
+		{
+			timer->stop();
+		}
+
+		switch (state)
+		{
+		case led_state::running:
+			led->setToolTip(QCoreApplication::translate("main_window", "Power LED: the console is on."));
+			led->setStyleSheet(led_css(led_colour::green, true));
+			break;
+		case led_state::bricked:
+			led->setToolTip(QCoreApplication::translate("main_window", "Power LED: dark. The console's boot chain does not boot, so the light never comes on."));
+			led->setStyleSheet(led_css(led_colour::off, false));
+			break;
+		case led_state::standby:
+		default:
+			led->setToolTip(QCoreApplication::translate("main_window", "Power LED: the console is in standby."));
+			led->setStyleSheet(led_css(led_colour::red, true));
+			break;
+		}
+
+		led->raise();
+		led->show();
+	}
+
+	// The state the window should be showing, from the console's own state.
+	void refresh_power_led(QMainWindow* window)
+	{
+		if (g_cfg.sys.boot_bricked)
+		{
+			set_power_led(window, led_state::bricked);
+			return;
+		}
+
+		set_power_led(window, Emu.IsRunning() || Emu.IsPaused() ? led_state::running : led_state::standby);
+	}
+
+	bool failure_yellow()
+	{
+		const ps3::identity::generation generation = ps3::identity::from_name(g_cfg.sys.boot_loader.get());
+		return ps3::identity::failure_led_for(generation) == ps3::identity::failure_led::yellow;
+	}
+
+	// Factory Service Mode is a red translucent rectangle in the bottom right
+	// corner of the screen with "Playstation 3. Factory/Service Mode" in it
+	// (docs/fsm.txt).  The emulated console shows it while the syscon EEPROM
+	// flag at 0x48C07 is set.
+	QLabel* factory_banner(QMainWindow* window, bool create)
+	{
+		if (!window)
+		{
+			return nullptr;
+		}
+
+		QWidget* const host = window->centralWidget() ? window->centralWidget() : window;
+		QLabel* banner = host->findChild<QLabel*>(QStringLiteral("factory_service_banner"), Qt::FindDirectChildrenOnly);
+
+		if (!banner && create)
+		{
+			banner = new QLabel(host);
+			banner->setObjectName(QStringLiteral("factory_service_banner"));
+			banner->setAttribute(Qt::WA_TransparentForMouseEvents);
+			banner->setText(QCoreApplication::translate("main_window", "Playstation 3. Factory/Service Mode"));
+			banner->setAlignment(Qt::AlignCenter);
+			banner->setStyleSheet(QStringLiteral(
+				"background-color: rgba(150, 0, 0, 170);"
+				"color: white;"
+				"border: 1px solid rgba(255, 90, 90, 220);"
+				"padding: 6px 12px;"));
+		}
+
+		return banner;
+	}
+
+	void place_factory_banner(QMainWindow* window)
+	{
+		QLabel* const banner = factory_banner(window, false);
+
+		if (!banner || !banner->isVisible())
+		{
+			return;
+		}
+
+		QWidget* const host = window->centralWidget() ? window->centralWidget() : window;
+		banner->adjustSize();
+		banner->move(host->width() - banner->width() - 12, host->height() - banner->height() - 12);
+		banner->raise();
+	}
+
+	void refresh_factory_banner(QMainWindow* window)
+	{
+		if (g_cfg.sys.factory_service_mode)
+		{
+			factory_banner(window, true)->show();
+			place_factory_banner(window);
+			return;
+		}
+
+		if (QLabel* const banner = factory_banner(window, false))
+		{
+			banner->hide();
+		}
+	}
+
+	void flash_boot_failure_led(QMainWindow* window, bool yellow)
+	{
+		QLabel* const led = power_led(window, true);
+
+		if (!led)
+		{
+			return;
+		}
+
+		const led_colour colour = yellow ? led_colour::yellow : led_colour::red;
+
+		led->setToolTip(yellow
+			? QCoreApplication::translate("main_window", "The console's answer to a boot chain it will not run: three beeps and a flashing yellow light, the YLOD of the early phat models.")
+			: QCoreApplication::translate("main_window", "The console's answer to a boot chain it will not run: three beeps and a flashing red light, the light that replaced the yellow on later consoles."));
+		led->setStyleSheet(led_css(colour, true));
+		led->raise();
+		led->show();
+		led->setProperty("flash_step", 0);
+
+		QTimer* timer = led->findChild<QTimer*>(QStringLiteral("power_led_timer"));
+
+		if (!timer)
+		{
+			timer = new QTimer(led);
+			timer->setObjectName(QStringLiteral("power_led_timer"));
+			timer->setInterval(200);
+			QObject::connect(timer, &QTimer::timeout, led, [led, timer, colour]()
+			{
+				// Lit for the 200 ms of each beep (0, 400, 800 ms), dark between
+				// them, then back to standby - nothing booted.
+				const int step = led->property("flash_step").toInt();
+				led->setProperty("flash_step", step + 1);
+
+				if (step >= 4)
+				{
+					timer->stop();
+
+					// Back to whatever the console is now: standby, or dark if the
+					// image it was given is a brick.
+					refresh_power_led(qobject_cast<QMainWindow*>(led->window()));
+					return;
+				}
+
+				// Lit for each beep's 200 ms window, black between them: the first
+				// tick ends the opening lit window, so the even intervals are the
+				// dark ones.
+				led->setStyleSheet(led_css(colour, step % 2 == 1));
+			});
+		}
+
+		timer->start();
+	}
+
+	// The console's answer to a chain it will not run: three beeps with the power
+	// LED in step.  Started before any window is put up, so a dialog cannot hold
+	// the sound and the light behind its own event loop.
+	void answer_boot_refusal(QMainWindow* window, bool yellow)
+	{
+		flash_boot_failure_led(window, yellow);
+
+		for (int beep = 0; beep < 3; beep++)
+		{
+			QTimer::singleShot(beep * 400, window, []() { QApplication::beep(); });
+		}
+	}
+
+	// A warning shown without running it: shown, not executed as a nested event
+	// loop, so it cannot stop the answer above halfway.
+	void warn_boot_refusal(QMainWindow* window, const QString& text)
+	{
+		if (!window)
+		{
+			return;
+		}
+
+		auto* box = new QMessageBox(QMessageBox::Warning,
+			QCoreApplication::translate("main_window", "Firmware Installation Refused"), text,
+			QMessageBox::Ok, window);
+		box->setAttribute(Qt::WA_DeleteOnClose);
+		box->setModal(false);
+		box->show();
+		box->raise();
+	}
+
+	// The boot chain of a firmware image or a flash dump.  A file the reader
+	// cannot handle comes back as an unreadable chain instead of taking the
+	// window down with it.
+	ps3::boot::chain inspect_boot_chain(const std::string& path, ps3::boot::geometry flash)
+	{
+		try
+		{
+			return ps3::boot::inspect_file(path, flash);
+		}
+		catch (const std::exception& e)
+		{
+			ps3::boot::chain out;
+			out.flash = flash;
+			out.failures.emplace_back(std::string{"the boot chain could not be read: "} + e.what());
+			return out;
+		}
+		catch (...)
+		{
+			ps3::boot::chain out;
+			out.flash = flash;
+			out.failures.emplace_back("the boot chain could not be read");
+			return out;
+		}
+	}
+}
+
 void main_window::HandlePupInstallation(main_window* mw, const QString& file_path, const QString& dir_path)
 {
 	const auto critical = [mw](QString str)
@@ -1473,6 +1847,67 @@ void main_window::HandlePupInstallation(main_window* mw, const QString& file_pat
 		return;
 	}
 
+	const std::string path = file_path.toStdString();
+
+	// A firmware PUP may carry the two containers the console boots from.  Look
+	// at that chain before anything is loaded - before the confirmation, before
+	// the running game is shut down, before a byte is read into place.  The
+	// console will not boot a chain whose halves disagree, or that is missing
+	// one of them: it answers with three beeps and a flashing power LED.
+	const ps3::boot::chain boot = inspect_boot_chain(path, ps3::boot::geometry::payload);
+
+	if (boot.has_loaders)
+	{
+		gui_log.notice("Firmware PUP boot chain:\n%s", boot.summary());
+	}
+
+	if (mw && dir_path.isEmpty() && boot.bootable() && g_cfg.sys.boot_bricked)
+	{
+		// An image whose chain boots is what gets the console off the brick.
+		g_cfg.sys.boot_bricked.set(false);
+		refresh_power_led(mw);
+	}
+
+	if (!boot.bootable() && dir_path.isEmpty())
+	{
+		gui_log.error("Firmware installation refused: the boot chain in this image does not boot.\n%s", boot.summary());
+
+		QString reasons;
+
+		for (const std::string& failure : boot.failures)
+		{
+			reasons += tr("\n - %1").arg(QString::fromStdString(failure));
+		}
+
+		if (mw)
+		{
+			// This image would leave the console with a chain it does not boot,
+			// so the console the window is showing is a bricked one from now on -
+			// across a reboot too.  An image whose chain boots clears it below.
+			g_cfg.sys.boot_bricked.set(true);
+
+			// The colour follows the chain the console boots: metldr + lv0ldr
+			// (CECH-2001A and earlier) answer in yellow, metldr.2 + lv0ldr.2 in
+			// red - the red light that replaced the yellow on later consoles.
+			const bool yellow = failure_yellow();
+			answer_boot_refusal(mw, yellow);
+
+			const QString light = yellow
+				? tr("a flashing yellow light, the YLOD of the early phat models")
+				: tr("a flashing red light, the light that replaced the yellow on later consoles");
+
+			mw->statusBar()->showMessage(tr("Firmware refused: this image carries a boot chain the console would not boot."), 10000);
+
+			warn_boot_refusal(mw, tr("Firmware installation refused.\n\nThis image carries a boot chain the console would refuse to boot: three beeps and %1.%2\n\nNothing was loaded and nothing was written.").arg(light, reasons));
+
+			// A soft brick: the console still answers, and recovery is how it comes
+			// back.  Offered once the beeps have played.
+			QTimer::singleShot(1300, mw, [mw]() { mw->ShowRecoveryMenu(); });
+		}
+
+		return;
+	}
+
 	if (mw && !mw->m_gui_settings->GetBootConfirmation(mw))
 	{
 		return;
@@ -1484,8 +1919,6 @@ void main_window::HandlePupInstallation(main_window* mw, const QString& file_pat
 
 		mw->m_gui_settings->SetValue(gui::fd_install_pup, QFileInfo(file_path).path());
 	}
-
-	const std::string path = file_path.toStdString();
 
 	fs::file pup_f(path);
 	if (!pup_f)
@@ -1988,6 +2421,8 @@ void main_window::OnEmuRun(bool /*start_playtime*/)
 
 	update_gui_pad_thread();
 
+	set_power_led(this, led_state::running);
+
 	m_system_state = system_state::running;
 }
 
@@ -2004,6 +2439,8 @@ void main_window::OnEmuResume()
 	ui->toolbar_start->setText(tr("Pause"));
 	ui->toolbar_start->setToolTip(pause_tooltip);
 	ui->toolbar_stop->setToolTip(stop_tooltip);
+
+	set_power_led(this, led_state::running);
 
 	m_system_state = system_state::starting; // Let's just use this state to distinguish between resumed and running
 }
@@ -2037,6 +2474,9 @@ void main_window::OnEmuStop()
 	ui->sysPauseAct->setIcon(m_icon_play);
 
 	EnableMenus(false);
+
+	// Emulation is gone: the console is back in standby.
+	refresh_power_led(this);
 
 	if (title.isEmpty())
 	{
@@ -2958,9 +3398,22 @@ void main_window::CreateConnects()
 		gui_log.notice("User triggered stop action in menu bar");
 		Emu.GracefulShutdown(false, true);
 	});
-	connect(ui->sysRebootAct, &QAction::triggered, this, []()
+	connect(ui->sysRebootAct, &QAction::triggered, this, [this]()
 	{
 		gui_log.notice("User triggered restart action in menu bar");
+
+		// A bricked console does not come back on a reboot.  The action is still
+		// allowed: it puts the light back in that state instead of asking the
+		// emulator to restart a console that has nothing to boot.
+		if (g_cfg.sys.boot_bricked || Emu.IsStopped(true))
+		{
+			refresh_power_led(this);
+			statusBar()->showMessage(g_cfg.sys.boot_bricked
+				? tr("Reboot: the console's boot chain does not boot.")
+				: tr("Reboot: nothing is running."), 8000);
+			return;
+		}
+
 		Emu.Restart();
 	});
 
@@ -3000,6 +3453,8 @@ void main_window::CreateConnects()
 		connect(dlg, &settings_dialog::EmuSettingsApplied, this, &main_window::NotifyEmuSettingsChange);
 		connect(dlg, &settings_dialog::EmuSettingsApplied, this, &main_window::update_gui_pad_thread);
 		connect(dlg, &settings_dialog::EmuSettingsApplied, m_log_frame, &log_frame::LoadSettings);
+		connect(dlg, &settings_dialog::ConsoleStateChanged, this, &main_window::RefreshConsoleState);
+		connect(dlg, &settings_dialog::RecoveryMenuRequest, this, &main_window::ShowRecoveryMenu);
 		dlg->setAttribute(Qt::WA_DeleteOnClose);
 		dlg->open();
 	};
@@ -4147,6 +4602,139 @@ void main_window::changeEvent(QEvent* event)
 	}
 
 	QMainWindow::changeEvent(event);
+}
+
+void main_window::resizeEvent(QResizeEvent* event)
+{
+	QMainWindow::resizeEvent(event);
+
+	// The Factory Service Mode banner sits in the bottom right corner of the
+	// content area, so it follows the window.
+	place_factory_banner(this);
+}
+
+void main_window::RefreshConsoleState()
+{
+	refresh_power_led(this);
+	refresh_factory_banner(this);
+}
+
+void main_window::ShowRecoveryMenu()
+{
+	// docs/recovery.txt: the recovery menu of emer_init.self, option by option,
+	// with each one doing what an emulator can honestly do.  It is offered
+	// whenever the console soft bricks - a boot chain that does not boot - and
+	// it is reachable from the PS3 Dumps page.
+	auto* dialog = new QDialog(this);
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+	dialog->setWindowTitle(tr("Playstation 3 Recovery Menu"));
+	dialog->setModal(false);
+
+	auto* layout = new QVBoxLayout(dialog);
+
+	auto* title = new QLabel(tr("<b>Playstation 3. Recovery Mode (Emergency Init)</b><br>"
+		"<i>emer_init.self</i>, firmware 2.50 and later. On a console it is entered from standby with the power "
+		"button; here it is offered whenever the console does not come up - its boot chain does not boot."), dialog);
+	title->setWordWrap(true);
+	layout->addWidget(title);
+
+	const auto add = [this, dialog, layout](const QString& text, const std::function<void()>& action)
+	{
+		auto* button = new QPushButton(text, dialog);
+		connect(button, &QPushButton::clicked, dialog, [dialog, action]()
+		{
+			dialog->close();
+			action();
+		});
+		layout->addWidget(button);
+	};
+
+	add(tr("1. Restart System"), [this]()
+	{
+		// There is nothing to reboot into while the chain does not boot; the
+		// simulated brick is what the image left behind, so restarting clears it.
+		g_cfg.sys.boot_bricked.set(false);
+		RefreshConsoleState();
+		gui_log.notice("Recovery: restart system (simulated brick cleared).");
+	});
+
+	add(tr("2. Restore Default Settings"), [this]()
+	{
+		m_emu_settings->RestoreDefaults();
+		RefreshConsoleState();
+		gui_log.notice("Recovery: restore default settings.");
+	});
+
+	add(tr("3. Restore File System"), [this]()
+	{
+		// RPCS3 keeps the firmware as files under dev_flash instead of in a file
+		// system the console checks, so the option says what replaces it.
+		gui_log.notice("Recovery: restore file system - the emulated firmware is replaced by reinstalling it.");
+		statusBar()->showMessage(tr("Recovery: RPCS3 has no file system to rewrite - reinstall the firmware (option 6) to replace it."), 12000);
+	});
+
+	add(tr("4. Rebuild Database"), [this]()
+	{
+		// docs/recovery.txt: /dev_hdd0/mms/db.err with these four bytes is what
+		// asks the console to rebuild its database on the next boot.
+		const std::string path = vfs::get("/dev_hdd0/mms/db.err");
+
+		if (!path.empty())
+		{
+			fs::file marker(path, fs::create + fs::write + fs::trunc);
+			const u8 request[4] = {0x00, 0x00, 0x03, 0xE9};
+
+			if (marker && marker.write(request, sizeof(request)))
+			{
+				gui_log.notice("Recovery: wrote %s", path);
+			}
+			else
+			{
+				gui_log.error("Recovery: could not write %s", path);
+			}
+		}
+
+		if (m_game_list_frame)
+		{
+			m_game_list_frame->Refresh();
+		}
+	});
+
+	add(tr("5. Restore PS3 System"), [this]()
+	{
+		if (QMessageBox::question(this, tr("Restore PS3 System"),
+			tr("Restore the console's settings to their defaults and clear the simulated brick?\n\n"
+				"On a console this option formats the hard drive. Here the emulated drive and its saves are "
+				"kept - delete the dev_hdd0 folder yourself if you want them gone too."),
+			QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
+		{
+			return;
+		}
+
+		m_emu_settings->RestoreDefaults();
+		g_cfg.sys.boot_bricked.set(false);
+		RefreshConsoleState();
+		gui_log.notice("Recovery: restore PS3 system (settings defaulted, simulated brick cleared).");
+	});
+
+	add(tr("6. System Update..."), [this]()
+	{
+		InstallPup(this);
+	});
+
+	add(tr("Enter Factory Service Mode"), [this]()
+	{
+		g_cfg.sys.factory_service_mode.set(true);
+		RefreshConsoleState();
+		gui_log.notice("Recovery: Factory Service Mode set.");
+	});
+
+	auto* close = new QPushButton(tr("Close"), dialog);
+	connect(close, &QPushButton::clicked, dialog, &QDialog::close);
+	layout->addWidget(close);
+
+	dialog->show();
+	dialog->raise();
 }
 
 /**

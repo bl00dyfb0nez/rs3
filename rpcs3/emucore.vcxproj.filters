@@ -46,6 +46,9 @@
     <Filter Include="Emu\Cell">
       <UniqueIdentifier>{13d20086-2188-425a-9856-0440fe6f79f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Emu\Cell\lv1">
+      <UniqueIdentifier>{0c4d71b3-6f2a-4a9e-9c55-3d1e6a7b8f42}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Emu\Cell\lv2">
       <UniqueIdentifier>{269371f1-45b7-4ca9-a4a7-376e6e62a8ba}</UniqueIdentifier>
     </Filter>
@@ -264,6 +267,9 @@
     <ClCompile Include="Emu\Cell\PPUDisAsm.cpp">
       <Filter>Emu\Cell</Filter>
     </ClCompile>
+    <ClCompile Include="Emu\Cell\lv1\lv1.cpp">
+      <Filter>Emu\Cell\lv1</Filter>
+    </ClCompile>
     <ClCompile Include="Emu\Cell\lv2\lv2.cpp">
       <Filter>Emu\Cell\lv2</Filter>
     </ClCompile>
@@ -289,6 +295,9 @@
       <Filter>Emu\Cell\lv2</Filter>
     </ClCompile>
     <ClCompile Include="Emu\Cell\lv2\sys_lwmutex.cpp">
+      <Filter>Emu\Cell\lv2</Filter>
+    </ClCompile>
+    <ClCompile Include="Emu\Cell\lv2\sys_cfw.cpp">
       <Filter>Emu\Cell\lv2</Filter>
     </ClCompile>
     <ClCompile Include="Emu\Cell\lv2\sys_memory.cpp">
@@ -799,6 +808,27 @@
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Loader\PUP.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader\ps3_boot_chain.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader\ps3_identity.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader\ps3_flash.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader\ps3_bar.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader\ps3_ufs2.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader\ps3_qcow2.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader\ps3_xreg.cpp">
       <Filter>Loader</Filter>
     </ClCompile>
     <ClCompile Include="Loader\TAR.cpp">
@@ -1743,6 +1773,12 @@
     <ClInclude Include="Emu\Cell\lv2\sys_lwmutex.h">
       <Filter>Emu\Cell\lv2</Filter>
     </ClInclude>
+    <ClInclude Include="Emu\Cell\lv1\lv1.h">
+      <Filter>Emu\Cell\lv1</Filter>
+    </ClInclude>
+    <ClInclude Include="Emu\Cell\lv2\sys_cfw.h">
+      <Filter>Emu\Cell\lv2</Filter>
+    </ClInclude>
     <ClInclude Include="Emu\Cell\lv2\sys_memory.h">
       <Filter>Emu\Cell\lv2</Filter>
     </ClInclude>
@@ -2104,6 +2140,27 @@
       <Filter>Emu\Cell\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Loader\PUP.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\ps3_boot_chain.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\ps3_identity.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\ps3_flash.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\ps3_bar.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\ps3_ufs2.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\ps3_qcow2.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\ps3_xreg.h">
       <Filter>Loader</Filter>
     </ClInclude>
     <ClInclude Include="Loader\TAR.h">

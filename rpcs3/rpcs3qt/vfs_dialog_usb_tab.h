@@ -6,6 +6,7 @@
 #include <memory>
 
 class gui_settings;
+class QComboBox;
 
 namespace cfg
 {
@@ -28,6 +29,7 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent* ev) override;
 
 private:
+	void apply_port_count() const;
 	void show_usb_input_dialog(int index);
 	void show_context_menu(const QPoint& pos);
 	void double_clicked_slot(QTableWidgetItem* item);
@@ -35,4 +37,5 @@ private:
 	cfg::device_entry* m_cfg_node;
 	std::shared_ptr<gui_settings> m_gui_settings;
 	QTableWidget* m_usb_table;
+	QComboBox* m_port_count = nullptr;
 };

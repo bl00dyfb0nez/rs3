@@ -1,5 +1,7 @@
 #include <QButtonGroup>
 #include <QCameraDevice>
+#include <QComboBox>
+#include <QFileDialog>
 #include <QMediaDevices>
 #include <QDialogButtonBox>
 #include <QFontMetrics>
@@ -13,6 +15,16 @@
 #include <QScreen>
 #include <QShortcut>
 #include <QStyleFactory>
+#include <QFile>
+#include <QDir>
+#include <QWizard>
+#include <QWizardPage>
+#include <QSignalBlocker>
+#include <QLayout>
+#include <QFileInfo>
+#include <QVBoxLayout>
+#include <QGridLayout>
+#include <algorithm>
 
 #include "gui_settings.h"
 #include "qt_utils.h"
@@ -23,6 +35,11 @@
 #include "input_dialog.h"
 #include "emu_settings_type.h"
 #include "render_creator.h"
+#include "Loader/ps3_flash.h"
+#include "Loader/ps3_bar.h"
+#include "Loader/ps3_xreg.h"
+#include "Loader/ps3_ufs2.h"
+#include "Loader/ps3_qcow2.h"
 #include "microphone_creator.h"
 #include "log_level_dialog.h"
 #include "anaglyph_settings_dialog.h"
@@ -1358,6 +1375,962 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 
 	m_emu_settings->EnhanceLineEdit(ui->edit_hdd_serial, emu_settings_type::HDDSerialNumber);
 	SubscribeTooltip(ui->gb_edit_hdd_serial, tooltips.settings.hdd_serial);
+
+	// PS3 Dumps
+
+	m_emu_settings->EnhanceLineEdit(ui->edit_idps_dump, emu_settings_type::IdpsDump);
+	m_emu_settings->EnhanceLineEdit(ui->edit_psid_dump, emu_settings_type::PsidDump);
+
+	const auto pick_dump = [this](QLineEdit* edit)
+	{
+		const QString path = QFileDialog::getOpenFileName(this, tr("Select a console dump"), edit->text(),
+			tr("Console dumps (*.bin *.hex *.txt);;All files (*.*)"));
+
+		if (!path.isEmpty())
+		{
+			// The line edit carries the value: its textChanged writes it into the settings.
+			edit->setText(path);
+		}
+	};
+
+	connect(ui->button_idps_dump, &QPushButton::clicked, this, [this, pick_dump]() { pick_dump(ui->edit_idps_dump); });
+	connect(ui->button_psid_dump, &QPushButton::clicked, this, [this, pick_dump]() { pick_dump(ui->edit_psid_dump); });
+
+	// The boot loader is a string in the config, so the two names are added here
+	// rather than coming from the setting's own list of options.
+	ui->combo_boot_loader->addItem(tr("metldr.2 + lv0ldr.2 (3.60 and later)"), "metldr.2");
+	ui->combo_boot_loader->addItem(tr("metldr + lv0ldr (before 3.60)"), "metldr");
+	ui->combo_boot_loader->setCurrentIndex(m_emu_settings->GetSetting(emu_settings_type::BootLoader) == "metldr" ? 1 : 0);
+
+	connect(ui->combo_boot_loader, &QComboBox::currentIndexChanged, this, [this](int index)
+	{
+		m_emu_settings->SetSetting(emu_settings_type::BootLoader, ui->combo_boot_loader->itemData(index).toString().toStdString());
+	});
+
+	connect(m_emu_settings.get(), &emu_settings::RestoreDefaultsSignal, ui->combo_boot_loader, [this]()
+	{
+		ui->combo_boot_loader->setCurrentIndex(m_emu_settings->GetSettingDefault(emu_settings_type::BootLoader) == "metldr" ? 1 : 0);
+	});
+
+	// The fan is simulated: the emulator has no thermal sensors, it fabricates
+	// the temperature and runs the selected board's SYSCON thermal table over
+	// it (docs/thermal.txt).  Like the boot loader this is a config string, so
+	// the board names are added here.
+	ui->combo_fan_curve->addItem(tr("CECH-20xx - DYN-001, 10 cm"), "DYN-001");
+	ui->combo_fan_curve->addItem(tr("CECH-25xx - JTP-001, 10 cm"), "JTP-001");
+	ui->combo_fan_curve->addItem(tr("CECH-25xx - JSD-001, 10 cm"), "JSD-001");
+	ui->combo_fan_curve->addItem(tr("CECHCxx - COK-002, 14 cm"), "COK-002");
+	ui->combo_fan_curve->addItem(tr("CECHL/M/P/Q - VER-001, 14 cm"), "VER-001");
+
+	const auto select_fan_curve = [this](const std::string& board)
+	{
+		const int index = ui->combo_fan_curve->findData(QString::fromStdString(board));
+		ui->combo_fan_curve->setCurrentIndex(index < 0 ? ui->combo_fan_curve->count() - 1 : index);
+	};
+
+	select_fan_curve(m_emu_settings->GetSetting(emu_settings_type::FanCurve));
+
+	connect(ui->combo_fan_curve, &QComboBox::currentIndexChanged, this, [this](int index)
+	{
+		m_emu_settings->SetSetting(emu_settings_type::FanCurve, ui->combo_fan_curve->itemData(index).toString().toStdString());
+	});
+
+	connect(m_emu_settings.get(), &emu_settings::RestoreDefaultsSignal, ui->combo_fan_curve, [this, select_fan_curve]()
+	{
+		select_fan_curve(m_emu_settings->GetSettingDefault(emu_settings_type::FanCurve));
+	});
+
+	SubscribeTooltip(ui->combo_fan_curve,
+		tr("The simulated fan. RPCS3 has no thermal sensors: it fabricates the cell temperature - about 72 C "
+			"while a game runs, 60 C when the console is idle - and answers sys_sm_get_fan_policy with the duty "
+			"this board's SYSCON thermal table gives for it.\n\n"
+			"The tables are the ones read out of each board; VER-001 has none published, so it uses the shape "
+			"measured consoles of that board show."));
+
+	// The RSX the emulated console carries (docs/rsxdef.txt).  RPCS3 emulates
+	// one RSX, so this picks which console's part the simulated thermal model
+	// describes - the 90 nm part runs the console hotter than the 28 nm one.
+	ui->combo_rsx_type->addItem(tr("CXD2971 - 90nm, COK/DIA boards"), "CXD2971 (90nm)");
+	ui->combo_rsx_type->addItem(tr("CXD2982/CXD2991 - 65nm, DIA-002/VER-001/DYN-001"), "CXD2991 (65nm)");
+	ui->combo_rsx_type->addItem(tr("CXD5300/CXD5301/CXD5302 - 40nm, SUR-001 to MSX-001"), "CXD5302 (40nm)");
+	ui->combo_rsx_type->addItem(tr("D5305 - 28nm, NPX-001 to REX-001"), "D5305 (28nm)");
+
+	const auto select_rsx_type = [this](const std::string& rsx)
+	{
+		const int index = ui->combo_rsx_type->findData(QString::fromStdString(rsx));
+		ui->combo_rsx_type->setCurrentIndex(index < 0 ? 1 : index);
+	};
+
+	select_rsx_type(m_emu_settings->GetSetting(emu_settings_type::RsxType));
+
+	connect(ui->combo_rsx_type, &QComboBox::currentIndexChanged, this, [this](int index)
+	{
+		m_emu_settings->SetSetting(emu_settings_type::RsxType, ui->combo_rsx_type->itemData(index).toString().toStdString());
+	});
+
+	connect(m_emu_settings.get(), &emu_settings::RestoreDefaultsSignal, ui->combo_rsx_type, [this, select_rsx_type]()
+	{
+		select_rsx_type(m_emu_settings->GetSettingDefault(emu_settings_type::RsxType));
+	});
+
+	SubscribeTooltip(ui->combo_rsx_type,
+		tr("The RSX the emulated console carries. The die process changed across the models: CXD2971 at 90 nm "
+			"(258 mm2, 80 W), CXD2982/CXD2991 at 65 nm, CXD5300/1/2 at 40 nm and D5305 at 28 nm.\n\n"
+			"RPCS3 emulates one RSX; this picks which part the simulated thermal model describes, and the "
+			"coarser parts run the console hotter."));
+
+	// Factory Service Mode: the syscon EEPROM flag at 0x48C07 (docs/fsm.txt),
+	// which makes the console run dev_usb000/Lv2diag.self instead of GameOS.
+	m_emu_settings->EnhanceCheckBox(ui->check_factory_service_mode, emu_settings_type::FactoryServiceMode);
+	SubscribeTooltip(ui->check_factory_service_mode,
+		tr("Boot into Factory Service Mode. On a console this is the System Controller EEPROM byte at 0x48C07 "
+			"set to anything but 0xFF; in service mode lv2 runs dev_usb000/Lv2diag.self instead of GameOS."));
+
+	// A console whose boot chain does not boot is a simulated brick, and that
+	// state is recorded in config.yml.  Clearing it here undoes the brick the
+	// same way the recovery menu's restart does, without installing firmware.
+	connect(ui->button_clear_brick, &QPushButton::clicked, this, [this]()
+	{
+		g_cfg.sys.boot_bricked.set(false);
+		emit ConsoleStateChanged();
+		QMessageBox::information(this, tr("Simulated brick"),
+			tr("The simulated brick is cleared. The console boots again with the firmware it already has."));
+	});
+	SubscribeTooltip(ui->button_clear_brick,
+		tr("Forget the recorded simulated brick so this console boots again. A console stops booting when the "
+			"firmware image installed on it carries a boot chain that does not boot; clearing the state is what "
+			"the recovery menu's restart does, and it does not change the installed firmware."));
+
+	connect(ui->button_recovery_mode, &QPushButton::clicked, this, [this]()
+	{
+		emit RecoveryMenuRequest();
+	});
+	SubscribeTooltip(ui->button_recovery_mode,
+		tr("Open the Playstation 3 Recovery Menu (emer_init.self): restart system, restore default settings, "
+			"restore file system, rebuild database, restore PS3 system, system update."));
+
+	// The emulated console's flash: a 16 MiB NOR image built from its modeled
+	// state, and the CoreOS patch the flash writer or bgtoolset installs into
+	// it.  Both are simulated - there is no chip and no ciphertext to copy.
+	const auto modeled_console = [this]() -> ps3::flash::console
+	{
+		ps3::flash::console out;
+		out.boot_loader = m_emu_settings->GetSetting(emu_settings_type::BootLoader);
+		out.hdd_model = m_emu_settings->GetSetting(emu_settings_type::HDDModelName);
+		out.hdd_serial = m_emu_settings->GetSetting(emu_settings_type::HDDSerialNumber);
+		out.flash = m_emu_settings->GetSetting(emu_settings_type::FlashChip) == "emmc" ? ps3::flash::chip::emmc : ps3::flash::chip::nor;
+		out.dex = m_emu_settings->GetSetting(emu_settings_type::ConsoleDex) == "true";
+		out.coreos_patch = m_emu_settings->GetSetting(emu_settings_type::CoreosPatch);
+		out.coreos_patch_span = static_cast<std::uint32_t>(std::strtoul(m_emu_settings->GetSetting(emu_settings_type::CoreosPatchSpan).c_str(), nullptr, 10));
+
+		// The boot chain is sealed for the console's id, so the dump's two
+		// containers pair with each other the way a real dump's do.
+		const u128 idps = g_cfg.sys.console_idps.get();
+
+		// IDPS is stored most significant byte first.
+		for (int i = 0; i < 8; i++)
+		{
+			out.idps[15 - i] = static_cast<std::uint8_t>(idps.lo >> (i * 8));
+			out.idps[7 - i] = static_cast<std::uint8_t>(idps.hi >> (i * 8));
+		}
+
+		return out;
+	};
+
+	const auto refresh_flash_state = [this]()
+	{
+		const QString patch = QString::fromStdString(m_emu_settings->GetSetting(emu_settings_type::CoreosPatch));
+
+		ui->label_flash_state->setText(patch.isEmpty()
+			? tr("CoreOS patch: none installed")
+			: tr("CoreOS patch: %1, %2 bytes at bank 0x200")
+				.arg(QFileInfo(patch).fileName(), QString::fromStdString(m_emu_settings->GetSetting(emu_settings_type::CoreosPatchSpan))));
+	};
+
+	// The chip the dump describes: the 16 MiB NOR of the phat and slim models, or
+	// the eMMC map a superslim shares with NAND - which is what carries the
+	// dev_flash and the VSH a debug superslim is dumped for.
+	ui->combo_flash_chip->addItem(tr("NOR - 16 MiB (phat, slim)"), "nor");
+	ui->combo_flash_chip->addItem(tr("eMMC / NAND - 256 MiB (superslim)"), "emmc");
+
+	const auto select_flash_chip = [this](const std::string& chip)
+	{
+		const int index = ui->combo_flash_chip->findData(QString::fromStdString(chip));
+		ui->combo_flash_chip->setCurrentIndex(index < 0 ? 0 : index);
+	};
+
+	select_flash_chip(m_emu_settings->GetSetting(emu_settings_type::FlashChip));
+
+	connect(ui->combo_flash_chip, &QComboBox::currentIndexChanged, this, [this](int index)
+	{
+		m_emu_settings->SetSetting(emu_settings_type::FlashChip, ui->combo_flash_chip->itemData(index).toString().toStdString());
+	});
+
+	connect(m_emu_settings.get(), &emu_settings::RestoreDefaultsSignal, ui->combo_flash_chip, [this, select_flash_chip]()
+	{
+		select_flash_chip(m_emu_settings->GetSettingDefault(emu_settings_type::FlashChip));
+	});
+
+	m_emu_settings->EnhanceCheckBox(ui->check_console_dex, emu_settings_type::ConsoleDex);
+
+	SubscribeTooltip(ui->check_console_dex,
+		tr("Model a debug console (DEX). Its dev_flash is not sealed per console, which is why a debug console's can "
+			"be copied as it is; the dump then marks the eFlash area and keeps the console's debug content together."));
+
+	SubscribeTooltip(ui->combo_flash_chip,
+		tr("The chip the flash dump describes. The phat and slim models carry a 16 MiB NOR chip; a superslim carries "
+			"the same NOR plus eMMC, which docs/flash.txt maps exactly like NAND - 256 MiB with bootldr at 0 and the "
+			"eFlash area from 0xF00000, where /dev_flash and the VSH live."));
+
+	ui->combo_writer_mode->addItem(tr("Shipped writer - stock span"), static_cast<int>(ps3::flash::writer_mode::stock));
+	ui->combo_writer_mode->addItem(tr("4.93 page - lv0 span"), static_cast<int>(ps3::flash::writer_mode::span_493));
+
+	refresh_flash_state();
+
+	connect(ui->button_dump_flash, &QPushButton::clicked, this, [this, modeled_console]()
+	{
+		const QString path = QFileDialog::getSaveFileName(this, tr("Save the emulated flash dump"), QStringLiteral("flash_dump.bin"),
+			tr("Flash image (*.bin);;All files (*.*)"));
+
+		if (path.isEmpty())
+		{
+			return;
+		}
+
+		const auto image = ps3::flash::build(modeled_console());
+		std::string error;
+
+		if (!ps3::flash::write_file(path.toStdString(), image, error))
+		{
+			QMessageBox::warning(this, tr("Flash dump"), tr("The dump could not be written: %1").arg(QString::fromStdString(error)));
+			return;
+		}
+
+		QMessageBox::information(this, tr("Flash dump"),
+			tr("Wrote %1, %2 bytes.\n\n%3")
+				.arg(QFileInfo(path).fileName(), QString::number(image.size()), QString::fromStdString(ps3::flash::summary(modeled_console()))));
+	});
+
+	SubscribeTooltip(ui->button_dump_flash,
+		tr("Write the flash of the emulated console as a 16 MiB NOR image. Its regions, offsets and headers are the "
+			"ones in the flash layout docs, so a dump is read by the same tools as a real one: the table of contents, "
+			"the asecure_loader table naming metldr, the revoke list records, the CoreOS bank headers, the hard drive "
+			"block and the bootldr header. The encrypted bodies are erased - the emulator keeps the firmware as files "
+			"and has no ciphertext - so the layout says where each of them sits."));
+
+	connect(ui->button_flash_coreos, &QPushButton::clicked, this, [this, modeled_console, refresh_flash_state]()
+	{
+		const auto mode = static_cast<ps3::flash::writer_mode>(ui->combo_writer_mode->currentData().toInt());
+		const ps3::flash::console console = modeled_console();
+		const ps3::flash::writer_plan plan = ps3::flash::plan_writer(console, mode);
+
+		if (plan.refused)
+		{
+			QMessageBox::warning(this, tr("CoreOS patch"), tr("The tool refuses this console:\n\n%1").arg(QString::fromStdString(plan.reason)));
+			return;
+		}
+
+		const QString path = QFileDialog::getOpenFileName(this, tr("Select the CoreOS patch image"), {},
+			tr("CoreOS images (*.bin *.P3T *.self);;All files (*.*)"));
+
+		if (path.isEmpty())
+		{
+			return;
+		}
+
+		std::string error;
+
+		if (!ps3::flash::check_patch(path.toStdString(), plan, error))
+		{
+			QMessageBox::warning(this, tr("CoreOS patch"), tr("The image cannot be written:\n\n%1").arg(QString::fromStdString(error)));
+			return;
+		}
+
+		m_emu_settings->SetSetting(emu_settings_type::CoreosPatch, path.toStdString());
+		m_emu_settings->SetSetting(emu_settings_type::CoreosPatchSpan, std::to_string(plan.bytes));
+		refresh_flash_state();
+
+		QString notes;
+
+		for (const std::string& note : plan.notes)
+		{
+			notes += "\n - " + QString::fromStdString(note);
+		}
+
+		QMessageBox::information(this, tr("CoreOS patch"),
+			tr("The patched CoreOS is recorded for this console, and every flash dump from now on carries it.\n\n"
+				"%1 bytes written at bank 0x200.%2\n\n"
+				"bgtoolset and the shipped writer install the same patch through different loaders, so this is the "
+				"same write; only the window differs between the two spans.")
+				.arg(QString::number(plan.bytes), notes));
+	});
+
+	SubscribeTooltip(ui->button_flash_coreos,
+		tr("Run the flash writer's CoreOS patch write against the emulated console. The tool copies a flat image of a "
+			"ros bank into bank 0x200 and stops on lv0's slot; the 4.93 page's fourth step runs on to lv0's own extent, "
+			"which carries the encapsulated loaders. The shipped writer refuses a console whose minimum firmware "
+			"version is above 3.56, and both it and bgtoolset refuse a console already running patched CoreOS."));
+
+	// BAR backups: archive.dat is the index of a backup, archive2.dat the index
+	// of its copy-protected content, and the archive_XX.dat files hold the data.
+	m_emu_settings->EnhanceCheckBox(ui->check_bar_backups, emu_settings_type::BarBackups);
+	m_emu_settings->EnhanceLineEdit(ui->edit_bar_dir, emu_settings_type::BarBackupDir);
+
+	const auto refresh_bar_state = [this]()
+	{
+		const bool on = g_cfg.sys.bar_backups.get();
+
+		for (QWidget* widget : {static_cast<QWidget*>(ui->label_bar_dir), static_cast<QWidget*>(ui->edit_bar_dir),
+			static_cast<QWidget*>(ui->button_bar_dir), static_cast<QWidget*>(ui->button_bar_read),
+			static_cast<QWidget*>(ui->button_bar_write), static_cast<QWidget*>(ui->text_bar_list)})
+		{
+			widget->setEnabled(on);
+		}
+	};
+
+	connect(ui->check_bar_backups, &QCheckBox::toggled, this, refresh_bar_state);
+	refresh_bar_state();
+
+	// What a read produced, so Write can put it back without asking for the
+	// original file again.
+	const auto bar_index = std::make_shared<ps3::bar::index>();
+	const auto bar_footer = std::make_shared<ps3::bar::footer>();
+
+	connect(ui->button_bar_dir, &QPushButton::clicked, this, [this]()
+	{
+		const QString dir = QFileDialog::getExistingDirectory(this, tr("Select the backup directory"),
+			QString::fromStdString(m_emu_settings->GetSetting(emu_settings_type::BarBackupDir)));
+
+		if (!dir.isEmpty())
+		{
+			m_emu_settings->SetSetting(emu_settings_type::BarBackupDir, dir.toStdString());
+		}
+	});
+
+	connect(ui->button_bar_read, &QPushButton::clicked, this, [this, bar_index, bar_footer, modeled_console]()
+	{
+		const QString dir = QString::fromStdString(m_emu_settings->GetSetting(emu_settings_type::BarBackupDir));
+
+		if (dir.isEmpty())
+		{
+			QMessageBox::warning(this, tr("BAR backup"), tr("Choose the backup directory first."));
+			return;
+		}
+
+		QFile file(dir + QStringLiteral("/archive.dat"));
+
+		if (!file.open(QIODevice::ReadOnly))
+		{
+			QMessageBox::warning(this, tr("BAR backup"), tr("There is no archive.dat in that directory: %1").arg(file.errorString()));
+			return;
+		}
+
+		const QByteArray data = file.readAll();
+		const auto image = std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(data.constData()), data.size());
+		const ps3::flash::console console = modeled_console();
+		const auto idps = std::span<const std::uint8_t, 16>(console.idps.data(), 16);
+
+		std::string error;
+
+		if (!ps3::bar::read_index(image, idps, *bar_index, *bar_footer, error))
+		{
+			QMessageBox::warning(this, tr("BAR backup"), tr("The index could not be read: %1").arg(QString::fromStdString(error)));
+			return;
+		}
+
+		QString text = tr("%1 files, %2 directories, %3 bytes\n\n")
+			.arg(QString::number(bar_index->files.size()), QString::number(bar_index->dirs.size()), QString::number(bar_index->file_sizes));
+
+		int shown = 0;
+
+		for (const ps3::bar::file_entry& entry : bar_index->files)
+		{
+			if (shown++ >= 40)
+			{
+				text += tr("... and %1 more\n").arg(QString::number(bar_index->files.size() - 40));
+				break;
+			}
+
+			text += QString::fromStdString(entry.path) + (entry.flags & 1 ? tr("  [/dev_flash2]\n") : QStringLiteral("\n"));
+		}
+
+		if (!bar_footer->open_psid.empty())
+		{
+			text += tr("\nMade on OpenPSID %1; copy-protected data %2 bytes\n")
+				.arg(QString(QByteArray(reinterpret_cast<const char*>(bar_footer->open_psid.data()), 0x10).toHex()), QString::number(bar_footer->archive2_sizes));
+		}
+
+		ui->text_bar_list->setPlainText(text);
+	});
+
+	connect(ui->button_bar_write, &QPushButton::clicked, this, [this, bar_index, bar_footer, modeled_console]()
+	{
+		if (bar_index->files.empty() && bar_index->dirs.empty())
+		{
+			QMessageBox::warning(this, tr("BAR backup"), tr("Read a backup index first - the entries it lists are what gets written."));
+			return;
+		}
+
+		const QString path = QFileDialog::getSaveFileName(this, tr("Save the backup index"), QStringLiteral("archive.dat"),
+			tr("Backup index (archive.dat);;All files (*.*)"));
+
+		if (path.isEmpty())
+		{
+			return;
+		}
+
+		ps3::bar::bytes out;
+		std::string error;
+		const ps3::flash::console console = modeled_console();
+		const auto idps = std::span<const std::uint8_t, 16>(console.idps.data(), 16);
+
+		if (!ps3::bar::write_index(*bar_index, *bar_footer, idps, out, error))
+		{
+			QMessageBox::warning(this, tr("BAR backup"), tr("The index could not be written: %1").arg(QString::fromStdString(error)));
+			return;
+		}
+
+		QFile file(path);
+
+		if (!file.open(QIODevice::WriteOnly) || file.write(reinterpret_cast<const char*>(out.data()), out.size()) < 0)
+		{
+			QMessageBox::warning(this, tr("BAR backup"), tr("The index could not be saved: %1").arg(file.errorString()));
+			return;
+		}
+
+		QMessageBox::information(this, tr("BAR backup"),
+			tr("Wrote %1 (%2 bytes): %3 files and %4 directories.")
+				.arg(QFileInfo(path).fileName(), QString::number(out.size()),
+					QString::number(bar_index->files.size()), QString::number(bar_index->dirs.size())));
+	});
+
+	// The HDD image: a qcow2 the formatter writes, sealed with the console's own
+	// ERK, so it is a drive the console's filesystem can be read out of.  A
+	// physical device is never the default: the list names the disks that are
+	// attached, and turning the checkbox on goes through the wizard first,
+	// which says what will be overwritten.
+	ui->combo_hdd_layer->addItem(tr("SLIM - AES-128-XTS (CECH-20xx and later)"), static_cast<int>(ps3::ufs2::layer::slim));
+	ui->combo_hdd_layer->addItem(tr("PHAT - AES-192-CBC (NAND and early NOR)"), static_cast<int>(ps3::ufs2::layer::phat));
+
+	ui->edit_hdd_image->setText(m_gui_settings->GetValue(gui::dumps_hdd_image).toString());
+	ui->edit_hdd_erk->setText(m_gui_settings->GetValue(gui::dumps_hdd_erk).toString());
+	ui->spin_hdd_size->setValue(std::max(20, m_gui_settings->GetValue(gui::dumps_hdd_gb).toInt()));
+
+	// The disks this machine has, named by capacity so \\.\PhysicalDriveN is a
+	// choice rather than something to type.  A saved path that is no longer
+	// attached stays in the list, so a setting is not lost by unplugging.
+	const auto rescan_devices = [this]()
+	{
+		const QString current = m_gui_settings->GetValue(gui::dumps_hdd_device).toString();
+		QSignalBlocker blocker(ui->combo_hdd_device);
+		ui->combo_hdd_device->clear();
+
+		for (const ps3::ufs2::device_info& device : ps3::ufs2::devices())
+		{
+			const QString path = QString::fromStdString(device.path);
+			ui->combo_hdd_device->addItem(tr("%1 - %2 GB").arg(path, QString::number(device.bytes >> 30)), path);
+		}
+
+		if (!current.isEmpty() && ui->combo_hdd_device->findData(current) < 0)
+		{
+			ui->combo_hdd_device->addItem(tr("%1 - not attached").arg(current), current);
+		}
+
+		const int index = ui->combo_hdd_device->findData(current);
+		ui->combo_hdd_device->setCurrentIndex(index);
+	};
+
+	rescan_devices();
+
+	connect(ui->button_hdd_device, &QPushButton::clicked, this, rescan_devices);
+
+	connect(ui->combo_hdd_device, &QComboBox::currentIndexChanged, this, [this](int)
+	{
+		const QString device = ui->combo_hdd_device->currentData().toString();
+		m_gui_settings->SetValue(gui::dumps_hdd_device, device);
+
+		// The size box follows the device, so the label and the filesystem are
+		// laid out for the drive that is actually attached.
+		if (const std::uint64_t sectors = ps3::ufs2::device_sectors(device.toStdString()); sectors)
+		{
+			ui->spin_hdd_size->setValue(static_cast<int>(std::max<std::uint64_t>(1, sectors >> 21)));
+		}
+	});
+
+	if (const int layer = m_gui_settings->GetValue(gui::dumps_hdd_layer).toInt(); ui->combo_hdd_layer->findData(layer) >= 0)
+	{
+		ui->combo_hdd_layer->setCurrentIndex(ui->combo_hdd_layer->findData(layer));
+	}
+
+	connect(ui->edit_hdd_image, &QLineEdit::editingFinished, this, [this]()
+	{
+		m_gui_settings->SetValue(gui::dumps_hdd_image, ui->edit_hdd_image->text());
+	});
+
+	connect(ui->edit_hdd_erk, &QLineEdit::editingFinished, this, [this]()
+	{
+		m_gui_settings->SetValue(gui::dumps_hdd_erk, ui->edit_hdd_erk->text());
+	});
+
+	connect(ui->spin_hdd_size, &QSpinBox::valueChanged, this, [this](int value)
+	{
+		m_gui_settings->SetValue(gui::dumps_hdd_gb, value);
+	});
+
+	connect(ui->combo_hdd_layer, &QComboBox::currentIndexChanged, this, [this](int)
+	{
+		m_gui_settings->SetValue(gui::dumps_hdd_layer, ui->combo_hdd_layer->currentData().toInt());
+	});
+
+	connect(ui->button_hdd_image, &QPushButton::clicked, this, [this]()
+	{
+		const QString path = QFileDialog::getSaveFileName(this, tr("The HDD image"), ui->edit_hdd_image->text(),
+			tr("qcow2 image (*.qcow2);;All files (*.*)"));
+
+		if (!path.isEmpty())
+		{
+			ui->edit_hdd_image->setText(path);
+			m_gui_settings->SetValue(gui::dumps_hdd_image, path);
+		}
+	});
+
+	connect(ui->button_hdd_erk, &QPushButton::clicked, this, [this]()
+	{
+		const QString path = QFileDialog::getOpenFileName(this, tr("The EID root key"), ui->edit_hdd_erk->text(),
+			tr("EID root key (*.bin *.key);;All files (*.*)"));
+
+		if (!path.isEmpty())
+		{
+			ui->edit_hdd_erk->setText(path);
+			m_gui_settings->SetValue(gui::dumps_hdd_erk, path);
+			g_cfg.sys.hdd_erk.set(path.toStdString());
+		}
+	});
+
+	// The wizard is the only way in to a physical device: a page that says what
+	// will be erased and a page that names the device, with no default.
+	const auto physical_wizard = [this]() -> QString
+	{
+		QWizard wizard(this);
+		wizard.setWindowTitle(tr("Write to a physical device"));
+		wizard.setWizardStyle(QWizard::ModernStyle);
+
+		QWizardPage* warning = new QWizardPage;
+		warning->setTitle(tr("This erases a device"));
+		QVBoxLayout* warning_layout = new QVBoxLayout(warning);
+		QLabel* text = new QLabel(tr("Formatting writes a PS3 disklabel and an empty gameOS filesystem over the start of the device named on the next page. Whatever was there is lost, and only a drive of at least 20 GB can take it. An image file is the safer answer; this page is for a spare drive attached to this machine. Writing to a device needs administrator rights on Windows and root (sudo) on Linux and macOS, and the drive must not be mounted."));
+		text->setWordWrap(true);
+		warning_layout->addWidget(text);
+		wizard.addPage(warning);
+
+		QWizardPage* pick = new QWizardPage;
+		pick->setTitle(tr("The device"));
+		QGridLayout* pick_layout = new QGridLayout(pick);
+		QLineEdit* device = new QLineEdit(m_gui_settings->GetValue(gui::dumps_hdd_device).toString());
+		device->setPlaceholderText(QStringLiteral("\\\\.\\PhysicalDrive2"));
+		QPushButton* browse = new QPushButton(tr("Browse..."));
+		pick_layout->addWidget(new QLabel(tr("Device path")), 0, 0);
+		pick_layout->addWidget(device, 0, 1);
+		pick_layout->addWidget(browse, 0, 2);
+		pick_layout->addWidget(new QLabel(tr("The image fields above are not used in this mode.")), 1, 0, 1, 3);
+		wizard.addPage(pick);
+
+		connect(browse, &QPushButton::clicked, this, [this, device]()
+		{
+			const QString path = QFileDialog::getOpenFileName(this, tr("The physical device"), QString(),
+				tr("All files (*.*)"));
+
+			if (!path.isEmpty())
+			{
+				device->setText(path);
+			}
+		});
+
+		connect(&wizard, &QWizard::accepted, this, [this, device]()
+		{
+			m_gui_settings->SetValue(gui::dumps_hdd_device, device->text());
+		});
+
+		if (wizard.exec() != QDialog::Accepted)
+		{
+			return {};
+		}
+
+		return device->text();
+	};
+
+	connect(ui->check_hdd_physical, &QCheckBox::toggled, this, [this, physical_wizard, rescan_devices](bool checked)
+	{
+		if (!checked)
+		{
+			m_gui_settings->SetValue(gui::dumps_hdd_physical, false);
+			return;
+		}
+
+		const QString device = physical_wizard();
+
+		if (device.isEmpty())
+		{
+			// Backing out of the wizard leaves the checkbox off.
+			QSignalBlocker blocker(ui->check_hdd_physical);
+			ui->check_hdd_physical->setChecked(false);
+			m_gui_settings->SetValue(gui::dumps_hdd_physical, false);
+			return;
+		}
+
+		m_gui_settings->SetValue(gui::dumps_hdd_physical, true);
+		rescan_devices();
+	});
+
+	// A format is: read the ERK, format a raw image, pack it into qcow2.  The raw
+	// file is temporary and removed once the pack is done.
+	connect(ui->button_hdd_format, &QPushButton::clicked, this, [this]()
+	{
+		ps3::ufs2::erk key;
+
+		if (!ps3::ufs2::read_erk(ui->edit_hdd_erk->text().toStdString(), key))
+		{
+			QMessageBox::warning(this, tr("HDD image"), tr("The EID root key could not be read: give the 0x30 bytes, raw or as hex."));
+			return;
+		}
+
+		const bool physical = m_gui_settings->GetValue(gui::dumps_hdd_physical).toBool();
+		const QString path = physical ? m_gui_settings->GetValue(gui::dumps_hdd_device).toString() : ui->edit_hdd_image->text();
+
+		if (path.isEmpty())
+		{
+			QMessageBox::warning(this, tr("HDD image"), tr("Choose the image (or, in advanced mode, the device) first."));
+			return;
+		}
+
+		ps3::ufs2::format_request request;
+		request.sectors = static_cast<std::uint64_t>(ui->spin_hdd_size->value()) << 21;   // GB * 2^21 sectors
+		request.seal = static_cast<ps3::ufs2::layer>(ui->combo_hdd_layer->currentData().toInt());
+
+		if (physical)
+		{
+			// A device's capacity is its own, not what the size box says.
+			request.sectors = ps3::ufs2::device_sectors(path.toStdString());
+
+			if (!request.sectors)
+			{
+				QMessageBox::warning(this, tr("HDD image"), tr("The size of %1 could not be read. Is it attached?").arg(path));
+				return;
+			}
+		}
+
+		const QString raw = path + QStringLiteral(".raw.tmp");
+		const QString target = physical ? path : raw;
+
+		ps3::ufs2::format_result result;
+		std::string error;
+
+		const bool formatted = physical
+			? ps3::ufs2::format_device(target.toStdString(), key, request.seal, request, result, error)
+			: ps3::ufs2::format_file(target.toStdString(), key, request.seal, request, result, error);
+
+		if (!formatted)
+		{
+			QMessageBox::warning(this, tr("HDD image"), tr("The image could not be formatted: %1").arg(QString::fromStdString(error)));
+			QFile::remove(raw);
+			return;
+		}
+
+		if (!physical)
+		{
+			if (!ps3::qcow2::pack(raw.toStdString(), path.toStdString(), error))
+			{
+				QMessageBox::warning(this, tr("HDD image"), tr("The image could not be packed: %1").arg(QString::fromStdString(error)));
+				QFile::remove(raw);
+				return;
+			}
+
+			QFile::remove(raw);
+		}
+
+		// The emulator reads these at boot: the image is what dev_hdd0 becomes.
+		g_cfg.sys.hdd_image.set(path.toStdString());
+		g_cfg.sys.hdd_erk.set(ui->edit_hdd_erk->text().toStdString());
+		g_cfg.sys.hdd_layer.set(ui->combo_hdd_layer->currentData().toInt());
+
+		QString text = physical
+			? tr("Wrote the disklabel and the gameOS filesystem to %1 (%2 GB).\n").arg(path, QString::number(ui->spin_hdd_size->value()))
+			: tr("Wrote %1 (%2 GB): gameOS at sector %3, %4 cylinder groups, %5 inodes.\n")
+				.arg(QFileInfo(path).fileName(), QString::number(ui->spin_hdd_size->value()))
+				.arg(QString::number(result.partition_start), QString::number(result.cylinder_groups), QString::number(result.inodes));
+
+		text += tr("Sealing: %1.\n").arg(ui->combo_hdd_layer->currentText());
+		ui->text_hdd_list->setPlainText(text);
+	});
+
+	connect(ui->button_hdd_list, &QPushButton::clicked, this, [this]()
+	{
+		const QString path = ui->edit_hdd_image->text();
+
+		if (path.isEmpty())
+		{
+			QMessageBox::warning(this, tr("HDD image"), tr("Choose the image to open."));
+			return;
+		}
+
+		ps3::ufs2::erk key;
+
+		if (!ps3::ufs2::read_erk(ui->edit_hdd_erk->text().toStdString(), key))
+		{
+			QMessageBox::warning(this, tr("HDD image"), tr("The EID root key could not be read: give the 0x30 bytes, raw or as hex."));
+			return;
+		}
+
+		const QString raw = path + QStringLiteral(".raw.tmp");
+		std::string error;
+		std::uint64_t bytes = 0;
+
+		if (!ps3::qcow2::size(path.toStdString(), bytes, error))
+		{
+			QMessageBox::warning(this, tr("HDD image"), tr("This is not a qcow2 image: %1").arg(QString::fromStdString(error)));
+			return;
+		}
+
+		if (!ps3::qcow2::unpack(path.toStdString(), raw.toStdString(), error))
+		{
+			QMessageBox::warning(this, tr("HDD image"), tr("The image could not be read: %1").arg(QString::fromStdString(error)));
+			QFile::remove(raw);
+			return;
+		}
+
+		ps3::ufs2::volume disk;
+
+		if (!disk.open(raw.toStdString(), key, static_cast<ps3::ufs2::layer>(ui->combo_hdd_layer->currentData().toInt()), error))
+		{
+			QMessageBox::warning(this, tr("HDD image"), tr("The image could not be opened: %1").arg(QString::fromStdString(error)));
+			QFile::remove(raw);
+			return;
+		}
+
+		std::vector<ps3::ufs2::entry> entries;
+		QString text = QString::fromStdString(ps3::ufs2::describe(disk));
+
+		if (disk.list("/", entries, error))
+		{
+			text += tr("\n%1 entries in the gameOS root:\n").arg(QString::number(entries.size()));
+
+			for (const ps3::ufs2::entry& entry : entries)
+			{
+				text += QStringLiteral("  ") + QString::fromStdString(entry.name) + QStringLiteral("\n");
+			}
+		}
+		else
+		{
+			text += tr("\nThe root could not be listed: %1\n").arg(QString::fromStdString(error));
+		}
+
+		ui->text_hdd_list->setPlainText(text);
+		QFile::remove(raw);
+	});
+
+	// xRegistry: the console's registry, /dev_flash2/etc/xRegistry.sys.  It is a
+	// key table and a value table, so the dialog edits it as keys rather than as
+	// bytes: a region change is the same write the XMB makes.
+	const auto registry = std::make_shared<ps3::xreg::registry>();
+
+	const auto show_registry = [this, registry]()
+	{
+		QString text = tr("%1 keys, %2 values\n\n").arg(QString::number(registry->keys.size()), QString::number(registry->values.size()));
+
+		int shown = 0;
+
+		for (const ps3::xreg::value& value : registry->values)
+		{
+			if (shown++ >= 60)
+			{
+				text += tr("... and %1 more\n").arg(QString::number(registry->values.size() - 60));
+				break;
+			}
+
+			QString rendered;
+
+			switch (value.kind)
+			{
+			case ps3::xreg::type::text:
+				rendered = QString::fromStdString(std::string(value.data.begin(), value.data.end()));
+				break;
+			case ps3::xreg::type::boolean:
+				rendered = value.data.empty() ? QStringLiteral("false") : QStringLiteral("true");
+				break;
+			default:
+				rendered = QString::number(value.data.size() >= 4
+					? std::uint32_t(value.data[0]) | (std::uint32_t(value.data[1]) << 8) | (std::uint32_t(value.data[2]) << 16) | (std::uint32_t(value.data[3]) << 24)
+					: 0);
+				break;
+			}
+
+			text += QString::fromStdString(value.path) + QStringLiteral(" = ") + rendered + QLatin1Char('\n');
+		}
+
+		ui->text_xreg_list->setPlainText(text);
+
+		const std::string region = ps3::xreg::region(*registry);
+
+		if (!region.empty())
+		{
+			ui->edit_xreg_region->setText(QString::fromStdString(region));
+		}
+	};
+
+	connect(ui->button_xreg_browse, &QPushButton::clicked, this, [this]()
+	{
+		const QString path = QFileDialog::getOpenFileName(this, tr("Select xRegistry.sys"), QString(),
+			tr("xRegistry (xRegistry.sys);;All files (*.*)"));
+
+		if (!path.isEmpty())
+		{
+			ui->edit_xreg_path->setText(path);
+		}
+	});
+
+	connect(ui->button_xreg_read, &QPushButton::clicked, this, [this, registry, show_registry]()
+	{
+		QFile file(ui->edit_xreg_path->text());
+
+		if (!file.open(QIODevice::ReadOnly))
+		{
+			QMessageBox::warning(this, tr("xRegistry"), tr("The registry could not be opened: %1").arg(file.errorString()));
+			return;
+		}
+
+		const QByteArray data = file.readAll();
+		const ps3::xreg::bytes image(reinterpret_cast<const std::uint8_t*>(data.constData()),
+			reinterpret_cast<const std::uint8_t*>(data.constData()) + data.size());
+
+		std::string error;
+
+		if (!ps3::xreg::parse(image, *registry, error))
+		{
+			QMessageBox::warning(this, tr("xRegistry"), tr("The registry could not be read: %1").arg(QString::fromStdString(error)));
+			return;
+		}
+
+		show_registry();
+	});
+
+	connect(ui->button_xreg_region, &QPushButton::clicked, this, [this, registry, show_registry]()
+	{
+		const QString letters = ui->edit_xreg_region->text().trimmed().toUpper();
+
+		if (letters.size() != 2 || !letters.at(0).isLetter() || !letters.at(1).isLetter())
+		{
+			QMessageBox::warning(this, tr("xRegistry"), tr("A region is two letters, such as GB or JP."));
+			return;
+		}
+
+		if (!ps3::xreg::set_region(*registry, letters.toStdString()))
+		{
+			QMessageBox::warning(this, tr("xRegistry"), tr("The region could not be set."));
+			return;
+		}
+
+		show_registry();
+	});
+
+	connect(ui->button_xreg_value, &QPushButton::clicked, this, [this, registry, show_registry]()
+	{
+		const QString key = ui->edit_xreg_key->text().trimmed();
+		const QString value = ui->edit_xreg_value->text();
+
+		if (key.isEmpty())
+		{
+			QMessageBox::warning(this, tr("xRegistry"), tr("Name the setting to write."));
+			return;
+		}
+
+		const ps3::xreg::value* current = registry->find(key.toStdString());
+		bool done = false;
+
+		if (current && current->kind == ps3::xreg::type::integer && !value.isEmpty())
+		{
+			bool ok = false;
+			const std::uint32_t number = value.toUInt(&ok, 0);
+
+			done = ok && registry->set_integer(key.toStdString(), number);
+		}
+		else if (current && current->kind == ps3::xreg::type::boolean)
+		{
+			done = registry->set_boolean(key.toStdString(), value.compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0 || value == QStringLiteral("1"));
+		}
+		else
+		{
+			done = registry->set_text(key.toStdString(), value.toStdString());
+		}
+
+		if (!done)
+		{
+			QMessageBox::warning(this, tr("xRegistry"), tr("The setting could not be written."));
+			return;
+		}
+
+		show_registry();
+	});
+
+	connect(ui->button_xreg_write, &QPushButton::clicked, this, [this, registry]()
+	{
+		if (registry->keys.empty() && registry->values.empty())
+		{
+			QMessageBox::warning(this, tr("xRegistry"), tr("Read a registry first - the keys it holds are what gets written."));
+			return;
+		}
+
+		const QString path = QFileDialog::getSaveFileName(this, tr("Save the registry"), QStringLiteral("xRegistry.sys"),
+			tr("xRegistry (xRegistry.sys);;All files (*.*)"));
+
+		if (path.isEmpty())
+		{
+			return;
+		}
+
+		ps3::xreg::bytes image;
+		std::string error;
+
+		if (!ps3::xreg::write(*registry, image, error))
+		{
+			QMessageBox::warning(this, tr("xRegistry"), tr("The registry could not be written: %1").arg(QString::fromStdString(error)));
+			return;
+		}
+
+		QFile file(path);
+
+		if (!file.open(QIODevice::WriteOnly) || file.write(reinterpret_cast<const char*>(image.data()), image.size()) < 0)
+		{
+			QMessageBox::warning(this, tr("xRegistry"), tr("The registry could not be saved: %1").arg(file.errorString()));
+			return;
+		}
+
+		QMessageBox::information(this, tr("xRegistry"), tr("Wrote %1 bytes.").arg(QString::number(image.size())));
+	});
+
+	SubscribeTooltip(ui->check_bar_backups,
+		tr("PS3 Backup And Restore containers. archive.dat is the index of the backup, archive2.dat the index of its "
+			"copy-protected content, and the archive_XX.dat files hold the data. The index is an encrypted archive "
+			"header followed by the file and directory blocks and - in archive.dat - a footer naming the console."));
+
+	SubscribeTooltip(ui->text_bar_list,
+		tr("What the backup's archive.dat lists: the files, the directories, how much data they hold and, from the "
+			"footer, the OpenPSID of the console the backup was made on."));
+
+	SubscribeTooltip(ui->gb_dumps_flash,
+		tr("The emulated NOR flash. A dump is built from this console's state - its boot chain, console id and HDD "
+			"name - so the image pairs with itself the way a real dump does; the encrypted bodies stay erased because "
+			"the emulator has no ciphertext to copy."));
+
+	SubscribeTooltip(ui->gb_dumps_brick,
+		tr("A console soft bricks when the firmware image it was given carries a boot chain that does not boot. "
+			"The state is recorded so the console keeps answering as a bricked one until it is cleared here, by "
+			"a recovery restart, or by installing firmware whose chain boots."));
+
+	SubscribeTooltip(ui->gb_dumps_identity,
+		tr("The console's own id and PSN id. A dump is 16 bytes, raw or as 32 hex characters. "
+			"Leave a field empty to use the value in config.yml.\n\n"
+			"The boot loader chooses the pair the emulated console presents: metldr + lv0ldr before 3.60, "
+			"metldr.2 + lv0ldr.2 from 3.60. A firmware image carrying the other pair is refused by the installer."));
 
 	//    _   _      _                      _      _______    _
 	//   | \ | |    | |                    | |    |__   __|  | |

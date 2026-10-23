@@ -301,6 +301,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Emu\Io\PadHandler.cpp" />
+    <ClCompile Include="Emu\Cell\lv1\lv1.cpp" />
     <ClCompile Include="Emu\Cell\lv2\lv2.cpp" />
     <ClCompile Include="Emu\Cell\lv2\sys_cond.cpp" />
     <ClCompile Include="Emu\Cell\lv2\sys_dbg.cpp" />
@@ -311,6 +312,7 @@
     <ClCompile Include="Emu\Cell\lv2\sys_interrupt.cpp" />
     <ClCompile Include="Emu\Cell\lv2\sys_lwcond.cpp" />
     <ClCompile Include="Emu\Cell\lv2\sys_lwmutex.cpp" />
+    <ClCompile Include="Emu\Cell\lv2\sys_cfw.cpp" />
     <ClCompile Include="Emu\Cell\lv2\sys_memory.cpp" />
     <ClCompile Include="Emu\Cell\lv2\sys_mmapper.cpp" />
     <ClCompile Include="Emu\Cell\lv2\sys_mutex.cpp" />
@@ -572,6 +574,15 @@
     <ClCompile Include="Loader\ELF.cpp" />
     <ClCompile Include="Loader\PSF.cpp" />
     <ClCompile Include="Loader\PUP.cpp" />
+    <ClCompile Include="Loader\ps3_boot_chain.cpp" />
+    <ClCompile Include="Loader\ps3_identity.cpp" />
+    <ClCompile Include="Loader\ps3_flash.cpp" />
+
+    <ClCompile Include="Loader\ps3_bar.cpp" />
+
+    <ClCompile Include="Loader\ps3_xreg.cpp" />
+    <ClCompile Include="Loader\ps3_ufs2.cpp" />
+    <ClCompile Include="Loader\ps3_qcow2.cpp" />
     <ClCompile Include="Loader\TAR.cpp" />
     <ClCompile Include="Loader\IRD.cpp" />
     <ClCompile Include="Loader\IRD_validation.cpp" />
@@ -910,6 +921,8 @@
     <ClInclude Include="Emu\Cell\lv2\sys_interrupt.h" />
     <ClInclude Include="Emu\Cell\lv2\sys_lwcond.h" />
     <ClInclude Include="Emu\Cell\lv2\sys_lwmutex.h" />
+    <ClInclude Include="Emu\Cell\lv1\lv1.h" />
+    <ClInclude Include="Emu\Cell\lv2\sys_cfw.h" />
     <ClInclude Include="Emu\Cell\lv2\sys_memory.h" />
     <ClInclude Include="Emu\Cell\lv2\sys_mmapper.h" />
     <ClInclude Include="Emu\Cell\lv2\sys_mutex.h" />
@@ -1098,6 +1111,15 @@
     <ClInclude Include="Loader\ELF.h" />
     <ClInclude Include="Loader\PSF.h" />
     <ClInclude Include="Loader\PUP.h" />
+    <ClInclude Include="Loader\ps3_boot_chain.h" />
+    <ClInclude Include="Loader\ps3_identity.h" />
+    <ClInclude Include="Loader\ps3_flash.h" />
+
+    <ClInclude Include="Loader\ps3_bar.h" />
+
+    <ClInclude Include="Loader\ps3_xreg.h" />
+    <ClInclude Include="Loader\ps3_ufs2.h" />
+    <ClInclude Include="Loader\ps3_qcow2.h" />
     <ClInclude Include="Loader\TAR.h" />
     <ClInclude Include="Loader\IRD.h" />
     <ClInclude Include="Loader\IRD_validation.h" />

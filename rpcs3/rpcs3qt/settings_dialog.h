@@ -29,6 +29,11 @@ Q_SIGNALS:
 	void GuiRepaintRequest();
 	void EmuSettingsApplied();
 	void signal_restore_dependant_defaults();
+
+	// The PS3 Dumps page changed the console's recorded state (a simulated
+	// brick cleared) or asked for the recovery menu.
+	void ConsoleStateChanged();
+	void RecoveryMenuRequest();
 private:
 	void EnhanceCheckBox(emu_settings_type settings_type, QCheckBox* checkbox, const QString& tooltip, QObject* tooltip_object = nullptr);
 	void EnhanceComboBox(emu_settings_type settings_type, QComboBox* combobox, const QString& tooltip, QObject* tooltip_object = nullptr, bool is_ranged = false, bool use_max = false, int max = 0, bool sorted = false, bool strict = true);

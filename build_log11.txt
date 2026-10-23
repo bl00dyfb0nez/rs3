@@ -1,0 +1,1984 @@
+Using VS environment: C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvars64.bat
+Using CMake: C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
+Using Ninja: C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe
+Found Qt6 at: C:\Qt\6.12.0\msvc2022_64
+Found Vulkan SDK at: C:\VulkanSDK\1.4.363.0
+
+Cleaning SDL3 build cache to prevent export conflicts...
+SDL3 clean done.
+
+Configuring CMake with 16 cores...
+Qt6 Root: C:\Qt\6.12.0\msvc2022_64
+
+-- Using ccache: C:/usr/local/cell/host-win32/bin/ccache.exe
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+-- RPCS3: Using builtin ZLIB
+-- ZSTD VERSION: 1.5.7
+-- CMAKE_INSTALL_PREFIX: C:/Program Files (x86)/rpcs3
+-- CMAKE_INSTALL_LIBDIR: lib
+-- ZSTD_LEGACY_SUPPORT defined!
+-- ZSTD_MULTITHREAD_SUPPORT is enabled
+CMake Deprecation Warning at 3rdparty/protobuf/protobuf/CMakeLists.txt:7 (cmake_policy):
+  The OLD behavior for policy CMP0141 will be removed from a future version
+  of CMake.
+
+  The cmake-policies(7) manual explains that the OLD behaviors of all
+  policies are deprecated and that a policy should be set to OLD only under
+  specific short-term circumstances.  Projects should be ported to the NEW
+  behavior and not rely on setting a policy to OLD.
+
+
+-- protobuf version: 33.4.0
+-- Could NOT find absl (missing: absl_DIR)
+-- Fallback to downloading Abseil 20250512.1 from GitHub
+-- Building for target architecture: amd64
+-- Found AWK program: C:/Users/Thewoodsman/AppData/Local/Programs/@codebufffreebuff-desktop/resources/git/usr/bin/gawk.exe
+-- Creating standard configuration
+-- Generated configuration file in C:/Users/Thewoodsman/rpcs3/build/3rdparty/libusb/config.h
+-- Using static cubeb from 3rdparty
+-- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+-- Found Vulkan: C:/VulkanSDK/1.4.363.0/Lib/vulkan-1.lib (found version "1.4.363") found components: glslc glslangValidator
+CMake Deprecation Warning at 3rdparty/asmjit/asmjit/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+Call Stack (most recent call first):
+  3rdparty/asmjit/CMakeLists.txt:9 (include)
+
+
+** AsmJit Summary **
+   ASMJIT_DIR=C:/Users/Thewoodsman/rpcs3/3rdparty/asmjit/asmjit
+   ASMJIT_TEST=FALSE
+   ASMJIT_TARGET_TYPE=EMBED
+   ASMJIT_DEPS=
+   ASMJIT_LIBS=
+   ASMJIT_CFLAGS=-DASMJIT_STATIC;-DASMJIT_NO_DEPRECATED
+   ASMJIT_PRIVATE_CFLAGS=-MP;-GF;-Zc:__cplusplus;-Zc:inline;-Zc:strictStrings;-Zc:threadSafeInit-;-W4;-DASMJIT_STATIC;-DASMJIT_NO_DEPRECATED
+   ASMJIT_PRIVATE_CFLAGS_DBG=-GS
+   ASMJIT_PRIVATE_CFLAGS_REL=-GS-;-O2;-Oi
+-- Using static SDL3 from 3rdparty
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+-- Could NOT find LibUSB (missing: LibUSB_LIBRARY LibUSB_INCLUDE_PATH) (found version "LibUSB_VERSION-NOTFOUND")
+-- 
+-- SDL3 was configured with the following options:
+-- 
+-- Platform: Windows-10.0.19045
+-- 64-bit:   TRUE
+-- Compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe
+-- Revision: SDL-3.4.18-release-3.4.18
+-- Vendor:   
+-- 
+-- Subsystems:
+--   Audio:    ON
+--   Video:    ON
+--   GPU:      ON
+--   Render:   ON
+--   Camera:   ON
+--   Joystick: ON
+--   Haptic:   ON
+--   Hidapi:   ON
+--   Power:    ON
+--   Sensor:   ON
+--   Dialog:   ON
+--   Tray:     ON
+-- 
+-- Options:
+--   SDL_ALSA                    (Wanted: OFF): OFF
+--   SDL_ALSA_SHARED             (Wanted: OFF): OFF
+--   SDL_ALTIVEC                 (Wanted: OFF): OFF
+--   SDL_ARMNEON                 (Wanted: OFF): OFF
+--   SDL_ASAN                    (Wanted: OFF): OFF
+--   SDL_ASSEMBLY                (Wanted: ON): ON
+--   SDL_ASSERTIONS              (Wanted: auto): auto
+--   SDL_AVX                     (Wanted: ON): ON
+--   SDL_AVX2                    (Wanted: ON): ON
+--   SDL_AVX512F                 (Wanted: ON): ON
+--   SDL_BACKGROUNDING_SIGNAL    (Wanted: OFF): OFF
+--   SDL_CCACHE                  (Wanted: OFF): OFF
+--   SDL_CLANG_TIDY              (Wanted: OFF): OFF
+--   SDL_CLOCK_GETTIME           (Wanted: OFF): OFF
+--   SDL_COCOA                   (Wanted: OFF): OFF
+--   SDL_DBUS                    (Wanted: OFF): OFF
+--   SDL_DEPS_SHARED             (Wanted: ON): OFF
+--   SDL_DIRECTX                 (Wanted: ON): ON
+--   SDL_DISKAUDIO               (Wanted: ON): ON
+--   SDL_DLOPEN_NOTES            (Wanted: OFF): OFF
+--   SDL_DUMMYAUDIO              (Wanted: ON): ON
+--   SDL_DUMMYCAMERA             (Wanted: ON): ON
+--   SDL_DUMMYVIDEO              (Wanted: ON): ON
+--   SDL_EXAMPLES                (Wanted: OFF): OFF
+--   SDL_EXAMPLES_LINK_SHARED    (Wanted: OFF): OFF
+--   SDL_FOREGROUNDING_SIGNAL    (Wanted: OFF): OFF
+--   SDL_FRIBIDI                 (Wanted: OFF): OFF
+--   SDL_FRIBIDI_SHARED          (Wanted: OFF): OFF
+--   SDL_GCC_ATOMICS             (Wanted: OFF): OFF
+--   SDL_HIDAPI                  (Wanted: ON): ON
+--   SDL_HIDAPI_JOYSTICK         (Wanted: ON): ON
+--   SDL_HIDAPI_LIBUSB           (Wanted: ON): OFF
+--   SDL_HIDAPI_LIBUSB_SHARED    (Wanted: ON): OFF
+--   SDL_IBUS                    (Wanted: OFF): OFF
+--   SDL_INSTALL                 (Wanted: OFF): OFF
+--   SDL_INSTALL_TESTS           (Wanted: OFF): OFF
+--   SDL_JACK                    (Wanted: OFF): OFF
+--   SDL_JACK_SHARED             (Wanted: OFF): OFF
+--   SDL_KMSDRM                  (Wanted: OFF): OFF
+--   SDL_KMSDRM_SHARED           (Wanted: OFF): OFF
+--   SDL_LASX                    (Wanted: OFF): OFF
+--   SDL_LIBC                    (Wanted: ON): ON
+--   SDL_LIBICONV                (Wanted: OFF): OFF
+--   SDL_LIBTHAI                 (Wanted: OFF): OFF
+--   SDL_LIBTHAI_SHARED          (Wanted: OFF): OFF
+--   SDL_LIBUDEV                 (Wanted: ON): OFF
+--   SDL_LIBURING                (Wanted: OFF): OFF
+--   SDL_LSX                     (Wanted: OFF): OFF
+--   SDL_METAL                   (Wanted: OFF): OFF
+--   SDL_MMX                     (Wanted: ON): OFF
+--   SDL_OFFSCREEN               (Wanted: ON): ON
+--   SDL_OPENGL                  (Wanted: ON): ON
+--   SDL_OPENGLES                (Wanted: ON): ON
+--   SDL_OPENVR                  (Wanted: OFF): OFF
+--   SDL_OSS                     (Wanted: OFF): OFF
+--   SDL_PIPEWIRE                (Wanted: OFF): OFF
+--   SDL_PIPEWIRE_SHARED         (Wanted: OFF): OFF
+--   SDL_PTHREADS                (Wanted: OFF): OFF
+--   SDL_PTHREADS_SEM            (Wanted: OFF): OFF
+--   SDL_PULSEAUDIO              (Wanted: OFF): OFF
+--   SDL_PULSEAUDIO_SHARED       (Wanted: OFF): OFF
+--   SDL_RENDER_D3D              (Wanted: ON): ON
+--   SDL_RENDER_D3D11            (Wanted: ON): ON
+--   SDL_RENDER_D3D12            (Wanted: ON): ON
+--   SDL_RENDER_GPU              (Wanted: ON): ON
+--   SDL_RENDER_METAL            (Wanted: OFF): OFF
+--   SDL_RENDER_VULKAN           (Wanted: ON): ON
+--   SDL_ROCKCHIP                (Wanted: OFF): OFF
+--   SDL_RPATH                   (Wanted: OFF): OFF
+--   SDL_RPI                     (Wanted: OFF): OFF
+--   SDL_SNDIO                   (Wanted: OFF): OFF
+--   SDL_SNDIO_SHARED            (Wanted: OFF): OFF
+--   SDL_SSE                     (Wanted: ON): ON
+--   SDL_SSE2                    (Wanted: ON): ON
+--   SDL_SSE3                    (Wanted: ON): ON
+--   SDL_SSE4_1                  (Wanted: ON): ON
+--   SDL_SSE4_2                  (Wanted: ON): ON
+--   SDL_SYSTEM_ICONV            (Wanted: OFF): OFF
+--   SDL_TESTS                   (Wanted: OFF): OFF
+--   SDL_TESTS_LINK_SHARED       (Wanted: OFF): OFF
+--   SDL_UNINSTALL               (Wanted: OFF): OFF
+--   SDL_VIRTUAL_JOYSTICK        (Wanted: ON): ON
+--   SDL_VIVANTE                 (Wanted: OFF): OFF
+--   SDL_VULKAN                  (Wanted: ON): ON
+--   SDL_WASAPI                  (Wanted: ON): ON
+--   SDL_WAYLAND                 (Wanted: OFF): OFF
+--   SDL_WAYLAND_LIBDECOR        (Wanted: OFF): OFF
+--   SDL_WAYLAND_LIBDECOR_SHARED (Wanted: OFF): OFF
+--   SDL_WAYLAND_SHARED          (Wanted: OFF): OFF
+--   SDL_X11                     (Wanted: OFF): OFF
+--   SDL_X11_SHARED              (Wanted: OFF): OFF
+--   SDL_X11_XCURSOR             (Wanted: OFF): OFF
+--   SDL_X11_XDBE                (Wanted: OFF): OFF
+--   SDL_X11_XFIXES              (Wanted: OFF): OFF
+--   SDL_X11_XINPUT              (Wanted: OFF): OFF
+--   SDL_X11_XRANDR              (Wanted: OFF): OFF
+--   SDL_X11_XSCRNSAVER          (Wanted: OFF): OFF
+--   SDL_X11_XSHAPE              (Wanted: OFF): OFF
+--   SDL_X11_XSYNC               (Wanted: OFF): OFF
+--   SDL_X11_XTEST               (Wanted: OFF): OFF
+--   SDL_XINPUT                  (Wanted: ON): ON
+-- 
+--  Build Shared Library: OFF
+--  Build Static Library: ON
+-- 
+-- Enabled backends:
+--   Video drivers: dummy offscreen windows
+--   Render drivers: d3d d3d11 d3d12 gpu ogl ogl_es2 vulkan
+--   GPU drivers: d3d12 vulkan
+--   Audio drivers: disk dsound dummy wasapi
+--   Joystick drivers: dinput gameinput hidapi rawinput virtual wgi xinput
+--   Camera drivers: dummy mediafoundation
+-- 
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+C++20 modules not supported with Ninja Multi-Config on CMake 4.3.1-msvc1
+-- {fmt} version: 11.2.0
+-- Build type: RelWithDebInfo
+-- Using DirectX SDK directory: C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/
+-- Could NOT find PulseAudio (missing: PULSEAUDIO_LIBRARY PULSEAUDIO_INCLUDE_DIR) 
+-- Could NOT find JACK (missing: JACK_LIBRARY JACK_INCLUDE_DIR) 
+-- Could NOT find OpenSL (missing: OPENSL_LIBRARY OPENSL_INCLUDE_DIR OPENSL_ANDROID_INCLUDE_DIR) 
+-- Could NOT find PortAudio (missing: PORTAUDIO_LIBRARY PORTAUDIO_INCLUDE_DIR) 
+-- 
+-- STL hardening level: Enabled
+-- 
+-- Building OpenAL with support for the following backends:
+--     WASAPI, DirectSound, WinMM, WaveFile, Null
+-- 
+-- Building with support for CPU extensions:
+--     Default, SSE, SSE2, SSE3, SSE4.1
+-- 
+-- Building with legacy EAX extension support
+-- 
+-- Embedding HRTF datasets
+-- 
+-- Installing library and headers
+-- Installing sample configuration
+-- Installing HRTF data files
+-- Installing AmbDec presets
+-- 
+-- RPCS3: Using builtin FAudio
+-- using TARGET SDL3::SDL3
+-- RPCS3: using builtin ffmpeg
+-- LLVM will be built from the submodule.
+-- Could NOT find LibXml2 (missing: LIBXML2_LIBRARY LIBXML2_INCLUDE_DIR) 
+-- Could NOT find Backtrace (missing: Backtrace_LIBRARY Backtrace_INCLUDE_DIR) 
+-- LLVM host triple: x86_64-pc-windows-msvc
+-- Native target architecture is X86
+-- Threads enabled.
+-- Doxygen disabled.
+-- Ninja version: 1.13.2
+-- Could NOT find OCaml (missing: OCAMLFIND OCAML_VERSION OCAML_STDLIB_PATH) 
+-- OCaml bindings disabled.
+-- LLVM default target triple: x86_64-pc-windows-msvc
+HEAD is now at c2a515b version increase
+-- Targeting AArch64
+-- Targeting X86
+-- Could NOT find LibXml2 (missing: LIBXML2_LIBRARY LIBXML2_INCLUDE_DIR) 
+-- C Compiler ID: MSVC
+-- WOLFSSL_HAVE_MLKEM not found in WOLFSSL_DEFINITIONS.
+-- Enabling WOLFSSL_HAVE_MLKEM
+-- Enabling WOLFSSL_HAVE_MLKEM - success
+-- WOLFSSL_SHA3 not found in WOLFSSL_DEFINITIONS.
+-- Enabling WOLFSSL_SHA3
+-- Enabling WOLFSSL_SHA3 - success
+-- WOLFSSL_SHAKE128 not found in WOLFSSL_DEFINITIONS.
+-- Enabling WOLFSSL_SHAKE128
+-- Enabling WOLFSSL_SHAKE128 - success
+-- WOLFSSL_SHAKE256 not found in WOLFSSL_DEFINITIONS.
+-- Enabling WOLFSSL_SHAKE256
+-- Enabling WOLFSSL_SHAKE256 - success
+-- Looking for WOLFSSL_EXPERIMENTAL
+-- Looking for WOLFSSL_EXPERIMENTAL - not found
+-- RNG fork handlers off: they need getpid
+-- Generating user options header...
+-- Static Libs: wolfcrypt/src/hmac.c;wolfcrypt/src/hash.c;wolfcrypt/src/cpuid.c;wolfcrypt/src/kdf.c;wolfcrypt/src/random.c;wolfcrypt/src/sha256.c;wolfcrypt/src/rsa.c;wolfcrypt/src/sp_int.c;wolfcrypt/src/aes.c;wolfcrypt/src/des3.c;wolfcrypt/src/sha.c;wolfcrypt/src/sha512.c;wolfcrypt/src/sha3.c;wolfcrypt/src/logging.c;wolfcrypt/src/wc_port.c;wolfcrypt/src/error.c;wolfcrypt/src/wc_encrypt.c;wolfcrypt/src/signature.c;wolfcrypt/src/wolfmath.c;wolfcrypt/src/memory.c;wolfcrypt/src/dh.c;wolfcrypt/src/asn.c;wolfcrypt/src/coding.c;wolfcrypt/src/poly1305.c;wolfcrypt/src/md5.c;wolfcrypt/src/pwdbased.c;wolfcrypt/src/pkcs12.c;wolfcrypt/src/chacha.c;wolfcrypt/src/chacha20_poly1305.c;wolfcrypt/src/tfm.c;wolfcrypt/src/integer.c;wolfcrypt/src/ecc.c;wolfcrypt/src/wc_mlkem.c;wolfcrypt/src/wc_mlkem_poly.c;src/internal.c;src/wolfio.c;src/keys.c;src/ssl.c;src/ocsp.c;src/tls.c;src/tls13.c
+-- WOLFSSL_INCLUDE_DIRS is blank. No additional directories will be added.
+Building on Windows/MSYS/MINGW
+-- RPCS3: building libcurl + wolfssl submodules
+-- Using CMake version 4.3.1-msvc1
+-- curl version=[8.23.0-DEV]
+-- CMake platform flags: WIN32 MSVC-1951
+-- Performing Test HAVE_WIN32_WINNT
+-- Performing Test HAVE_WIN32_WINNT - Success
+-- Found _WIN32_WINNT=0x0a00
+-- Picky compiler options: -W4 -Wall -wd4061 -wd4191 -wd4255 -wd4464 -wd4548 -wd4574 -wd4668 -wd4710 -wd4711 -wd4746 -wd4820 -wd5045
+-- Could NOT find Brotli (missing: BROTLI_INCLUDE_DIR BROTLIDEC_LIBRARY BROTLICOMMON_LIBRARY) 
+-- Could NOT find Zstd (missing: ZSTD_INCLUDE_DIR ZSTD_LIBRARY) 
+-- Could NOT find NGHTTP2 (missing: NGHTTP2_INCLUDE_DIR NGHTTP2_LIBRARY) 
+-- Protocols: dict file ftp ftps gopher gophers http https imap imaps ipfs ipns ldap ldaps mqtt mqtts pop3 pop3s rtsp smtp smtps telnet tftp ws wss
+-- Features: alt-svc AsynchDNS HSTS IPv6 Largefile libz SSL threadsafe Unicode UnixSockets
+-- Enabled SSL backends: wolfSSL
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+-- Compiling with support for: winmm
+-- Found WrapVulkanHeaders: C:/VulkanSDK/1.4.363.0/include
+-- RPCS3_GIT_VERSION: 20365-8dc93f2e
+-- RPCS3_GIT_BRANCH: master
+-- RPCS3_GIT_FULL_BRANCH: local_build
+-- Configuring done (8.2s)
+-- Generating done (8.9s)
+-- Build files have been written to: C:/Users/Thewoodsman/rpcs3/build
+
+Building with 16 cores...
+[0/2] Re-checking globbed directories...
+[1/1937] Generating CXX dyndep file 3rdparty\pugixml\CMakeFiles\pugixml-static.dir\Release\CXX.dd
+[2/1935] Generating CXX dyndep file 3rdparty\yaml-cpp\yaml-cpp\CMakeFiles\yaml-cpp.dir\Release\CXX.dd
+[3/1904] Generating CXX dyndep file 3rdparty\SoundTouch\CMakeFiles\soundtouch.dir\Release\CXX.dd
+[4/1893] Generating CXX dyndep file 3rdparty\asmjit\CMakeFiles\asmjit.dir\Release\CXX.dd
+[5/1834] Generating CXX dyndep file 3rdparty\OpenAL\openal-soft\CMakeFiles\OpenAL.dir\Release\CXX.dd
+[6/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\cmake_pch.c.obj
+[7/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\scoped_progress_dialog.cpp for CXX dependencies
+[8/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\IdManager.cpp for CXX dependencies
+[9/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\system_config.cpp for CXX dependencies
+[10/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\stb_image.cpp for CXX dependencies
+[11/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\vfs_config.cpp for CXX dependencies
+[12/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\localized_string.cpp for CXX dependencies
+[13/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\system_config_types.cpp for CXX dependencies
+[14/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\system_utils.cpp for CXX dependencies
+[15/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\cache_utils.cpp for CXX dependencies
+[16/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\games_config.cpp for CXX dependencies
+[17/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\system_progress.cpp for CXX dependencies
+[18/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\savestate_utils.cpp for CXX dependencies
+[19/1732] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\cmake_pch.cxx.obj
+[20/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_guid.c.obj
+[21/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_error.c.obj
+[22/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_hints.c.obj
+[23/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_list.c.obj
+[24/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_hashtable.c.obj
+[25/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_properties.c.obj
+[26/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\atomic\SDL_atomic.c.obj
+[27/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_utils.c.obj
+[28/1732] Scanning C:\Users\Thewoodsman\rpcs3\3rdparty\libsdl-org\SDL\src\core\windows\pch_cpp.cpp for CXX dependencies
+[29/1732] Scanning C:\Users\Thewoodsman\rpcs3\3rdparty\libsdl-org\SDL\src\core\windows\SDL_gameinput.cpp for CXX dependencies
+[30/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_assert.c.obj
+[31/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL.c.obj
+[32/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\System.cpp for CXX dependencies
+[33/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audiodev.c.obj
+[34/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\SDL_log.c.obj
+[35/1732] Scanning C:\Users\Thewoodsman\rpcs3\3rdparty\libsdl-org\SDL\src\joystick\gdk\SDL_gameinputjoystick.cpp for CXX dependencies
+[36/1732] Scanning C:\Users\Thewoodsman\rpcs3\3rdparty\libsdl-org\SDL\src\video\windows\SDL_windowsgameinput.cpp for CXX dependencies
+[37/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audioqueue.c.obj
+[38/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\atomic\SDL_spinlock.c.obj
+[39/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audiotypecvt.c.obj
+[40/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audiocvt.c.obj
+[41/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audioresample.c.obj
+[42/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_mixer.c.obj
+[43/1732] Generating CXX dyndep file 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\CXX.dd
+[44/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_audio.c.obj
+[45/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\SDL_core_unsupported.c.obj
+[46/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\SDL_wave.c.obj
+[47/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\dynapi\SDL_dynapi.c.obj
+[48/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_categories.c.obj
+[49/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_clipboardevents.c.obj
+[50/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_eventwatch.c.obj
+[51/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_displayevents.c.obj
+[52/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_dropevents.c.obj
+[53/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_keysym_to_keycode.c.obj
+[54/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_keysym_to_scancode.c.obj
+[55/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_keymap.c.obj
+[56/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_keyboard.c.obj
+[57/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\cpuinfo\SDL_cpuinfo.c.obj
+[58/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_pen.c.obj
+[59/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\camera\SDL_camera.c.obj
+[60/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_scancode_tables.c.obj
+[61/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_quit.c.obj
+[62/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\imKStoUCS.c.obj
+[63/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_touch.c.obj
+[64/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_windowevents.c.obj
+[65/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\filesystem\SDL_filesystem.c.obj
+[66/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\SDL_haptic.c.obj
+[67/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_mouse.c.obj
+[68/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\gpu\SDL_gpu.c.obj
+[69/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\io\SDL_asyncio.c.obj
+[70/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\events\SDL_events.c.obj
+[71/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\io\generic\SDL_asyncio_generic.c.obj
+[72/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\controller_type.c.obj
+[73/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\locale\SDL_locale.c.obj
+[74/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\misc\SDL_libusb.c.obj
+[75/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\main\SDL_runapp.c.obj
+[76/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\main\SDL_main_callbacks.c.obj
+[77/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\io\SDL_iostream.c.obj
+[78/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\misc\SDL_url.c.obj
+[79/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\SDL_render_unsupported.c.obj
+[80/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\SDL_steam_virtual_gamepad.c.obj
+[81/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\SDL_yuv_sw.c.obj
+[82/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\SDL_gamepad.c.obj
+[83/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\power\SDL_power.c.obj
+[84/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\SDL_joystick.c.obj
+[85/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\gpu\SDL_pipeline_gpu.c.obj
+[86/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\SDL_render.c.obj
+[87/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\hidapi\SDL_hidapi.c.obj
+[88/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\ngage\SDL_render_ngage.c.obj
+[89/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\gpu\SDL_shaders_gpu.c.obj
+[90/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\gpu\SDL_render_gpu.c.obj
+[91/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\opengles2\SDL_shaders_gles2.c.obj
+[92/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d\SDL_shaders_d3d.c.obj
+[93/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\ps2\SDL_render_ps2.c.obj
+[94/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\opengles2\SDL_render_gles2.c.obj
+[95/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\psp\SDL_render_psp.c.obj
+[96/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d\SDL_render_d3d.c.obj
+[97/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d11\SDL_shaders_d3d11.c.obj
+[98/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_blendpoint.c.obj
+[99/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\opengl\SDL_shaders_gl.c.obj
+[100/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\opengl\SDL_render_gl.c.obj
+[101/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d12\SDL_shaders_d3d12.c.obj
+[102/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_drawline.c.obj
+[103/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d11\SDL_render_d3d11.c.obj
+[104/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\direct3d12\SDL_render_d3d12.c.obj
+[105/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_drawpoint.c.obj
+[106/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vitagxm\SDL_render_vita_gxm.c.obj
+[107/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_render_sw.c.obj
+[108/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vitagxm\SDL_render_vita_gxm_memory.c.obj
+[109/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vulkan\SDL_shaders_vulkan.c.obj
+[110/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vitagxm\SDL_render_vita_gxm_tools.c.obj
+[111/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_crc16.c.obj
+[112/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\sensor\SDL_sensor.c.obj
+[113/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_crc32.c.obj
+[114/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_triangle.c.obj
+[115/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_blendfillrect.c.obj
+[116/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_iconv.c.obj
+[117/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_memcpy.c.obj
+[118/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_memmove.c.obj
+[119/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_malloc.c.obj
+[120/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_memset.c.obj
+[121/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_mslibc.c.obj
+[122/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_stdlib.c.obj
+[123/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_getenv.c.obj
+[124/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_murmur3.c.obj
+[125/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_random.c.obj
+[126/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\software\SDL_blendline.c.obj
+[127/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_strtokr.c.obj
+[128/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_string.c.obj
+[129/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\stdlib\SDL_qsort.c.obj
+[130/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\storage\SDL_storage.c.obj
+[131/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\time\SDL_time.c.obj
+[132/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\render\vulkan\SDL_render_vulkan.c.obj
+[133/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit.c.obj
+[134/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_copy.c.obj
+[135/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_0.c.obj
+[136/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_1.c.obj
+[137/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\SDL_thread.c.obj
+[138/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_clipboard.c.obj
+[139/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_N.c.obj
+[140/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\timer\SDL_timer.c.obj
+[141/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_bmp.c.obj
+[142/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_RLEaccel.c.obj
+[143/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_A.c.obj
+[144/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_fillrect.c.obj
+[145/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_slow.c.obj
+[146/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_pixels.c.obj
+[147/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_rect.c.obj
+[148/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_rotate.c.obj
+[149/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_video_unsupported.c.obj
+[150/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_stretch.c.obj
+[151/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_egl.c.obj
+[152/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_surface.c.obj
+[153/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\yuv2rgb\yuv_rgb_lsx.c.obj
+[154/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_blit_auto.c.obj
+[155/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_atan2.c.obj
+[156/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\yuv2rgb\yuv_rgb_sse.c.obj
+[157/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_exp.c.obj
+[158/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_fmod.c.obj
+[159/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_log10.c.obj
+[160/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_vulkan_utils.c.obj
+[161/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_log.c.obj
+[162/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\yuv2rgb\yuv_rgb_std.c.obj
+[163/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_pow.c.obj
+[164/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_rem_pio2.c.obj
+[165/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\k_cos.c.obj
+[166/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\e_sqrt.c.obj
+[167/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_stb.c.obj
+[168/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\k_sin.c.obj
+[169/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_yuv.c.obj
+[170/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\SDL_video.c.obj
+[171/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\k_rem_pio2.c.obj
+[172/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\k_tan.c.obj
+[173/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_atan.c.obj
+[174/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_copysign.c.obj
+[175/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_fabs.c.obj
+[176/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_floor.c.obj
+[177/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_cos.c.obj
+[178/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_isinff.c.obj
+[179/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_isinf.c.obj
+[180/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_isnanf.c.obj
+[181/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_isnan.c.obj
+[182/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_tan.c.obj
+[183/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_modf.c.obj
+[184/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_sin.c.obj
+[185/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\camera\dummy\SDL_camera_dummy.c.obj
+[186/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\libm\s_scalbn.c.obj
+[187/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\dummy\SDL_dummyaudio.c.obj
+[188/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\disk\SDL_diskaudio.c.obj
+[189/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\dummy\SDL_nullevents.c.obj
+[190/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\virtual\SDL_virtualjoystick.c.obj
+[191/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\dummy\SDL_nullframebuffer.c.obj
+[192/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\dummy\SDL_nullvideo.c.obj
+[193/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\pch.c.obj
+[194/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\io\windows\SDL_asyncio_windows_ioring.c.obj
+[195/1732] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\pch_cpp.cpp.obj
+[196/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_xinput.c.obj
+[197/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_hid.c.obj
+[198/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\main\windows\SDL_sysmain_runapp.c.obj
+[199/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\misc\windows\SDL_sysurl.c.obj
+[200/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_windows.c.obj
+[201/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_immdevice.c.obj
+[202/1732] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\core\windows\SDL_gameinput.cpp.obj
+[203/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\directsound\SDL_directsound.c.obj
+[204/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\audio\wasapi\SDL_wasapi.c.obj
+[205/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsframebuffer.c.obj
+[206/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsclipboard.c.obj
+[207/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowskeyboard.c.obj
+[208/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsmodes.c.obj
+[209/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsmessagebox.c.obj
+[210/1732] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsgameinput.cpp.obj
+[211/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsmouse.c.obj
+[212/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\generic\SDL_syscond.c.obj
+[213/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsopengl.c.obj
+[214/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsopengles.c.obj
+[215/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsevents.c.obj
+[216/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\generic\SDL_sysrwlock.c.obj
+[217/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsrawinput.c.obj
+[218/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsshape.c.obj
+[219/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_syscond_cv.c.obj
+[220/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsvulkan.c.obj
+[221/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowsvideo.c.obj
+[222/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_sysmutex.c.obj
+[223/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_syssem.c.obj
+[224/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_sysrwlock_srw.c.obj
+[225/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\storage\generic\SDL_genericstorage.c.obj
+[226/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_systls.c.obj
+[227/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\locale\windows\SDL_syslocale.c.obj
+[228/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\power\windows\SDL_syspower.c.obj
+[229/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\thread\windows\SDL_systhread.c.obj
+[230/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\windows\SDL_windowswindow.c.obj
+[231/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\filesystem\windows\SDL_sysfsops.c.obj
+[232/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\storage\steam\SDL_steamstorage.c.obj
+[233/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_8bitdo.c.obj
+[234/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\sensor\windows\SDL_windowssensor.c.obj
+[235/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\time\windows\SDL_systime.c.obj
+[236/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_combined.c.obj
+[237/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_luna.c.obj
+[238/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_gamecube.c.obj
+[239/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_flydigi.c.obj
+[240/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\timer\windows\SDL_systimer.c.obj
+[241/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\loadso\windows\SDL_sysloadso.c.obj
+[242/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\filesystem\windows\SDL_sysfilesystem.c.obj
+[243/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_lg4ff.c.obj
+[244/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_ps3.c.obj
+[245/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\tray\windows\SDL_tray.c.obj
+[246/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_gip.c.obj
+[247/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_ps5.c.obj
+[248/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_ps4.c.obj
+[249/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_shield.c.obj
+[250/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_stadia.c.obj
+[251/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_sinput.c.obj
+[252/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_steam_triton.c.obj
+[253/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_steamdeck.c.obj
+[254/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_steam.c.obj
+[255/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_steam_hori.c.obj
+[256/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_switch2.c.obj
+[257/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_rumble.c.obj
+[258/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_xbox360.c.obj
+[259/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_zuiki.c.obj
+[260/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_xbox360w.c.obj
+[261/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_wii.c.obj
+[262/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_switch.c.obj
+[263/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapi_xboxone.c.obj
+[264/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\hidapi\SDL_hidapihaptic.c.obj
+[265/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_report_descriptor.c.obj
+[266/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\hidapi\SDL_hidapihaptic_lg4ff.c.obj
+[267/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\hidapi\SDL_hidapijoystick.c.obj
+[268/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\dialog\SDL_dialog_utils.c.obj
+[269/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\dialog\SDL_dialog.c.obj
+[270/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\process\SDL_process.c.obj
+[271/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenevents.c.obj
+[272/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_dinputjoystick.c.obj
+[273/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenframebuffer.c.obj
+[274/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\windows\SDL_windowshaptic.c.obj
+[275/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_windowsjoystick.c.obj
+[276/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_xinputjoystick.c.obj
+[277/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\process\windows\SDL_windowsprocess.c.obj
+[278/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\haptic\windows\SDL_dinputhaptic.c.obj
+[279/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\camera\mediafoundation\SDL_camera_mediafoundation.c.obj
+[280/1732] Building CXX object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\gdk\SDL_gameinputjoystick.cpp.obj
+[281/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenopengles.c.obj
+[282/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\tray\SDL_tray_utils.c.obj
+[283/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenvideo.c.obj
+[284/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\main\generic\SDL_sysmain_callbacks.c.obj
+[285/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\dialog\windows\SDL_windowsdialog.c.obj
+[286/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\perf_meter.cpp for CXX dependencies
+[287/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenvulkan.c.obj
+[288/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\video\offscreen\SDL_offscreenwindow.c.obj
+[289/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\IPC_config.cpp for CXX dependencies
+[290/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\SkylanderPortalIPC_config.cpp for CXX dependencies
+[291/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\VFS.cpp for CXX dependencies
+[292/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\gpu\vulkan\SDL_gpu_vulkan.c.obj
+[293/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\GDB.cpp for CXX dependencies
+[294/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\media_utils.cpp for CXX dependencies
+[295/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\title.cpp for CXX dependencies
+[296/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\perf_monitor.cpp for CXX dependencies
+[297/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\video_provider.cpp for CXX dependencies
+[298/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\emu_utils.cpp for CXX dependencies
+[299/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\IPC_socket.cpp for CXX dependencies
+[300/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\yaml.cpp for CXX dependencies
+[301/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\atomic.cpp for CXX dependencies
+[302/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\console.cpp for CXX dependencies
+[303/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\cond.cpp for CXX dependencies
+[304/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\serialization_ext.cpp for CXX dependencies
+[305/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\cheat_info.cpp for CXX dependencies
+[306/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\Config.cpp for CXX dependencies
+[307/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\logs.cpp for CXX dependencies
+[308/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\bin_patch.cpp for CXX dependencies
+[309/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\gpu\d3d12\SDL_gpu_d3d12.c.obj
+[310/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\date_time.cpp for CXX dependencies
+[311/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\vm_native.cpp for CXX dependencies
+[312/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\dyn_lib.cpp for CXX dependencies
+[313/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\sysinfo.cpp for CXX dependencies
+[314/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\LUrlParser.cpp for CXX dependencies
+[315/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\mutex.cpp for CXX dependencies
+[316/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\util\cpu_stats.cpp for CXX dependencies
+[317/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\JITASM.cpp for CXX dependencies
+[318/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\rXml.cpp for CXX dependencies
+[319/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\sema.cpp for CXX dependencies
+[320/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\simple_ringbuf.cpp for CXX dependencies
+[321/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\aesni.cpp for CXX dependencies
+[322/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_rawinputjoystick.c.obj
+[323/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\stereo_config.cpp for CXX dependencies
+[324/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\aes.cpp for CXX dependencies
+[325/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\File.cpp for CXX dependencies
+[326/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\lz.cpp for CXX dependencies
+[327/1732] Building C object 3rdparty\libsdl-org\SDL\CMakeFiles\SDL3-static.dir\Release\src\joystick\windows\SDL_windows_gaming_input.c.obj
+[328/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\version.cpp for CXX dependencies
+[329/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\ec.cpp for CXX dependencies
+[330/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\sha1.cpp for CXX dependencies
+[331/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\JITLLVM.cpp for CXX dependencies
+[332/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\stack_trace.cpp for CXX dependencies
+[333/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\key_vault.cpp for CXX dependencies
+[334/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\decrypt_binaries.cpp for CXX dependencies
+[335/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\md5.cpp for CXX dependencies
+[336/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\sha256.cpp for CXX dependencies
+[337/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\unedat.cpp for CXX dependencies
+[338/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\unself.cpp for CXX dependencies
+[339/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\unpkg.cpp for CXX dependencies
+[340/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\utils.cpp for CXX dependencies
+[341/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Crypto\unzip.cpp for CXX dependencies
+[342/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\StrFmt.cpp for CXX dependencies
+[343/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\ELF.cpp for CXX dependencies
+[344/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\PUP.cpp for CXX dependencies
+[345/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\ps3_boot_chain.cpp for CXX dependencies
+[346/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\disc.cpp for CXX dependencies
+[347/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\mself.cpp for CXX dependencies
+[348/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\ps3_identity.cpp for CXX dependencies
+[349/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\ps3_flash.cpp for CXX dependencies
+[350/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\PSF.cpp for CXX dependencies
+[351/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\ps3_bar.cpp for CXX dependencies
+[352/1732] Scanning C:\Users\Thewoodsman\rpcs3\Utilities\Thread.cpp for CXX dependencies
+[353/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\ps3_xreg.cpp for CXX dependencies
+[354/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\ps3_qcow2.cpp for CXX dependencies
+[355/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\IRD.cpp for CXX dependencies
+[356/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\TAR.cpp for CXX dependencies
+[357/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\IRD_validation.cpp for CXX dependencies
+[358/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\TROPUSR.cpp for CXX dependencies
+[359/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\TRP.cpp for CXX dependencies
+[360/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\content_validation.cpp for CXX dependencies
+[361/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\ISO.cpp for CXX dependencies
+[362/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\audio_resampler.cpp for CXX dependencies
+[363/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\iso_cache.cpp for CXX dependencies
+[364/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\AudioDumper.cpp for CXX dependencies
+[365/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\audio_utils.cpp for CXX dependencies
+[366/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\AudioBackend.cpp for CXX dependencies
+[367/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\FAudio\FAudioBackend.cpp for CXX dependencies
+[368/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Loader\ps3_ufs2.cpp for CXX dependencies
+[369/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\FAudio\faudio_enumerator.cpp for CXX dependencies
+[370/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\MFC.cpp for CXX dependencies
+[371/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\ErrorCodes.cpp for CXX dependencies
+[372/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\PPUDisAsm.cpp for CXX dependencies
+[373/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\PPUAnalyser.cpp for CXX dependencies
+[374/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\PPUFunction.cpp for CXX dependencies
+[375/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\Cubeb\CubebBackend.cpp for CXX dependencies
+[376/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\PPUModule.cpp for CXX dependencies
+[377/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\PPUInterpreter.cpp for CXX dependencies
+[378/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\Cubeb\cubeb_enumerator.cpp for CXX dependencies
+[379/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\RawSPUThread.cpp for CXX dependencies
+[380/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\SPUAnalyser.cpp for CXX dependencies
+[381/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\XAudio2\XAudio2Backend.cpp for CXX dependencies
+[382/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\SPUASMJITRecompiler.cpp for CXX dependencies
+[383/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Audio\XAudio2\xaudio2_enumerator.cpp for CXX dependencies
+[384/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\SPUDisAsm.cpp for CXX dependencies
+[385/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv1\lv1.cpp for CXX dependencies
+[386/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\SPUInterpreter.cpp for CXX dependencies
+[387/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_bdemu.cpp for CXX dependencies
+[388/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\SPUCommonRecompiler.cpp for CXX dependencies
+[389/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\PPUTranslator.cpp for CXX dependencies
+[390/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_btsetting.cpp for CXX dependencies
+[391/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_bluetooth.cpp for CXX dependencies
+[392/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_cond.cpp for CXX dependencies
+[393/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_console.cpp for CXX dependencies
+[394/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\SPUThread.cpp for CXX dependencies
+[395/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_crypto_engine.cpp for CXX dependencies
+[396/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_config.cpp for CXX dependencies
+[397/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\PPUThread.cpp for CXX dependencies
+[398/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_event_flag.cpp for CXX dependencies
+[399/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_dbg.cpp for CXX dependencies
+[400/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_event.cpp for CXX dependencies
+[401/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_gamepad.cpp for CXX dependencies
+[402/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_game.cpp for CXX dependencies
+[403/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_fs.cpp for CXX dependencies
+[404/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_gpio.cpp for CXX dependencies
+[405/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_hid.cpp for CXX dependencies
+[406/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\lv2.cpp for CXX dependencies
+[407/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_interrupt.cpp for CXX dependencies
+[408/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_io.cpp for CXX dependencies
+[409/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_lwcond.cpp for CXX dependencies
+[410/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_lwmutex.cpp for CXX dependencies
+[411/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_cfw.cpp for CXX dependencies
+[412/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\SPULLVMRecompiler.cpp for CXX dependencies
+[413/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_memory.cpp for CXX dependencies
+[414/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_mmapper.cpp for CXX dependencies
+[415/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_mutex.cpp for CXX dependencies
+[416/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_overlay.cpp for CXX dependencies
+[417/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_ppu_thread.cpp for CXX dependencies
+[418/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_process.cpp for CXX dependencies
+[419/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_prx.cpp for CXX dependencies
+[420/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket.cpp for CXX dependencies
+[421/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_rwlock.cpp for CXX dependencies
+[422/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_rsx.cpp for CXX dependencies
+[423/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_raw.cpp for CXX dependencies
+[424/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\network_context.cpp for CXX dependencies
+[425/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net.cpp for CXX dependencies
+[426/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_native.cpp for CXX dependencies
+[427/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_p2ps.cpp for CXX dependencies
+[428/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_p2p.cpp for CXX dependencies
+[429/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_semaphore.cpp for CXX dependencies
+[430/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_sm.cpp for CXX dependencies
+[431/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\nt_p2p_port.cpp for CXX dependencies
+[432/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_spu.cpp for CXX dependencies
+[433/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\sys_net_helpers.cpp for CXX dependencies
+[434/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_storage.cpp for CXX dependencies
+[435/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_trace.cpp for CXX dependencies
+[436/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_rsxaudio.cpp for CXX dependencies
+[437/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_timer.cpp for CXX dependencies
+[438/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_tty.cpp for CXX dependencies
+[439/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_vm.cpp for CXX dependencies
+[440/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellAtrac.cpp for CXX dependencies
+[441/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellAtracMulti.cpp for CXX dependencies
+[442/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellAdec.cpp for CXX dependencies
+[443/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_ss.cpp for CXX dependencies
+[444/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellAudio.cpp for CXX dependencies
+[445/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellAtracXdec.cpp for CXX dependencies
+[446/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellAuthDialog.cpp for CXX dependencies
+[447/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellAvconfExt.cpp for CXX dependencies
+[448/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_time.cpp for CXX dependencies
+[449/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellBgdl.cpp for CXX dependencies
+[450/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellCamera.cpp for CXX dependencies
+[451/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellCelp8Enc.cpp for CXX dependencies
+[452/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellCelpEnc.cpp for CXX dependencies
+[453/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_uart.cpp for CXX dependencies
+[454/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellDaisy.cpp for CXX dependencies
+[455/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellCrossController.cpp for CXX dependencies
+[456/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_usbd.cpp for CXX dependencies
+[457/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellDmux.cpp for CXX dependencies
+[458/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellDtcpIpUtility.cpp for CXX dependencies
+[459/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellFiber.cpp for CXX dependencies
+[460/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellDmuxPamf.cpp for CXX dependencies
+[461/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellAudioOut.cpp for CXX dependencies
+[462/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellFont.cpp for CXX dependencies
+[463/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellFontFT.cpp for CXX dependencies
+[464/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cell_FreeType2.cpp for CXX dependencies
+[465/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellFs.cpp for CXX dependencies
+[466/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellGameExec.cpp for CXX dependencies
+[467/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellGame.cpp for CXX dependencies
+[468/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellGem.cpp for CXX dependencies
+[469/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellGifDec.cpp for CXX dependencies
+[470/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellHttp.cpp for CXX dependencies
+[471/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellGcmSys.cpp for CXX dependencies
+[472/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellImeJp.cpp for CXX dependencies
+[473/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellJpgDec.cpp for CXX dependencies
+[474/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellKb.cpp for CXX dependencies
+[475/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellJpgEnc.cpp for CXX dependencies
+[476/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellKey2char.cpp for CXX dependencies
+[477/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellLibprof.cpp for CXX dependencies
+[478/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellMic.cpp for CXX dependencies
+[479/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellMouse.cpp for CXX dependencies
+[480/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellMsgDialog.cpp for CXX dependencies
+[481/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellMusic.cpp for CXX dependencies
+[482/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellMusicSelectionContext.cpp for CXX dependencies
+[483/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellMusicExport.cpp for CXX dependencies
+[484/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellNetAoi.cpp for CXX dependencies
+[485/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellMusicDecode.cpp for CXX dependencies
+[486/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellHttpUtil.cpp for CXX dependencies
+[487/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellOvis.cpp for CXX dependencies
+[488/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellOskDialog.cpp for CXX dependencies
+[489/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellPamf.cpp for CXX dependencies
+[490/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellPad.cpp for CXX dependencies
+[491/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellL10n.cpp for CXX dependencies
+[492/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellPesmUtility.cpp for CXX dependencies
+[493/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellPhotoDecode.cpp for CXX dependencies
+[494/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellPhotoExport.cpp for CXX dependencies
+[495/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellPhotoImport.cpp for CXX dependencies
+[496/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellPrint.cpp for CXX dependencies
+[497/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellPngEnc.cpp for CXX dependencies
+[498/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellPngDec.cpp for CXX dependencies
+[499/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellRemotePlay.cpp for CXX dependencies
+[500/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellRec.cpp for CXX dependencies
+[501/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellRtcAlarm.cpp for CXX dependencies
+[502/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellResc.cpp for CXX dependencies
+[503/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellRtc.cpp for CXX dependencies
+[504/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellRudp.cpp for CXX dependencies
+[505/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSail.cpp for CXX dependencies
+[506/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSailRec.cpp for CXX dependencies
+[507/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSaveData.cpp for CXX dependencies
+[508/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellScreenshot.cpp for CXX dependencies
+[509/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellNetCtl.cpp for CXX dependencies
+[510/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSearch.cpp for CXX dependencies
+[511/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSheap.cpp for CXX dependencies
+[512/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSpudll.cpp for CXX dependencies
+[513/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSpursJq.cpp for CXX dependencies
+[514/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellStorage.cpp for CXX dependencies
+[515/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSsl.cpp for CXX dependencies
+[516/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSubDisplay.cpp for CXX dependencies
+[517/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSpurs.cpp for CXX dependencies
+[518/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSync2.cpp for CXX dependencies
+[519/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSpursSpu.cpp for CXX dependencies
+[520/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSync.cpp for CXX dependencies
+[521/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysconf.cpp for CXX dependencies
+[522/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysCache.cpp for CXX dependencies
+[523/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysutilAp.cpp for CXX dependencies
+[524/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysmodule.cpp for CXX dependencies
+[525/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysutilAvc2.cpp for CXX dependencies
+[526/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysutilAvc.cpp for CXX dependencies
+[527/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysutilAvcExt.cpp for CXX dependencies
+[528/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysutil.cpp for CXX dependencies
+[529/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysutilMisc.cpp for CXX dependencies
+[530/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellSysutilNpEula.cpp for CXX dependencies
+[531/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellUsbd.cpp for CXX dependencies
+[532/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellUsbpspcm.cpp for CXX dependencies
+[533/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellVideoExport.cpp for CXX dependencies
+[534/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellUserInfo.cpp for CXX dependencies
+[535/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellVideoPlayerUtility.cpp for CXX dependencies
+[536/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellVdec.cpp for CXX dependencies
+[537/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellVideoOut.cpp for CXX dependencies
+[538/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellVideoUpload.cpp for CXX dependencies
+[539/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellVoice.cpp for CXX dependencies
+[540/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellWebBrowser.cpp for CXX dependencies
+[541/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\cellVpost.cpp for CXX dependencies
+[542/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libad_async.cpp for CXX dependencies
+[543/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\HLE_PATCHES.cpp for CXX dependencies
+[544/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libad_core.cpp for CXX dependencies
+[545/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libdivx311dec.cpp for CXX dependencies
+[546/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libavcdec.cpp for CXX dependencies
+[547/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libdivxdec.cpp for CXX dependencies
+[548/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libmedi.cpp for CXX dependencies
+[549/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libmixer.cpp for CXX dependencies
+[550/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libmvcdec.cpp for CXX dependencies
+[551/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libsjvtd.cpp for CXX dependencies
+[552/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libsmvd2.cpp for CXX dependencies
+[553/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libsmvd4.cpp for CXX dependencies
+[554/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libsnd3.cpp for CXX dependencies
+[555/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libsvc1d.cpp for CXX dependencies
+[556/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libsynth2.cpp for CXX dependencies
+[557/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpMatchingInt.cpp for CXX dependencies
+[558/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpPlus.cpp for CXX dependencies
+[559/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\StaticHLE.cpp for CXX dependencies
+[560/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpUtil.cpp for CXX dependencies
+[561/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_crashdump.cpp for CXX dependencies
+[562/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_heap.cpp for CXX dependencies
+[563/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_game_.cpp for CXX dependencies
+[564/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_io_.cpp for CXX dependencies
+[565/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_libc_.cpp for CXX dependencies
+[566/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_libc.cpp for CXX dependencies
+[567/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_lv2dbg.cpp for CXX dependencies
+[568/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNp2.cpp for CXX dependencies
+[569/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpClans.cpp for CXX dependencies
+[570/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_lwcond_.cpp for CXX dependencies
+[571/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_lwmutex_.cpp for CXX dependencies
+[572/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpCommerce2.cpp for CXX dependencies
+[573/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_mempool.cpp for CXX dependencies
+[574/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNp.cpp for CXX dependencies
+[575/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpSns.cpp for CXX dependencies
+[576/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_mmapper_.cpp for CXX dependencies
+[577/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_net_.cpp for CXX dependencies
+[578/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\evdev_gun_handler.cpp for CXX dependencies
+[579/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpTus.cpp for CXX dependencies
+[580/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_ppu_thread_.cpp for CXX dependencies
+[581/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sceNpTrophy.cpp for CXX dependencies
+[582/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_prx_.cpp for CXX dependencies
+[583/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sysPrxForUser.cpp for CXX dependencies
+[584/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_spinlock.cpp for CXX dependencies
+[585/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_rsxaudio_.cpp for CXX dependencies
+[586/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\libfs_utility_init.cpp for CXX dependencies
+[587/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\Modules\sys_spu_.cpp for CXX dependencies
+[588/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\camera_config.cpp for CXX dependencies
+[589/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\gem_config.cpp for CXX dependencies
+[590/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\CPU\CPUThread.cpp for CXX dependencies
+[591/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\wiimote_config.cpp for CXX dependencies
+[592/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\interception.cpp for CXX dependencies
+[593/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\midi_config_types.cpp for CXX dependencies
+[594/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\KeyboardHandler.cpp for CXX dependencies
+[595/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\mouse_config.cpp for CXX dependencies
+[596/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\Buzz.cpp for CXX dependencies
+[597/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\MouseHandler.cpp for CXX dependencies
+[598/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\CPU\CPUTranslator.cpp for CXX dependencies
+[599/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\Dimensions.cpp for CXX dependencies
+[600/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\pad_config.cpp for CXX dependencies
+[601/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\GHLtar.cpp for CXX dependencies
+[602/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\GameTablet.cpp for CXX dependencies
+[603/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\pad_config_types.cpp for CXX dependencies
+[604/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\GunCon3.cpp for CXX dependencies
+[605/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\Infinity.cpp for CXX dependencies
+[606/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\pad_types.cpp for CXX dependencies
+[607/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\ps_move_data.cpp for CXX dependencies
+[608/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\rb3drums_config.cpp for CXX dependencies
+[609/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\PadHandler.cpp for CXX dependencies
+[610/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\KamenRider.cpp for CXX dependencies
+[611/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\recording_config.cpp for CXX dependencies
+[612/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\LogitechG27Config.cpp for CXX dependencies
+[613/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\RB3MidiKeyboard.cpp for CXX dependencies
+[614/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\RB3MidiGuitar.cpp for CXX dependencies
+[615/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\RB3MidiDrums.cpp for CXX dependencies
+[616/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\TopShotElite.cpp for CXX dependencies
+[617/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\Skylander.cpp for CXX dependencies
+[618/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\SkylanderPortalIPC.cpp for CXX dependencies
+[619/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\Turntable.cpp for CXX dependencies
+[620/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\TopShotFearmaster.cpp for CXX dependencies
+[621/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\usb_device.cpp for CXX dependencies
+[622/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\usb_microphone.cpp for CXX dependencies
+[623/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\usb_vfs.cpp for CXX dependencies
+[624/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\usio.cpp for CXX dependencies
+[625/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_gui_cache.cpp for CXX dependencies
+[626/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Io\LogitechG27.cpp for CXX dependencies
+[627/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\pb_helpers.cpp for CXX dependencies
+[628/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\clans_config.cpp for CXX dependencies
+[629/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\rpcn_config.cpp for CXX dependencies
+[630/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\rpcn_countries.cpp for CXX dependencies
+[631/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_cache.cpp for CXX dependencies
+[632/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_dnshook.cpp for CXX dependencies
+[633/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\upnp_config.cpp for CXX dependencies
+[634/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_contexts.cpp for CXX dependencies
+[635/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_helpers.cpp for CXX dependencies
+[636/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\clans_client.cpp for CXX dependencies
+[637/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\upnp_handler.cpp for CXX dependencies
+[638/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\signaling_handler.cpp for CXX dependencies
+[639/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_handler.cpp for CXX dependencies
+[640/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_structs_extra.cpp for CXX dependencies
+[641/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Capture\rsx_capture.cpp for CXX dependencies
+[642/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Capture\rsx_replay.cpp for CXX dependencies
+[643/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Memory\vm.cpp for CXX dependencies
+[644/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Common\surface_store.cpp for CXX dependencies
+[645/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Common\BufferUtils.cpp for CXX dependencies
+[646/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_requests_gui.cpp for CXX dependencies
+[647/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Common\texture_cache_types.cpp for CXX dependencies
+[648/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Common\TextureUtils.cpp for CXX dependencies
+[649/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_notifications.cpp for CXX dependencies
+[650/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Core\RSXContext.cpp for CXX dependencies
+[651/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\np_requests.cpp for CXX dependencies
+[652/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Common\texture_cache.cpp for CXX dependencies
+[653/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\ip_address.cpp for CXX dependencies
+[654/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Core\RSXDisplay.cpp for CXX dependencies
+[655/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\gcm_enums.cpp for CXX dependencies
+[656/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\generated\np2_structs.pb.cc for CXX dependencies
+[657/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\gcm_printing.cpp for CXX dependencies
+[658/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\NP\rpcn_client.cpp for CXX dependencies
+[659/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Core\RSXDrawCommands.cpp for CXX dependencies
+[660/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Host\MM.cpp for CXX dependencies
+[661/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Host\RSXDMAWriter.cpp for CXX dependencies
+[662/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\NV47\FW\reg_context.cpp for CXX dependencies
+[663/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\NV47\FW\draw_call.cpp for CXX dependencies
+[664/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\NV47\HW\nv0039.cpp for CXX dependencies
+[665/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\NV47\HW\common.cpp for CXX dependencies
+[666/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\NV47\HW\nv3089.cpp for CXX dependencies
+[667/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\NV47\HW\nv308a.cpp for CXX dependencies
+[668/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\NV47\HW\nv406e.cpp for CXX dependencies
+[669/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_icons.cpp for CXX dependencies
+[670/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\NV47\HW\nv4097.cpp for CXX dependencies
+[671/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_menu.cpp for CXX dependencies
+[672/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_menu_components.cpp for CXX dependencies
+[673/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GSRender.cpp for CXX dependencies
+[674/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_menu_message_box.cpp for CXX dependencies
+[675/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_menu_page.cpp for CXX dependencies
+[676/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Null\NullGSRender.cpp for CXX dependencies
+[677/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_menu_settings.cpp for CXX dependencies
+[678/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_menu_sidebar_page.cpp for CXX dependencies
+[679/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_menu_savestate.cpp for CXX dependencies
+[680/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\BigPicture\overlay_big_picture_game_details.cpp for CXX dependencies
+[681/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\BigPicture\overlay_big_picture.cpp for CXX dependencies
+[682/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\BigPicture\overlay_big_picture_game_grid.cpp for CXX dependencies
+[683/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\BigPicture\overlay_big_picture_game_info.cpp for CXX dependencies
+[684/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\BigPicture\overlay_big_picture_main_menu.cpp for CXX dependencies
+[685/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\FriendsList\overlay_friends_list_dialog.cpp for CXX dependencies
+[686/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_animation.cpp for CXX dependencies
+[687/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_animated_icon.cpp for CXX dependencies
+[688/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_audio.cpp for CXX dependencies
+[689/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_checkbox.cpp for CXX dependencies
+[690/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\HomeMenu\overlay_home_menu_main_menu.cpp for CXX dependencies
+[691/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlays.cpp for CXX dependencies
+[692/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_compile_notification.cpp for CXX dependencies
+[693/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_controls.cpp for CXX dependencies
+[694/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_cursor.cpp for CXX dependencies
+[695/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_debug_overlay.cpp for CXX dependencies
+[696/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_edit_text.cpp for CXX dependencies
+[697/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_fonts.cpp for CXX dependencies
+[698/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_list_view.cpp for CXX dependencies
+[699/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\Network\overlay_recvmessage_dialog.cpp for CXX dependencies
+[700/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_manager.cpp for CXX dependencies
+[701/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_message.cpp for CXX dependencies
+[702/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_media_list_dialog.cpp for CXX dependencies
+[703/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_message_dialog.cpp for CXX dependencies
+[704/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_osk_panel.cpp for CXX dependencies
+[705/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\Network\overlay_sendmessage_dialog.cpp for CXX dependencies
+[706/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_osk.cpp for CXX dependencies
+[707/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\Trophies\overlay_trophy_list_dialog.cpp for CXX dependencies
+[708/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_progress_bar.cpp for CXX dependencies
+[709/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_save_dialog.cpp for CXX dependencies
+[710/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_select.cpp for CXX dependencies
+[711/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_slider.cpp for CXX dependencies
+[712/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_tabs.cpp for CXX dependencies
+[713/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_trophy_notification.cpp for CXX dependencies
+[714/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_video.cpp for CXX dependencies
+[715/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_utils.cpp for CXX dependencies
+[716/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_user_list_dialog.cpp for CXX dependencies
+[717/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\Assembler\FPOpcodes.cpp for CXX dependencies
+[718/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\Shaders\shader_loading_dialog.cpp for CXX dependencies
+[719/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\Assembler\Passes\FP\RegisterAnnotationPass.cpp for CXX dependencies
+[720/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\Assembler\FPToCFG.cpp for CXX dependencies
+[721/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\Assembler\FPASM.cpp for CXX dependencies
+[722/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\Assembler\Passes\FP\RegisterDependencyPass.cpp for CXX dependencies
+[723/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\CgBinaryFragmentProgram.cpp for CXX dependencies
+[724/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\overlay_perf_metrics.cpp for CXX dependencies
+[725/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\CgBinaryVertexProgram.cpp for CXX dependencies
+[726/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\FragmentProgramDecompiler.cpp for CXX dependencies
+[727/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\GLSLCommon.cpp for CXX dependencies
+[728/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\program_util.cpp for CXX dependencies
+[729/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\ShaderInterpreter.cpp for CXX dependencies
+[730/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\SPIRVCommon.cpp for CXX dependencies
+[731/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\ProgramStateCache.cpp for CXX dependencies
+[732/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\VertexProgramDecompiler.cpp for CXX dependencies
+[733/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\RSXDisAsm.cpp for CXX dependencies
+[734/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Overlays\Shaders\shader_loading_dialog_native.cpp for CXX dependencies
+[735/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\RSXFIFO.cpp for CXX dependencies
+[736/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\RSXOffload.cpp for CXX dependencies
+[737/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Program\CgBinaryProgram.cpp for CXX dependencies
+[738/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\RSXTexture.cpp for CXX dependencies
+[739/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\rsx_vertex_data.cpp for CXX dependencies
+[740/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\RSXZCULL.cpp for CXX dependencies
+[741/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLCommonDecompiler.cpp for CXX dependencies
+[742/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\rsx_methods.cpp for CXX dependencies
+[743/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\Utils\rsx_utils.cpp for CXX dependencies
+[744/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GSFrameBase.cpp for CXX dependencies
+[745/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\RSXThread.cpp for CXX dependencies
+[746/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLCompute.cpp for CXX dependencies
+[747/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLDMA.cpp for CXX dependencies
+[748/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLFragmentProgram.cpp for CXX dependencies
+[749/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLHelpers.cpp for CXX dependencies
+[750/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLDraw.cpp for CXX dependencies
+[751/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLOverlays.cpp for CXX dependencies
+[752/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLPipelineCompiler.cpp for CXX dependencies
+[753/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLGSRender.cpp for CXX dependencies
+[754/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLPresent.cpp for CXX dependencies
+[755/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLResolveHelper.cpp for CXX dependencies
+[756/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\blitter.cpp for CXX dependencies
+[757/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLRenderTargets.cpp for CXX dependencies
+[758/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLShaderInterpreter.cpp for CXX dependencies
+[759/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLTextureCache.cpp for CXX dependencies
+[760/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLTexture.cpp for CXX dependencies
+[761/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\buffer_object.cpp for CXX dependencies
+[762/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\common.cpp for CXX dependencies
+[763/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\capabilities.cpp for CXX dependencies
+[764/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\ex.cpp for CXX dependencies
+[765/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\image.cpp for CXX dependencies
+[766/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\fbo.cpp for CXX dependencies
+[767/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\program.cpp for CXX dependencies
+[768/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\ring_buffer.cpp for CXX dependencies
+[769/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\chip_class.cpp for CXX dependencies
+[770/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\glutils\sampler.cpp for CXX dependencies
+[771/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\OpenGL.cpp for CXX dependencies
+[772/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLVertexProgram.cpp for CXX dependencies
+[773/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\upscalers\fsr1\fsr_pass.cpp for CXX dependencies
+[774/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\GL\GLVertexBuffers.cpp for CXX dependencies
+[775/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\barriers.cpp for CXX dependencies
+[776/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\upscalers\fsr1\fsr_pass.cpp for CXX dependencies
+[777/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\buffer_object.cpp for CXX dependencies
+[778/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\commands.cpp for CXX dependencies
+[779/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\ex.cpp for CXX dependencies
+[780/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\data_heap.cpp for CXX dependencies
+[781/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\debug_print.cpp for CXX dependencies
+[782/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\descriptors.cpp for CXX dependencies
+[783/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\image.cpp for CXX dependencies
+[784/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\unique_resource.cpp for CXX dependencies
+[785/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\image_helpers.cpp for CXX dependencies
+[786/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\instance.cpp for CXX dependencies
+[787/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\scratch.cpp for CXX dependencies
+[788/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\swapchain.cpp for CXX dependencies
+[789/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\sync.cpp for CXX dependencies
+[790/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKCommonDecompiler.cpp for CXX dependencies
+[791/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\memory.cpp for CXX dependencies
+[792/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\sampler.cpp for CXX dependencies
+[793/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\device.cpp for CXX dependencies
+[794/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\vkutils\shared.cpp for CXX dependencies
+[795/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKAsyncScheduler.cpp for CXX dependencies
+[796/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKMemAlloc.cpp for CXX dependencies
+[797/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKCommandStream.cpp for CXX dependencies
+[798/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKCommonPipelineLayout.cpp for CXX dependencies
+[799/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKCompute.cpp for CXX dependencies
+[800/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKDataHeapManager.cpp for CXX dependencies
+[801/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKDMA.cpp for CXX dependencies
+[802/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKFormats.cpp for CXX dependencies
+[803/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKFragmentProgram.cpp for CXX dependencies
+[804/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKDraw.cpp for CXX dependencies
+[805/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKFramebuffer.cpp for CXX dependencies
+[806/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKPipelineCompiler.cpp for CXX dependencies
+[807/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKOverlays.cpp for CXX dependencies
+[808/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKGSRender.cpp for CXX dependencies
+[809/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKHelpers.cpp for CXX dependencies
+[810/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKPresent.cpp for CXX dependencies
+[811/1732] Linking CXX static library 3rdparty\libsdl-org\SDL\Release\SDL3-static.lib
+[812/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKProgramPipeline.cpp for CXX dependencies
+[813/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKRenderPass.cpp for CXX dependencies
+[814/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKQueryPool.cpp for CXX dependencies
+[815/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKRenderTargets.cpp for CXX dependencies
+[816/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKResolveHelper.cpp for CXX dependencies
+[817/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKShaderInterpreter.cpp for CXX dependencies
+[818/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKResourceManager.cpp for CXX dependencies
+[819/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKVertexProgram.cpp for CXX dependencies
+[820/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKTexture.cpp for CXX dependencies
+[821/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKVertexBuffers.cpp for CXX dependencies
+[822/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VulkanAPI.cpp for CXX dependencies
+[823/1732] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\curl_sha512_256.c.obj
+[824/1732] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\md5.c.obj
+[825/1732] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\sha256.c.obj
+[826/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\RSX\VK\VKTextureCache.cpp for CXX dependencies
+[827/1732] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\vtls\vtls.c.obj
+[828/1732] Building C object 3rdparty\curl\curl\lib\CMakeFiles\libcurl_object.dir\Release\vtls\wolfssl.c.obj
+[829/1732] Linking C static library 3rdparty\curl\curl\lib\Release\libcurl.lib
+[830/1732] Generating CXX dyndep file rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\CXX.dd
+[831/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\localized_string.cpp.obj
+[832/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\system_config_types.cpp.obj
+[833/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\vfs_config.cpp.obj
+[834/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\IdManager.cpp.obj
+[835/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\scoped_progress_dialog.cpp.obj
+[836/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\stb_image.cpp.obj
+[837/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\system_config.cpp.obj
+[838/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\games_config.cpp.obj
+[839/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\cache_utils.cpp.obj
+[840/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\system_utils.cpp.obj
+[841/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\title.cpp.obj
+[842/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\VFS.cpp.obj
+[843/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\GDB.cpp.obj
+[844/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\savestate_utils.cpp.obj
+[845/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\console.cpp.obj
+[846/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\system_progress.cpp.obj
+[847/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\IPC_config.cpp.obj
+[848/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\SkylanderPortalIPC_config.cpp.obj
+[849/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\perf_meter.cpp.obj
+[850/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\perf_monitor.cpp.obj
+[851/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\IPC_socket.cpp.obj
+[852/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\media_utils.cpp.obj
+[853/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\emu_utils.cpp.obj
+[854/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\yaml.cpp.obj
+[855/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\video_provider.cpp.obj
+[856/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\logs.cpp.obj
+[857/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\dyn_lib.cpp.obj
+[858/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\vm_native.cpp.obj
+[859/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\cpu_stats.cpp.obj
+[860/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\serialization_ext.cpp.obj
+[861/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\cond.cpp.obj
+[862/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\cheat_info.cpp.obj
+[863/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\sysinfo.cpp.obj
+[864/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\Config.cpp.obj
+[865/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\LUrlParser.cpp.obj
+[866/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\util\atomic.cpp.obj
+[867/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\date_time.cpp.obj
+[868/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\aesni.cpp.obj
+[869/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\bin_patch.cpp.obj
+[870/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\mutex.cpp.obj
+[871/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\aes.cpp.obj
+[872/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\sema.cpp.obj
+[873/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\simple_ringbuf.cpp.obj
+[874/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\rXml.cpp.obj
+[875/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\JITASM.cpp.obj
+[876/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\lz.cpp.obj
+[877/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\System.cpp.obj
+[878/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\File.cpp.obj
+[879/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\stack_trace.cpp.obj
+[880/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\stereo_config.cpp.obj
+[881/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\StrFmt.cpp.obj
+[882/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\ec.cpp.obj
+[883/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\key_vault.cpp.obj
+[884/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\md5.cpp.obj
+[885/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\version.cpp.obj
+[886/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\sha1.cpp.obj
+[887/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\decrypt_binaries.cpp.obj
+[888/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\sha256.cpp.obj
+[889/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\JITLLVM.cpp.obj
+[890/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\unedat.cpp.obj
+[891/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\utils.cpp.obj
+[892/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\unzip.cpp.obj
+[893/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\unself.cpp.obj
+[894/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\disc.cpp.obj
+[895/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Crypto\unpkg.cpp.obj
+[896/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\ELF.cpp.obj
+[897/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\mself.cpp.obj
+[898/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\PUP.cpp.obj
+[899/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\ps3_identity.cpp.obj
+[900/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\ps3_boot_chain.cpp.obj
+[901/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\PSF.cpp.obj
+[902/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\ps3_bar.cpp.obj
+[903/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\ps3_flash.cpp.obj
+[904/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\ps3_xreg.cpp.obj
+[905/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\ps3_qcow2.cpp.obj
+[906/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\__\Utilities\Thread.cpp.obj
+[907/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\TAR.cpp.obj
+[908/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\IRD.cpp.obj
+[909/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\ps3_ufs2.cpp.obj
+[910/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\IRD_validation.cpp.obj
+[911/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\content_validation.cpp.obj
+[912/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\TROPUSR.cpp.obj
+[913/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\iso_cache.cpp.obj
+[914/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\audio_resampler.cpp.obj
+[915/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\ISO.cpp.obj
+[916/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\__\Loader\TRP.cpp.obj
+[917/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\AudioDumper.cpp.obj
+[918/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\AudioBackend.cpp.obj
+[919/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\audio_utils.cpp.obj
+[920/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\Cubeb\CubebBackend.cpp.obj
+[921/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\FAudio\faudio_enumerator.cpp.obj
+[922/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\Cubeb\cubeb_enumerator.cpp.obj
+[923/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\FAudio\FAudioBackend.cpp.obj
+[924/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\MFC.cpp.obj
+[925/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\XAudio2\xaudio2_enumerator.cpp.obj
+[926/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Audio\XAudio2\XAudio2Backend.cpp.obj
+[927/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\ErrorCodes.cpp.obj
+[928/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\SPUAnalyser.cpp.obj
+[929/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\PPUAnalyser.cpp.obj
+[930/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\PPUDisAsm.cpp.obj
+[931/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\RawSPUThread.cpp.obj
+[932/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\PPUFunction.cpp.obj
+[933/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv1\lv1.cpp.obj
+[934/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\SPUDisAsm.cpp.obj
+[935/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_bdemu.cpp.obj
+[936/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\PPUModule.cpp.obj
+[937/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\SPUInterpreter.cpp.obj
+[938/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\SPUASMJITRecompiler.cpp.obj
+[939/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_btsetting.cpp.obj
+[940/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_bluetooth.cpp.obj
+[941/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_cond.cpp.obj
+[942/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_console.cpp.obj
+[943/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_crypto_engine.cpp.obj
+[944/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\PPUInterpreter.cpp.obj
+[945/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\SPUCommonRecompiler.cpp.obj
+[946/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_dbg.cpp.obj
+[947/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_game.cpp.obj
+[948/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_config.cpp.obj
+[949/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_event_flag.cpp.obj
+[950/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_gamepad.cpp.obj
+[951/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\lv2.cpp.obj
+[952/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_gpio.cpp.obj
+[953/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\PPUTranslator.cpp.obj
+[954/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_event.cpp.obj
+[955/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_fs.cpp.obj
+[956/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\SPUThread.cpp.obj
+[957/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_hid.cpp.obj
+[958/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_io.cpp.obj
+[959/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_interrupt.cpp.obj
+[960/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_cfw.cpp.obj
+[961/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_lwcond.cpp.obj
+[962/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_lwmutex.cpp.obj
+[963/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_mutex.cpp.obj
+[964/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_mmapper.cpp.obj
+[965/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\lv2_socket.cpp.obj
+[966/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\lv2_socket_raw.cpp.obj
+[967/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_memory.cpp.obj
+[968/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\lv2_socket_native.cpp.obj
+[969/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\lv2_socket_p2p.cpp.obj
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(135): warning C4267: 'initializing': conversion from 'size_t' to '_Ty', possible loss of data
+        with
+        [
+            _Ty=u32
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(135): note: the template instantiation context (the oldest one first) is
+C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_p2p.cpp(209): note: see reference to function template instantiation 'std::tuple<s32,lv2_socket::sockopt_data,u32>::tuple<CellNotAnError,lv2_socket::sockopt_data&,size_t,0>(_This2 &&,lv2_socket::sockopt_data &,size_t &&) noexcept' being compiled
+        with
+        [
+            _This2=CellNotAnError
+        ]
+C:\Users\Thewoodsman\rpcs3\rpcs3\Emu\Cell\lv2\sys_net\lv2_socket_p2p.cpp(209): note: see the first reference to 'std::tuple<s32,lv2_socket::sockopt_data,u32>::tuple' in 'lv2_socket_p2p::getsockopt'
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(368): note: see reference to function template instantiation 'std::tuple<s32,lv2_socket::sockopt_data,u32>::tuple<std::_Exact_args_t,_Ty,lv2_socket::sockopt_data&,unsigned __int64,0>(_Tag,_This2 &&,lv2_socket::sockopt_data &,unsigned __int64 &&)' being compiled
+        with
+        [
+            _Ty=CellNotAnError,
+            _Tag=std::_Exact_args_t,
+            _This2=CellNotAnError
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(320): note: see reference to function template instantiation 'std::tuple<lv2_socket::sockopt_data,u32>::tuple<std::_Exact_args_t,lv2_socket::sockopt_data&,_Ty,0>(_Tag,_This2,_Ty &&)' being compiled
+        with
+        [
+            _Ty=size_t,
+            _Tag=std::_Exact_args_t,
+            _This2=lv2_socket::sockopt_data &
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(320): note: see reference to function template instantiation 'std::tuple<u32>::tuple<std::_Exact_args_t,_Ty,,0>(_Tag,_This2 &&)' being compiled
+        with
+        [
+            _Ty=size_t,
+            _Tag=std::_Exact_args_t,
+            _This2=size_t
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\tuple(320): note: see reference to function template instantiation 'std::_Tuple_val<_This>::_Tuple_val<_Ty>(_Other &&)' being compiled
+        with
+        [
+            _This=u32,
+            _Ty=size_t,
+            _Other=size_t
+        ]
+[970/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\network_context.cpp.obj
+[971/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\PPUThread.cpp.obj
+[972/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net.cpp.obj
+[973/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_ppu_thread.cpp.obj
+[974/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\lv2_socket_p2ps.cpp.obj
+[975/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_overlay.cpp.obj
+[976/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\nt_p2p_port.cpp.obj
+[977/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_net\sys_net_helpers.cpp.obj
+[978/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_process.cpp.obj
+[979/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_rwlock.cpp.obj
+[980/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_prx.cpp.obj
+[981/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_semaphore.cpp.obj
+[982/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_sm.cpp.obj
+[983/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_storage.cpp.obj
+[984/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_trace.cpp.obj
+[985/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_rsxaudio.cpp.obj
+[986/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_time.cpp.obj
+[987/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_ss.cpp.obj
+[988/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_rsx.cpp.obj
+[989/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_timer.cpp.obj
+[990/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_tty.cpp.obj
+[991/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_spu.cpp.obj
+[992/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_vm.cpp.obj
+[993/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellAtrac.cpp.obj
+[994/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_uart.cpp.obj
+[995/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellAtracMulti.cpp.obj
+[996/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellAuthDialog.cpp.obj
+[997/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\SPULLVMRecompiler.cpp.obj
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\utility(335): warning C4244: 'initializing': conversion from '_Ty' to '_Ty2', possible loss of data
+        with
+        [
+            _Ty=unsigned __int64
+        ]
+        and
+        [
+            _Ty2=unsigned int
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\utility(335): note: the template instantiation context (the oldest one first) is
+C:\Users\Thewoodsman\rpcs3\3rdparty\llvm\llvm\llvm\include\llvm/Transforms/Utils/InstructionWorklist.h(62): note: see reference to function template instantiation 'std::pair<KeyT,ValueT>::pair<llvm::Instruction*,unsigned __int64,0>(std::pair<llvm::Instruction *,unsigned __int64> &&) noexcept' being compiled
+        with
+        [
+            KeyT=llvm::Instruction *,
+            ValueT=unsigned int
+        ]
+C:\Users\Thewoodsman\rpcs3\3rdparty\llvm\llvm\llvm\include\llvm/Transforms/Utils/InstructionWorklist.h(62): note: see the first reference to 'std::pair<KeyT,ValueT>::pair' in 'llvm::InstructionWorklist::push'
+        with
+        [
+            KeyT=llvm::Instruction *,
+            ValueT=unsigned int
+        ]
+[998/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellBgdl.cpp.obj
+[999/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellAtracXdec.cpp.obj
+[1000/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellCelp8Enc.cpp.obj
+[1001/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellAvconfExt.cpp.obj
+[1002/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellAdec.cpp.obj
+[1003/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellCelpEnc.cpp.obj
+[1004/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellCamera.cpp.obj
+[1005/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellAudio.cpp.obj
+[1006/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\lv2\sys_usbd.cpp.obj
+[1007/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellAudioOut.cpp.obj
+[1008/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellCrossController.cpp.obj
+[1009/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellDaisy.cpp.obj
+[1010/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellDmux.cpp.obj
+[1011/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellDtcpIpUtility.cpp.obj
+[1012/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellFiber.cpp.obj
+[1013/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellFont.cpp.obj
+[1014/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellFontFT.cpp.obj
+[1015/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cell_FreeType2.cpp.obj
+[1016/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellDmuxPamf.cpp.obj
+[1017/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellFs.cpp.obj
+[1018/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellGameExec.cpp.obj
+[1019/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellGame.cpp.obj
+[1020/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellGifDec.cpp.obj
+[1021/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellHttp.cpp.obj
+[1022/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellImeJp.cpp.obj
+[1023/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellHttpUtil.cpp.obj
+[1024/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellJpgEnc.cpp.obj
+[1025/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellGcmSys.cpp.obj
+[1026/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellJpgDec.cpp.obj
+[1027/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellGem.cpp.obj
+[1028/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellKey2char.cpp.obj
+[1029/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellKb.cpp.obj
+[1030/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellLibprof.cpp.obj
+[1031/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellL10n.cpp.obj
+[1032/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellMic.cpp.obj
+[1033/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellMouse.cpp.obj
+[1034/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellMsgDialog.cpp.obj
+[1035/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellMusicSelectionContext.cpp.obj
+[1036/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellNetAoi.cpp.obj
+[1037/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellMusicExport.cpp.obj
+[1038/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellMusic.cpp.obj
+[1039/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellMusicDecode.cpp.obj
+[1040/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellPesmUtility.cpp.obj
+[1041/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellOvis.cpp.obj
+[1042/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellPamf.cpp.obj
+[1043/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellOskDialog.cpp.obj
+[1044/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellPhotoDecode.cpp.obj
+[1045/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellPad.cpp.obj
+[1046/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellNetCtl.cpp.obj
+[1047/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellPhotoExport.cpp.obj
+[1048/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellPngEnc.cpp.obj
+[1049/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellPrint.cpp.obj
+[1050/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellPhotoImport.cpp.obj
+[1051/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellPngDec.cpp.obj
+[1052/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellRemotePlay.cpp.obj
+[1053/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellRtcAlarm.cpp.obj
+[1054/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellResc.cpp.obj
+[1055/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellRec.cpp.obj
+[1056/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellRtc.cpp.obj
+[1057/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSailRec.cpp.obj
+[1058/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellRudp.cpp.obj
+[1059/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellScreenshot.cpp.obj
+[1060/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSail.cpp.obj
+[1061/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSheap.cpp.obj
+[1062/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSpudll.cpp.obj
+[1063/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSpursJq.cpp.obj
+[1064/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSearch.cpp.obj
+[1065/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSaveData.cpp.obj
+[1066/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellStorage.cpp.obj
+[1067/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSsl.cpp.obj
+[1068/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSubDisplay.cpp.obj
+[1069/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSync2.cpp.obj
+[1070/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysconf.cpp.obj
+[1071/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysutilAp.cpp.obj
+[1072/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysCache.cpp.obj
+[1073/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSpursSpu.cpp.obj
+[1074/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSync.cpp.obj
+[1075/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysutilAvc.cpp.obj
+[1076/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysutilAvc2.cpp.obj
+[1077/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysmodule.cpp.obj
+[1078/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysutilAvcExt.cpp.obj
+[1079/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSpurs.cpp.obj
+[1080/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellUsbd.cpp.obj
+[1081/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysutilNpEula.cpp.obj
+[1082/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysutilMisc.cpp.obj
+[1083/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellUsbpspcm.cpp.obj
+[1084/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellSysutil.cpp.obj
+[1085/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellUserInfo.cpp.obj
+[1086/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellVideoPlayerUtility.cpp.obj
+[1087/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellVideoExport.cpp.obj
+[1088/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellVideoUpload.cpp.obj
+[1089/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellVdec.cpp.obj
+[1090/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellVpost.cpp.obj
+[1091/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libad_async.cpp.obj
+[1092/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellWebBrowser.cpp.obj
+[1093/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellVoice.cpp.obj
+[1094/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libad_core.cpp.obj
+[1095/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libavcdec.cpp.obj
+[1096/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libdivx311dec.cpp.obj
+[1097/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\HLE_PATCHES.cpp.obj
+[1098/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\cellVideoOut.cpp.obj
+[1099/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libdivxdec.cpp.obj
+[1100/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libmedi.cpp.obj
+[1101/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libmixer.cpp.obj
+[1102/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libmvcdec.cpp.obj
+[1103/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libsmvd2.cpp.obj
+[1104/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libsjvtd.cpp.obj
+[1105/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libsmvd4.cpp.obj
+[1106/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libsnd3.cpp.obj
+[1107/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libsvc1d.cpp.obj
+[1108/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libsynth2.cpp.obj
+[1109/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpMatchingInt.cpp.obj
+[1110/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpPlus.cpp.obj
+[1111/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpUtil.cpp.obj
+[1112/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_crashdump.cpp.obj
+[1113/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\StaticHLE.cpp.obj
+[1114/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpClans.cpp.obj
+[1115/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpCommerce2.cpp.obj
+[1116/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpSns.cpp.obj
+[1117/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNp2.cpp.obj
+[1118/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_game_.cpp.obj
+[1119/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_heap.cpp.obj
+[1120/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_libc_.cpp.obj
+[1121/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_io_.cpp.obj
+[1122/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_libc.cpp.obj
+[1123/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpTus.cpp.obj
+[1124/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_lv2dbg.cpp.obj
+[1125/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNpTrophy.cpp.obj
+[1126/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sceNp.cpp.obj
+[1127/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_mempool.cpp.obj
+[1128/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_lwmutex_.cpp.obj
+[1129/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_lwcond_.cpp.obj
+[1130/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\evdev_gun_handler.cpp.obj
+[1131/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_mmapper_.cpp.obj
+[1132/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_ppu_thread_.cpp.obj
+[1133/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_net_.cpp.obj
+[1134/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_prx_.cpp.obj
+[1135/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sysPrxForUser.cpp.obj
+[1136/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_rsxaudio_.cpp.obj
+[1137/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_spinlock.cpp.obj
+[1138/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\libfs_utility_init.cpp.obj
+[1139/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Cell\Modules\sys_spu_.cpp.obj
+[1140/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\camera_config.cpp.obj
+[1141/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\Buzz.cpp.obj
+[1142/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\gem_config.cpp.obj
+[1143/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\Dimensions.cpp.obj
+[1144/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\wiimote_config.cpp.obj
+[1145/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\Infinity.cpp.obj
+[1146/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\CPU\CPUThread.cpp.obj
+[1147/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\midi_config_types.cpp.obj
+[1148/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\KeyboardHandler.cpp.obj
+[1149/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\GameTablet.cpp.obj
+[1150/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\GHLtar.cpp.obj
+[1151/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\KamenRider.cpp.obj
+[1152/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\interception.cpp.obj
+[1153/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\mouse_config.cpp.obj
+[1154/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\GunCon3.cpp.obj
+[1155/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\CPU\CPUTranslator.cpp.obj
+[1156/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\MouseHandler.cpp.obj
+[1157/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\pad_config.cpp.obj
+[1158/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\pad_config_types.cpp.obj
+[1159/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\rb3drums_config.cpp.obj
+[1160/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\ps_move_data.cpp.obj
+[1161/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\pad_types.cpp.obj
+[1162/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\recording_config.cpp.obj
+[1163/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\PadHandler.cpp.obj
+[1164/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\RB3MidiGuitar.cpp.obj
+[1165/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\RB3MidiDrums.cpp.obj
+[1166/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\RB3MidiKeyboard.cpp.obj
+[1167/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\Skylander.cpp.obj
+[1168/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\SkylanderPortalIPC.cpp.obj
+[1169/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\TopShotElite.cpp.obj
+[1170/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\usb_device.cpp.obj
+[1171/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\usb_microphone.cpp.obj
+[1172/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\Turntable.cpp.obj
+[1173/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\TopShotFearmaster.cpp.obj
+[1174/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\usb_vfs.cpp.obj
+[1175/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\LogitechG27Config.cpp.obj
+[1176/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\LogitechG27.cpp.obj
+[1177/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_gui_cache.cpp.obj
+[1178/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Io\usio.cpp.obj
+[1179/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_cache.cpp.obj
+[1180/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_dnshook.cpp.obj
+[1181/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_contexts.cpp.obj
+[1182/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\clans_config.cpp.obj
+[1183/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\pb_helpers.cpp.obj
+[1184/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_helpers.cpp.obj
+[1185/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_structs_extra.cpp.obj
+[1186/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\rpcn_config.cpp.obj
+[1187/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\rpcn_countries.cpp.obj
+[1188/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\clans_client.cpp.obj
+[1189/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\signaling_handler.cpp.obj
+[1190/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\upnp_config.cpp.obj
+[1191/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\upnp_handler.cpp.obj
+[1192/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_handler.cpp.obj
+[1193/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_requests_gui.cpp.obj
+[1194/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_notifications.cpp.obj
+[1195/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\ip_address.cpp.obj
+[1196/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Common\surface_store.cpp.obj
+[1197/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Capture\rsx_capture.cpp.obj
+[1198/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Common\texture_cache_types.cpp.obj
+[1199/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\np_requests.cpp.obj
+[1200/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Common\BufferUtils.cpp.obj
+[1201/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Capture\rsx_replay.cpp.obj
+[1202/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Core\RSXContext.cpp.obj
+[1203/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\gcm_enums.cpp.obj
+[1204/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Core\RSXDisplay.cpp.obj
+[1205/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\rpcn_client.cpp.obj
+[1206/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\NP\generated\np2_structs.pb.cc.obj
+[1207/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Common\TextureUtils.cpp.obj
+[1208/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Common\texture_cache.cpp.obj
+[1209/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Core\RSXDrawCommands.cpp.obj
+[1210/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\Memory\vm.cpp.obj
+[1211/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\gcm_printing.cpp.obj
+[1212/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Host\RSXDMAWriter.cpp.obj
+[1213/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\NV47\FW\reg_context.cpp.obj
+[1214/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Host\MM.cpp.obj
+[1215/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\NV47\FW\draw_call.cpp.obj
+[1216/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Null\NullGSRender.cpp.obj
+[1217/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GSRender.cpp.obj
+[1218/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\NV47\HW\common.cpp.obj
+[1219/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\NV47\HW\nv0039.cpp.obj
+[1220/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_icons.cpp.obj
+[1221/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\NV47\HW\nv308a.cpp.obj
+[1222/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\NV47\HW\nv3089.cpp.obj
+[1223/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_menu_components.cpp.obj
+[1224/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\NV47\HW\nv406e.cpp.obj
+[1225/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_menu_message_box.cpp.obj
+[1226/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\NV47\HW\nv4097.cpp.obj
+[1227/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_menu.cpp.obj
+[1228/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\FriendsList\overlay_friends_list_dialog.cpp.obj
+[1229/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_menu_page.cpp.obj
+[1230/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_menu_main_menu.cpp.obj
+[1231/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_menu_sidebar_page.cpp.obj
+[1232/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_menu_savestate.cpp.obj
+[1233/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\BigPicture\overlay_big_picture.cpp.obj
+[1234/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\BigPicture\overlay_big_picture_game_info.cpp.obj
+[1235/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\BigPicture\overlay_big_picture_game_details.cpp.obj
+[1236/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_animated_icon.cpp.obj
+[1237/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\BigPicture\overlay_big_picture_main_menu.cpp.obj
+[1238/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\HomeMenu\overlay_home_menu_settings.cpp.obj
+[1239/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_animation.cpp.obj
+[1240/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\BigPicture\overlay_big_picture_game_grid.cpp.obj
+[1241/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_audio.cpp.obj
+[1242/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\Network\overlay_recvmessage_dialog.cpp.obj
+[1243/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\Network\overlay_sendmessage_dialog.cpp.obj
+[1244/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_checkbox.cpp.obj
+[1245/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\Trophies\overlay_trophy_list_dialog.cpp.obj
+[1246/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlays.cpp.obj
+[1247/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_compile_notification.cpp.obj
+[1248/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_edit_text.cpp.obj
+[1249/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_cursor.cpp.obj
+[1250/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_controls.cpp.obj
+[1251/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_fonts.cpp.obj
+[1252/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_list_view.cpp.obj
+[1253/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_debug_overlay.cpp.obj
+[1254/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_manager.cpp.obj
+[1255/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_message.cpp.obj
+[1256/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_media_list_dialog.cpp.obj
+[1257/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_progress_bar.cpp.obj
+[1258/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_message_dialog.cpp.obj
+[1259/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_osk.cpp.obj
+[1260/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_select.cpp.obj
+[1261/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_save_dialog.cpp.obj
+[1262/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_slider.cpp.obj
+[1263/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_tabs.cpp.obj
+[1264/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_utils.cpp.obj
+[1265/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_trophy_notification.cpp.obj
+[1266/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_video.cpp.obj
+[1267/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_user_list_dialog.cpp.obj
+[1268/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\Shaders\shader_loading_dialog.cpp.obj
+[1269/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_perf_metrics.cpp.obj
+[1270/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\Assembler\FPOpcodes.cpp.obj
+[1271/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\Assembler\FPASM.cpp.obj
+[1272/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\Assembler\FPToCFG.cpp.obj
+[1273/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\overlay_osk_panel.cpp.obj
+[1274/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\Assembler\Passes\FP\RegisterAnnotationPass.cpp.obj
+[1275/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\Assembler\Passes\FP\RegisterDependencyPass.cpp.obj
+[1276/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\CgBinaryFragmentProgram.cpp.obj
+[1277/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\CgBinaryVertexProgram.cpp.obj
+[1278/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\program_util.cpp.obj
+[1279/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Overlays\Shaders\shader_loading_dialog_native.cpp.obj
+[1280/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\CgBinaryProgram.cpp.obj
+[1281/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\GLSLCommon.cpp.obj
+[1282/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\ProgramStateCache.cpp.obj
+[1283/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\ShaderInterpreter.cpp.obj
+[1284/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\FragmentProgramDecompiler.cpp.obj
+[1285/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\SPIRVCommon.cpp.obj
+[1286/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Program\VertexProgramDecompiler.cpp.obj
+[1287/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GSFrameBase.cpp.obj
+[1288/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\RSXDisAsm.cpp.obj
+[1289/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLCommonDecompiler.cpp.obj
+[1290/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\RSXOffload.cpp.obj
+[1291/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\rsx_vertex_data.cpp.obj
+[1292/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\RSXFIFO.cpp.obj
+[1293/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\RSXTexture.cpp.obj
+[1294/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\Utils\rsx_utils.cpp.obj
+[1295/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLDMA.cpp.obj
+[1296/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLCompute.cpp.obj
+[1297/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\RSXZCULL.cpp.obj
+[1298/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\rsx_methods.cpp.obj
+[1299/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLFragmentProgram.cpp.obj
+[1300/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLHelpers.cpp.obj
+[1301/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\RSXThread.cpp.obj
+[1302/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLOverlays.cpp.obj
+[1303/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLPipelineCompiler.cpp.obj
+[1304/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\buffer_object.cpp.obj
+[1305/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\blitter.cpp.obj
+[1306/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLResolveHelper.cpp.obj
+[1307/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\common.cpp.obj
+[1308/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLDraw.cpp.obj
+[1309/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\capabilities.cpp.obj
+[1310/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\ex.cpp.obj
+[1311/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\fbo.cpp.obj
+[1312/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLGSRender.cpp.obj
+[1313/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLTextureCache.cpp.obj
+[1314/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\image.cpp.obj
+[1315/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLShaderInterpreter.cpp.obj
+[1316/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLPresent.cpp.obj
+[1317/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\program.cpp.obj
+[1318/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\ring_buffer.cpp.obj
+[1319/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLRenderTargets.cpp.obj
+[1320/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\glutils\sampler.cpp.obj
+[1321/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLTexture.cpp.obj
+[1322/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\OpenGL.cpp.obj
+[1323/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\chip_class.cpp.obj
+[1324/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLVertexProgram.cpp.obj
+[1325/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\upscalers\fsr1\fsr_pass.cpp.obj
+[1326/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\buffer_object.cpp.obj
+[1327/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\commands.cpp.obj
+[1328/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\barriers.cpp.obj
+[1329/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\upscalers\fsr1\fsr_pass.cpp.obj
+[1330/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\ex.cpp.obj
+[1331/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\debug_print.cpp.obj
+[1332/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\descriptors.cpp.obj
+[1333/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\data_heap.cpp.obj
+[1334/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\image_helpers.cpp.obj
+[1335/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\image.cpp.obj
+[1336/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\GL\GLVertexBuffers.cpp.obj
+[1337/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\scratch.cpp.obj
+[1338/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\sync.cpp.obj
+[1339/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\unique_resource.cpp.obj
+[1340/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\instance.cpp.obj
+[1341/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\swapchain.cpp.obj
+[1342/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\sampler.cpp.obj
+[1343/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\shared.cpp.obj
+[1344/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\memory.cpp.obj
+[1345/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKCommonDecompiler.cpp.obj
+[1346/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\vkutils\device.cpp.obj
+[1347/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKAsyncScheduler.cpp.obj
+[1348/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKCommonPipelineLayout.cpp.obj
+[1349/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKCompute.cpp.obj
+[1350/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKDataHeapManager.cpp.obj
+[1351/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKCommandStream.cpp.obj
+[1352/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKFormats.cpp.obj
+[1353/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKMemAlloc.cpp.obj
+[1354/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKFramebuffer.cpp.obj
+[1355/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKFragmentProgram.cpp.obj
+[1356/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKDMA.cpp.obj
+[1357/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKPipelineCompiler.cpp.obj
+[1358/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKProgramPipeline.cpp.obj
+[1359/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKOverlays.cpp.obj
+[1360/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKRenderPass.cpp.obj
+[1361/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKDraw.cpp.obj
+[1362/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKHelpers.cpp.obj
+[1363/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKResolveHelper.cpp.obj
+[1364/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKShaderInterpreter.cpp.obj
+[1365/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKRenderTargets.cpp.obj
+[1366/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKVertexProgram.cpp.obj
+[1367/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKPresent.cpp.obj
+[1368/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKGSRender.cpp.obj
+[1369/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VulkanAPI.cpp.obj
+[1370/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKQueryPool.cpp.obj
+[1371/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKResourceManager.cpp.obj
+[1372/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKTexture.cpp.obj
+[1373/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKVertexBuffers.cpp.obj
+[1374/1732] Building CXX object rpcs3\Emu\CMakeFiles\rpcs3_emu.dir\Release\RSX\VK\VKTextureCache.cpp.obj
+[1375/1732] Linking CXX static library rpcs3\Emu\Release\rpcs3_emu.lib
+[1376/1732] Automatic MOC and UIC for target rpcs3_ui
+[1377/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\breakpoint_handler.cpp for CXX dependencies
+[1378/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\config_adapter.cpp for CXX dependencies
+[1379/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\auto_scroll_label.cpp for CXX dependencies
+[1380/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\call_stack_list.cpp for CXX dependencies
+[1381/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\clans_settings_dialog.cpp for CXX dependencies
+[1382/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\wiimote_settings_dialog.cpp for CXX dependencies
+[1383/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\config_checker.cpp for CXX dependencies
+[1384/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\breakpoint_list.cpp for CXX dependencies
+[1385/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\auto_pause_settings_dialog.cpp for CXX dependencies
+[1386/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\basic_mouse_settings_dialog.cpp for CXX dependencies
+[1387/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\config_database.cpp for CXX dependencies
+[1388/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\_discord_utils.cpp for CXX dependencies
+[1389/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\about_dialog.cpp for CXX dependencies
+[1390/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\anaglyph_settings_dialog.cpp for CXX dependencies
+[1391/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\cheat_manager.cpp for CXX dependencies
+[1392/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\cg_disasm_window.cpp for CXX dependencies
+[1393/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\camera_settings_dialog.cpp for CXX dependencies
+[1394/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\content_integrity.cpp for CXX dependencies
+[1395/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\curl_handle.cpp for CXX dependencies
+[1396/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\emu_settings_type.cpp for CXX dependencies
+[1397/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\custom_dialog.cpp for CXX dependencies
+[1398/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\debugger_add_bp_window.cpp for CXX dependencies
+[1399/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\custom_table_widget_item.cpp for CXX dependencies
+[1400/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\fatal_error_dialog.cpp for CXX dependencies
+[1401/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\emu_settings.cpp for CXX dependencies
+[1402/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\elf_memory_dumping_dialog.cpp for CXX dependencies
+[1403/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\debugger_list.cpp for CXX dependencies
+[1404/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\find_dialog.cpp for CXX dependencies
+[1405/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\debugger_frame.cpp for CXX dependencies
+[1406/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\downloader.cpp for CXX dependencies
+[1407/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\emulated_pad_settings_dialog.cpp for CXX dependencies
+[1408/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\dimensions_dialog.cpp for CXX dependencies
+[1409/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\flow_widget.cpp for CXX dependencies
+[1410/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\flow_widget_item.cpp for CXX dependencies
+[1411/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\emulated_logitech_g27_settings_dialog.cpp for CXX dependencies
+[1412/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_list.cpp for CXX dependencies
+[1413/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\flow_layout.cpp for CXX dependencies
+[1414/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_list_base.cpp for CXX dependencies
+[1415/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_compatibility.cpp for CXX dependencies
+[1416/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_list_delegate.cpp for CXX dependencies
+[1417/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_list_grid_item.cpp for CXX dependencies
+[1418/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\guest_memory_dumper.cpp for CXX dependencies
+[1419/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_list_grid.cpp for CXX dependencies
+[1420/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_list_actions.cpp for CXX dependencies
+[1421/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_list_context_menu.cpp for CXX dependencies
+[1422/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_list_table.cpp for CXX dependencies
+[1423/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\gui_game_info.cpp for CXX dependencies
+[1424/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\gl_gs_frame.cpp for CXX dependencies
+[1425/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\gs_frame.cpp for CXX dependencies
+[1426/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\game_list_frame.cpp for CXX dependencies
+[1427/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\gui_settings.cpp for CXX dependencies
+[1428/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\localized.cpp for CXX dependencies
+[1429/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\input_dialog.cpp for CXX dependencies
+[1430/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\instruction_editor_dialog.cpp for CXX dependencies
+[1431/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\sky_ipc_settings_dialog.cpp for CXX dependencies
+[1432/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\localized_emu.cpp for CXX dependencies
+[1433/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\infinity_dialog.cpp for CXX dependencies
+[1434/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\gui_application.cpp for CXX dependencies
+[1435/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\ipc_settings_dialog.cpp for CXX dependencies
+[1436/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\log_level_dialog.cpp for CXX dependencies
+[1437/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\kamen_rider_dialog.cpp for CXX dependencies
+[1438/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\log_frame.cpp for CXX dependencies
+[1439/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\log_viewer.cpp for CXX dependencies
+[1440/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\kernel_explorer.cpp for CXX dependencies
+[1441/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\microphone_creator.cpp for CXX dependencies
+[1442/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\midi_creator.cpp for CXX dependencies
+[1443/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\memory_string_searcher.cpp for CXX dependencies
+[1444/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\movie_item_base.cpp for CXX dependencies
+[1445/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\memory_viewer_panel.cpp for CXX dependencies
+[1446/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\msg_dialog_frame.cpp for CXX dependencies
+[1447/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\movie_item.cpp for CXX dependencies
+[1448/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\music_player_dialog.cpp for CXX dependencies
+[1449/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\osk_dialog_frame.cpp for CXX dependencies
+[1450/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\pad_led_settings_dialog.cpp for CXX dependencies
+[1451/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\pad_motion_settings_dialog.cpp for CXX dependencies
+[1452/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\progress_indicator.cpp for CXX dependencies
+[1453/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\persistent_settings.cpp for CXX dependencies
+[1454/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\permissions.cpp for CXX dependencies
+[1455/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\pad_settings_dialog.cpp for CXX dependencies
+[1456/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\patch_creator_dialog.cpp for CXX dependencies
+[1457/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\progress_dialog.cpp for CXX dependencies
+[1458/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\pkg_install_dialog.cpp for CXX dependencies
+[1459/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\qt_camera_handler.cpp for CXX dependencies
+[1460/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\qt_camera_video_sink.cpp for CXX dependencies
+[1461/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\patch_manager_dialog.cpp for CXX dependencies
+[1462/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\main_window.cpp for CXX dependencies
+[1463/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\qt_music_handler.cpp for CXX dependencies
+[1464/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\ps_move_tracker_dialog.cpp for CXX dependencies
+[1465/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\qt_utils.cpp for CXX dependencies
+[1466/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\qt_video_source.cpp for CXX dependencies
+[1467/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\register_editor_dialog.cpp for CXX dependencies
+[1468/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\recording_settings_dialog.cpp for CXX dependencies
+[1469/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\render_creator.cpp for CXX dependencies
+[1470/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\raw_mouse_settings_dialog.cpp for CXX dependencies
+[1471/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\save_data_dialog.cpp for CXX dependencies
+[1472/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\save_data_info_dialog.cpp for CXX dependencies
+[1473/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\save_data_list_dialog.cpp for CXX dependencies
+[1474/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\recvmessage_dialog_frame.cpp for CXX dependencies
+[1475/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\rsx_debugger.cpp for CXX dependencies
+[1476/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\screenshot_item.cpp for CXX dependencies
+[1477/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\rpcn_settings_dialog.cpp for CXX dependencies
+[1478/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\screenshot_preview.cpp for CXX dependencies
+[1479/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\settings.cpp for CXX dependencies
+[1480/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\savestate_manager_dialog.cpp for CXX dependencies
+[1481/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\screenshot_manager_dialog.cpp for CXX dependencies
+[1482/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\save_manager_dialog.cpp for CXX dependencies
+[1483/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\shortcut_dialog.cpp for CXX dependencies
+[1484/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\shortcut_handler.cpp for CXX dependencies
+[1485/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\shortcut_settings.cpp for CXX dependencies
+[1486/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\sendmessage_dialog_frame.cpp for CXX dependencies
+[1487/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\settings_dialog.cpp for CXX dependencies
+[1488/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\sound_effect_manager_dialog.cpp for CXX dependencies
+[1489/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\syntax_highlighter.cpp for CXX dependencies
+[1490/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\system_cmd_dialog.cpp for CXX dependencies
+[1491/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\skylander_dialog.cpp for CXX dependencies
+[1492/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\table_item_delegate.cpp for CXX dependencies
+[1493/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\user_account.cpp for CXX dependencies
+[1494/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\tooltips.cpp for CXX dependencies
+[1495/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\trophy_notification_frame.cpp for CXX dependencies
+[1496/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\shortcut_utils.cpp for CXX dependencies
+[1497/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\steam_utils.cpp for CXX dependencies
+[1498/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\trophy_notification_helper.cpp for CXX dependencies
+[1499/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\gamemode_control.cpp for CXX dependencies
+[1500/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\uuid.cpp for CXX dependencies
+[1501/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\display_sleep_control.cpp for CXX dependencies
+[1502/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\vfs_dialog_path_widget.cpp for CXX dependencies
+[1503/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\user_manager_dialog.cpp for CXX dependencies
+[1504/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\vfs_dialog.cpp for CXX dependencies
+[1505/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\update_manager.cpp for CXX dependencies
+[1506/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\vfs_dialog_tab.cpp for CXX dependencies
+[1507/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\vfs_dialog_usb_input.cpp for CXX dependencies
+[1508/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\vfs_tool_dialog.cpp for CXX dependencies
+[1509/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\vfs_dialog_usb_tab.cpp for CXX dependencies
+[1510/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\video_label.cpp for CXX dependencies
+[1511/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\trophy_manager_dialog.cpp for CXX dependencies
+[1512/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\evdev_joystick_handler.cpp for CXX dependencies
+[1513/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3_version.cpp for CXX dependencies
+[1514/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\stdafx.cpp for CXX dependencies
+[1515/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3qt\welcome_dialog.cpp for CXX dependencies
+[1516/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\module_verifier.cpp for CXX dependencies
+[1517/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\blob_detector.cpp for CXX dependencies
+[1518/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\camera_video_sink.cpp for CXX dependencies
+[1519/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\ds3_pad_handler.cpp for CXX dependencies
+[1520/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\headless_application.cpp for CXX dependencies
+[1521/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\ds4_pad_handler.cpp for CXX dependencies
+[1522/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\dualsense_pad_handler.cpp for CXX dependencies
+[1523/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\hid_pad_handler.cpp for CXX dependencies
+[1524/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\hid_instance.cpp for CXX dependencies
+[1525/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\basic_keyboard_handler.cpp for CXX dependencies
+[1526/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\rpcs3.cpp for CXX dependencies
+[1527/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\main_application.cpp for CXX dependencies
+[1528/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\basic_mouse_handler.cpp for CXX dependencies
+[1529/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\ps_move_config.cpp for CXX dependencies
+[1530/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\ps_move_calibration.cpp for CXX dependencies
+[1531/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\mm_joystick_handler.cpp for CXX dependencies
+[1532/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\product_info.cpp for CXX dependencies
+[1533/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\ps_move_handler.cpp for CXX dependencies
+[1534/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\ps_move_tracker.cpp for CXX dependencies
+[1535/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\mouse_gyro_handler.cpp for CXX dependencies
+[1536/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\keyboard_pad_handler.cpp for CXX dependencies
+[1537/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\gui_pad_thread.cpp for CXX dependencies
+[1538/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\sdl_camera_handler.cpp for CXX dependencies
+[1539/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\rpcs3_ui_autogen\G744SNA36W\qrc_windows_Release.cpp.obj
+[1540/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\sdl_camera_video_sink.cpp for CXX dependencies
+[1541/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\skateboard_pad_handler.cpp for CXX dependencies
+[1542/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\wiimote_handler.cpp for CXX dependencies
+[1543/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\raw_mouse_config.cpp for CXX dependencies
+[1544/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\sdl_instance.cpp for CXX dependencies
+[1545/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\sdl_pad_handler.cpp for CXX dependencies
+[1546/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\raw_mouse_handler.cpp for CXX dependencies
+[1547/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\pad_thread.cpp for CXX dependencies
+[1548/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\Input\xinput_pad_handler.cpp for CXX dependencies
+[1549/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\rpcs3_ui_autogen\G744SNA36W\qrc_resources_Release.cpp.obj
+[1550/1732] Generating CXX dyndep file rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\CXX.dd
+[1551/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\breakpoint_handler.cpp.obj
+[1552/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\config_adapter.cpp.obj
+[1553/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\auto_scroll_label.cpp.obj
+[1554/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\call_stack_list.cpp.obj
+[1555/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\clans_settings_dialog.cpp.obj
+[1556/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\breakpoint_list.cpp.obj
+[1557/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\anaglyph_settings_dialog.cpp.obj
+[1558/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\auto_pause_settings_dialog.cpp.obj
+[1559/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\wiimote_settings_dialog.cpp.obj
+[1560/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\basic_mouse_settings_dialog.cpp.obj
+[1561/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\about_dialog.cpp.obj
+[1562/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\camera_settings_dialog.cpp.obj
+[1563/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\_discord_utils.cpp.obj
+[1564/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\cg_disasm_window.cpp.obj
+[1565/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\config_checker.cpp.obj
+[1566/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\cheat_manager.cpp.obj
+[1567/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\curl_handle.cpp.obj
+[1568/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\content_integrity.cpp.obj
+[1569/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\custom_dialog.cpp.obj
+[1570/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\config_database.cpp.obj
+[1571/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\custom_table_widget_item.cpp.obj
+[1572/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\debugger_add_bp_window.cpp.obj
+[1573/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\downloader.cpp.obj
+[1574/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\emu_settings_type.cpp.obj
+[1575/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\fatal_error_dialog.cpp.obj
+[1576/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\dimensions_dialog.cpp.obj
+[1577/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\find_dialog.cpp.obj
+[1578/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\emu_settings.cpp.obj
+[1579/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\elf_memory_dumping_dialog.cpp.obj
+[1580/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\emulated_logitech_g27_settings_dialog.cpp.obj
+[1581/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\debugger_list.cpp.obj
+[1582/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\flow_widget.cpp.obj
+[1583/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\flow_widget_item.cpp.obj
+[1584/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\emulated_pad_settings_dialog.cpp.obj
+[1585/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\rpcs3_ui_autogen\mocs_compilation_Release.cpp.obj
+[1586/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_list.cpp.obj
+[1587/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\flow_layout.cpp.obj
+[1588/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\debugger_frame.cpp.obj
+[1589/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_list_base.cpp.obj
+[1590/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_compatibility.cpp.obj
+[1591/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_list_grid_item.cpp.obj
+[1592/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_list_delegate.cpp.obj
+[1593/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\gl_gs_frame.cpp.obj
+[1594/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_list_grid.cpp.obj
+[1595/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_list_actions.cpp.obj
+[1596/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\guest_memory_dumper.cpp.obj
+[1597/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\gui_game_info.cpp.obj
+[1598/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_list_table.cpp.obj
+[1599/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\input_dialog.cpp.obj
+[1600/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_list_context_menu.cpp.obj
+[1601/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\instruction_editor_dialog.cpp.obj
+[1602/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\gui_settings.cpp.obj
+[1603/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\sky_ipc_settings_dialog.cpp.obj
+[1604/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\ipc_settings_dialog.cpp.obj
+[1605/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\infinity_dialog.cpp.obj
+[1606/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\game_list_frame.cpp.obj
+[1607/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\gs_frame.cpp.obj
+[1608/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\localized.cpp.obj
+[1609/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\localized_emu.cpp.obj
+[1610/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\kamen_rider_dialog.cpp.obj
+[1611/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\log_level_dialog.cpp.obj
+[1612/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\microphone_creator.cpp.obj
+[1613/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\midi_creator.cpp.obj
+[1614/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\memory_string_searcher.cpp.obj
+[1615/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\log_frame.cpp.obj
+[1616/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\log_viewer.cpp.obj
+[1617/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\msg_dialog_frame.cpp.obj
+[1618/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\music_player_dialog.cpp.obj
+[1619/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\movie_item.cpp.obj
+[1620/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\osk_dialog_frame.cpp.obj
+[1621/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\gui_application.cpp.obj
+[1622/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\movie_item_base.cpp.obj
+[1623/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\kernel_explorer.cpp.obj
+[1624/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\pad_led_settings_dialog.cpp.obj
+[1625/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\memory_viewer_panel.cpp.obj
+[1626/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\progress_indicator.cpp.obj
+[1627/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\pad_motion_settings_dialog.cpp.obj
+[1628/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\persistent_settings.cpp.obj
+[1629/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\progress_dialog.cpp.obj
+[1630/1732] Building CXX object rpcs3\rpcs3qt\CMakeFiles\rpcs3_ui.dir\Release\permissions.cpp.obj

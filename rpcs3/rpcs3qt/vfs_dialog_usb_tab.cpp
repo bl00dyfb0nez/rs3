@@ -9,6 +9,12 @@
 #include <QScrollBar>
 #include <QMenu>
 #include <QMouseEvent>
+#include <QComboBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QFileDialog>
+#include <QDir>
+#include <QMessageBox>
 
 constexpr int max_usb_devices = 8;
 
@@ -72,10 +78,43 @@ vfs_dialog_usb_tab::vfs_dialog_usb_tab(cfg::device_entry* cfg_node, std::shared_
 	connect(m_usb_table, &QTableWidget::customContextMenuRequested, this, &vfs_dialog_usb_tab::show_context_menu);
 	connect(m_usb_table, &QTableWidget::itemDoubleClicked, this, &vfs_dialog_usb_tab::double_clicked_slot);
 
+	// A console does not have eight ports because the table has eight rows.
+	// The .2 models carry two (dev_usb000 and 001) and the older ones eight
+	// (dev_usb000 to 007), so the tab offers the count and hides the rest.
+	QHBoxLayout* ports = new QHBoxLayout;
+	ports->addWidget(new QLabel(tr("Console USB ports")));
+
+	m_port_count = new QComboBox(this);
+	m_port_count->addItem(tr("2 - dev_usb000 to dev_usb001 (.2 models)"), 2);
+	m_port_count->addItem(tr("8 - dev_usb000 to dev_usb007 (older models)"), 8);
+	m_port_count->setCurrentIndex(m_port_count->findData(m_gui_settings->GetValue(gui::fs_usb_port_count).toInt() == 8 ? 8 : 2));
+	ports->addWidget(m_port_count);
+
+	ports->addWidget(new QLabel(tr("The rows above the count are the ports this console exposes.")), 1);
+
+	connect(m_port_count, &QComboBox::currentIndexChanged, this, [this](int)
+	{
+		m_gui_settings->SetValue(gui::fs_usb_port_count, m_port_count->currentData().toInt());
+		apply_port_count();
+	});
+
 	QVBoxLayout* vbox = new QVBoxLayout;
+	vbox->addLayout(ports);
 	vbox->addWidget(m_usb_table);
 
 	setLayout(vbox);
+
+	apply_port_count();
+}
+
+void vfs_dialog_usb_tab::apply_port_count() const
+{
+	const int count = m_gui_settings->GetValue(gui::fs_usb_port_count).toInt() == 8 ? 8 : 2;
+
+	for (int i = 0; i < max_usb_devices; i++)
+	{
+		m_usb_table->setRowHidden(i, i >= count);
+	}
 }
 
 void vfs_dialog_usb_tab::set_settings() const
@@ -84,6 +123,11 @@ void vfs_dialog_usb_tab::set_settings() const
 
 	for (int i = 0; i < max_usb_devices; i++)
 	{
+		if (m_usb_table->isRowHidden(i))
+		{
+			continue;
+		}
+
 		cfg::device_info info{};
 
 		info.path   = m_usb_table->item(i, usb_column::usb_path)->text().toStdString();
@@ -149,10 +193,35 @@ void vfs_dialog_usb_tab::show_context_menu(const QPoint& pos)
 
 	QMenu menu{};
 	QAction* edit = menu.addAction(tr("&Edit"));
+	QAction* new_dir = menu.addAction(tr("Map to a &new directory..."));
 
 	connect(edit, &QAction::triggered, this, [this, row]()
 	{
 		show_usb_input_dialog(row);
+	});
+
+	// The port needs a directory of its own: make one named after the device
+	// and point the row at it, so a port has a home before anything is copied
+	// into it.
+	connect(new_dir, &QAction::triggered, this, [this, row]()
+	{
+		const QString parent = QFileDialog::getExistingDirectory(this, tr("Where the new directory goes"));
+
+		if (parent.isEmpty())
+		{
+			return;
+		}
+
+		const QString name = get_device_name(row).mid(1);   // dev_usb000 -> dev_usb000
+		const QString path = QDir(parent).filePath(name);
+
+		if (!QDir().mkpath(path))
+		{
+			QMessageBox::warning(this, tr("USB device"), tr("%1 could not be created.").arg(path));
+			return;
+		}
+
+		m_usb_table->item(row, usb_column::usb_path)->setText(path);
 	});
 
 	menu.exec(m_usb_table->viewport()->mapToGlobal(pos));

@@ -16,6 +16,7 @@
 #include "sys_cond.h"
 #include "sys_event.h"
 #include "sys_event_flag.h"
+#include "sys_cfw.h"
 #include "sys_game.h"
 #include "sys_interrupt.h"
 #include "sys_memory.h"
@@ -132,6 +133,25 @@ static void uns_func_(ppu_thread& ppu, ppu_opcode_t, be_t<u32>* this_op, ppu_int
 #define NULL_FUNC(name) {null_func_, #name}
 
 constexpr std::pair<ppu_intrp_func_t, std::string_view> null_func{null_func_, ""};
+
+// The factory syscalls are there in Factory Service Mode - the syscon EEPROM
+// byte at 0x48C07 set, docs/fsm.txt - and answer ENOSYS on a console that is
+// not in it.
+static void factory_func_(ppu_thread& ppu, ppu_opcode_t, be_t<u32>* this_op, ppu_intrp_func*)
+{
+	if (g_cfg.sys.factory_service_mode)
+	{
+		ppu_log.trace("Factory syscall %s -> CELL_OK", ppu_syscall_code(ppu.gpr[11]));
+		ppu.gpr[3] = 0;
+	}
+	else
+	{
+		ppu_log.trace("Factory syscall %s -> CELL_ENOSYS (not in Factory Service Mode)", ppu_syscall_code(ppu.gpr[11]));
+		ppu.gpr[3] = CELL_ENOSYS;
+	}
+
+	ppu.cia = vm::get_addr(this_op) + 4;
+}
 constexpr std::pair<ppu_intrp_func_t, std::string_view> uns_func{uns_func_, ""};
 
 // UNS = Unused
@@ -149,13 +169,20 @@ const std::array<std::pair<ppu_intrp_func_t, std::string_view>, 1024> g_ppu_sysc
 	BIND_SYSC(sys_process_get_status),                      //4   (0x004)  DBG
 	BIND_SYSC(sys_process_detach_child),                    //5   (0x005)  DBG
 
-	uns_func, uns_func, uns_func, uns_func, uns_func, uns_func, //6-11  UNS
+	// 6-11 are unused on retail and taken by the custom firmware syscalls.
+	BIND_SYSC(sys_cfw_peek),                                //6   (0x006)  CFW
+	BIND_SYSC(sys_cfw_poke),                                //7   (0x007)  CFW
+	BIND_SYSC(sys_cfw_syscall8),                            //8   (0x008)  CFW
+	BIND_SYSC(sys_cfw_lv1_poke),                            //9   (0x009)  CFW
+	BIND_SYSC(sys_cfw_lv1_call),                            //10  (0x00A)  CFW
+	BIND_SYSC(sys_cfw_lv1_peek),                            //11  (0x00B)  CFW
 
 	BIND_SYSC(sys_process_get_number_of_object),            //12  (0x00C)
 	BIND_SYSC(sys_process_get_id),                          //13  (0x00D)
 	BIND_SYSC(sys_process_is_spu_lock_line_reservation_address), //14  (0x00E)
 
-	uns_func, uns_func, uns_func,                           //15-17  UNS
+	BIND_SYSC(sys_cfw_lv2_func),                            //15  (0x00F)  CFW
+	uns_func, uns_func,                                     //16-17  UNS
 
 	BIND_SYSC(sys_process_getppid),                         //18  (0x012)
 	BIND_SYSC(sys_process_kill),                            //19  (0x013)
@@ -465,27 +492,27 @@ const std::array<std::pair<ppu_intrp_func_t, std::string_view>, 1024> g_ppu_sysc
 	BIND_SYSC(sys_sm_control_led),                          //386 (0x182)  ROOT
 	NULL_FUNC(sys_sm_get_system_info),                      //387 (0x183)  DBG
 	BIND_SYSC(sys_sm_ring_buzzer2),                         //388 (0x184)  ROOT
-	NULL_FUNC(sys_sm_set_fan_policy),                       //389 (0x185)  PM
+	BIND_SYSC(sys_sm_set_fan_policy),                       //389 (0x185)  PM
 	NULL_FUNC(sys_sm_request_error_log),                    //390 (0x186)  ROOT
 	NULL_FUNC(sys_sm_request_be_count),                     //391 (0x187)  ROOT
 	BIND_SYSC(sys_sm_ring_buzzer),                          //392 (0x188)  ROOT
 	NULL_FUNC(sys_sm_get_hw_config),                        //393 (0x189)  ROOT
 	NULL_FUNC(sys_sm_request_scversion),                    //394 (0x18A)  ROOT
-	NULL_FUNC(sys_sm_request_system_event_log),             //395 (0x18B)  PM
+	{factory_func_, "sys_sm_request_system_event_log"},     //395 (0x18B)  PM, FSM
 	NULL_FUNC(sys_sm_set_rtc_alarm),                        //396 (0x18C)  ROOT
 	NULL_FUNC(sys_sm_get_rtc_alarm),                        //397 (0x18D)  ROOT
 	BIND_SYSC(sys_console_write),                           //398 (0x18E)  ROOT
 	uns_func,                                               //399 (0x18F)  UNS
-	null_func,//BIND_SYSC(sys_sm_...),                      //400 (0x190)  PM
+	{factory_func_, "sys_sm_request_system_event_log2"},    //400 (0x190)  PM, FSM
 	null_func,//BIND_SYSC(sys_sm_...),                      //401 (0x191)  ROOT
 	BIND_SYSC(sys_tty_read),                                //402 (0x192)
 	BIND_SYSC(sys_tty_write),                               //403 (0x193)
 	null_func,//BIND_SYSC(sys_...),                         //404 (0x194)  ROOT
-	null_func,//BIND_SYSC(sys_...),                         //405 (0x195)  PM
-	null_func,//BIND_SYSC(sys_...),                         //406 (0x196)  PM
-	null_func,//BIND_SYSC(sys_...),                         //407 (0x197)  PM
+	{factory_func_, "sys_sm_factory_process_1"},            //405 (0x195)  PM, FSM
+	{factory_func_, "sys_sm_factory_process_2"},            //406 (0x196)  PM, FSM
+	{factory_func_, "sys_sm_factory_process_3"},            //407 (0x197)  PM, FSM
 	NULL_FUNC(sys_sm_get_tzpb),                             //408 (0x198)  PM
-	NULL_FUNC(sys_sm_get_fan_policy),                       //409 (0x199)  PM
+	BIND_SYSC(sys_sm_get_fan_policy),                       //409 (0x199)  PM
 	BIND_SYSC(_sys_game_board_storage_read),                //410 (0x19A)
 	BIND_SYSC(_sys_game_board_storage_write),               //411 (0x19B)
 	BIND_SYSC(_sys_game_get_rtc_status),                    //412 (0x19C)
