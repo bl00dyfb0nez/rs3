@@ -1657,7 +1657,11 @@ namespace
 			if (led->parentWidget())
 			{
 				led->hide();
-				led->setAttribute(Qt::WA_TranslucentBackground);
+
+				// The lens is a circle, not a square: the window is cut to the same
+				// shape instead of being translucent, so it stays a plain opaque
+				// window over the game window.
+				led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
 				led->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowTransparentForInput
 					| Qt::WindowDoesNotAcceptFocus | Qt::WindowStaysOnTopHint);
 				led->setParent(nullptr);
@@ -1681,7 +1685,7 @@ namespace
 		if (led->parentWidget() != host)
 		{
 			led->hide();
-			led->setAttribute(Qt::WA_TranslucentBackground, false);
+			led->clearMask();
 			led->setWindowFlags(Qt::Widget);
 			led->setParent(host);
 		}
