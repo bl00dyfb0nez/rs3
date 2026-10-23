@@ -267,7 +267,7 @@ void main_window::Init()
 	QTimer* const led_tick = new QTimer(this);
 	led_tick->setObjectName(QStringLiteral("power_led_tick"));
 	led_tick->setInterval(250);
-	connect(led_tick, &QTimer::timeout, this, [this]() { refresh_power_led(this); place_factory_banner(this); });
+	connect(led_tick, &QTimer::timeout, this, [this]() { refresh_power_led(this); refresh_factory_banner(this); });
 	led_tick->start();
 
 	// And the Factory Service Mode banner, if the console is in service mode.
@@ -1614,21 +1614,45 @@ namespace
 	}
 
 	// The console's settings are where the machine is described - its boot
-	// loader, its syscon flags, its light.  While one is open the console's light
-	// and its service mode banner are drawn in the main window as well: the
-	// dialog is what is being looked at, and the screen they belong on may not be
-	// up at all.  Outside the settings they live on the console's screen only.
-	bool in_settings()
+	// loader, its syscon flags, its light.  While one is open, the console's
+	// light and its service mode banner are drawn inside that dialog as well:
+	// the dialog is what is being looked at, and the screen they belong on may
+	// not be up at all.  Outside the settings they live on the console's screen
+	// only.
+	QWidget* settings_window()
 	{
 		for (QWidget* const widget : QApplication::topLevelWidgets())
 		{
 			if (widget->isVisible() && qobject_cast<settings_dialog*>(widget))
 			{
-				return true;
+				return widget;
 			}
 		}
 
-		return false;
+		return nullptr;
+	}
+
+	// A console overlay is a window of its own: a gs_frame is a QWindow and takes
+	// no children, so this is how anything is drawn over the console's screen.
+	// Frameless, click-through, never focused, kept on top of the game window,
+	// and given its size once here so nothing can stretch it later.
+	void make_console_overlay(QLabel* label, const QSize& size, bool circular)
+	{
+		label->hide();
+		label->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowTransparentForInput
+			| Qt::WindowDoesNotAcceptFocus | Qt::WindowStaysOnTopHint);
+		label->setAttribute(Qt::WA_TransparentForMouseEvents);
+		label->setAttribute(Qt::WA_ShowWithoutActivating);
+		label->setFocusPolicy(Qt::NoFocus);
+		label->setFixedSize(size);
+
+		if (circular)
+		{
+			// A circle rather than a square, cut with a mask instead of drawn
+			// translucent: a translucent window is not composited over the game
+			// window, so the light would not be seen where it matters.
+			label->setMask(QRegion(QRect(QPoint(0, 0), size), QRegion::Ellipse));
+		}
 	}
 
 	// The light itself, and the window it belongs to: it has to survive the game
@@ -1649,19 +1673,16 @@ namespace
 		{
 			g_power_led = new QLabel();
 			g_power_led->setObjectName(QStringLiteral("power_led"));
-			g_power_led->setFixedSize(16, 16);
-			g_power_led->setAttribute(Qt::WA_TransparentForMouseEvents);
-			g_power_led->setAttribute(Qt::WA_ShowWithoutActivating);
-			g_power_led->setFocusPolicy(Qt::NoFocus);
 			g_power_led->setProperty("led_state", -1);
+			make_console_overlay(g_power_led, QSize(16, 16), true);
 		}
 
 		return g_power_led;
 	}
 
-	// The light is worn by whichever window shows the console.  Over the game
-	// window it is a frameless, click-through window of its own that takes no
-	// focus and follows it; in standby it is a child of the content area again.
+	// Where the console's light is drawn: the top left corner of the console's
+	// screen.  With no screen up it is drawn in the corner of the content area
+	// instead, and only while the console's settings are open.
 	void place_power_led(QMainWindow* window)
 	{
 		QLabel* const led = power_led(window, false);
@@ -1676,48 +1697,40 @@ namespace
 			if (led->parentWidget())
 			{
 				led->hide();
-
-				// The lens is a circle, not a square: the window is cut to the same
-				// shape instead of being translucent, so it stays a plain opaque
-				// window over the game window.
-				led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
+				led->clearMask();
 				led->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowTransparentForInput
 					| Qt::WindowDoesNotAcceptFocus | Qt::WindowStaysOnTopHint);
 				led->setParent(nullptr);
+				led->setFixedSize(16, 16);
+				led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
 			}
 
-			led->move(screen->mapToGlobal(QPointF(8, 8)).toPoint());
+			led->move(screen->position() + QPoint(8, 8));
 			led->raise();
 			led->show();
 			return;
 		}
 
-		// No console screen: the light is a mirror of the console in the window
-		// that configures it, so it is drawn there only while that window is open.
-		if (!in_settings())
+		// No console screen: the light is drawn inside the console's settings
+		// while they are open, in their bottom left corner.
+		QWidget* const settings = settings_window();
+
+		if (!settings)
 		{
 			led->hide();
 			return;
 		}
 
-		// The corner of the content area, not of the frame: the menu bar and the
-		// toolbar own the very top of the window.
-		QWidget* const host = window && window->centralWidget() ? window->centralWidget() : window;
-
-		if (!host)
-		{
-			return;
-		}
-
-		if (led->parentWidget() != host)
+		if (led->parentWidget() != settings)
 		{
 			led->hide();
 			led->clearMask();
 			led->setWindowFlags(Qt::Widget);
-			led->setParent(host);
+			led->setParent(settings);
+			led->setFixedSize(16, 16);
 		}
 
-		led->move(8, 8);
+		led->move(8, settings->height() - 24);
 		led->raise();
 		led->show();
 	}
@@ -1840,19 +1853,20 @@ namespace
 
 		if (!g_factory_banner && create)
 		{
-			g_factory_banner = new QLabel();
-			g_factory_banner->setObjectName(QStringLiteral("factory_service_banner"));
-			g_factory_banner->setAttribute(Qt::WA_TransparentForMouseEvents);
-			g_factory_banner->setAttribute(Qt::WA_ShowWithoutActivating);
-			g_factory_banner->setFocusPolicy(Qt::NoFocus);
-			g_factory_banner->setText(QCoreApplication::translate("main_window", "Playstation 3. Factory/Service Mode"));
-			g_factory_banner->setAlignment(Qt::AlignCenter);
-			g_factory_banner->setStyleSheet(QStringLiteral(
+			auto* banner = new QLabel();
+			banner->setObjectName(QStringLiteral("factory_service_banner"));
+			banner->setText(QCoreApplication::translate("main_window", "Playstation 3. Factory/Service Mode"));
+			banner->setAlignment(Qt::AlignCenter);
+			banner->setStyleSheet(QStringLiteral(
 				"background-color: #8c0000;"
 				"color: white;"
 				"border: 1px solid #ff5a5a;"
 				"padding: 6px 12px;"));
-			g_factory_banner->adjustSize();
+
+			banner->ensurePolished();
+			make_console_overlay(banner, banner->sizeHint(), false);
+
+			g_factory_banner = banner;
 		}
 
 		return g_factory_banner;
@@ -1867,7 +1881,7 @@ namespace
 			return;
 		}
 
-		banner->adjustSize();
+		const QSize size = banner->size();
 
 		if (QWindow* const screen = console_screen())
 		{
@@ -1877,49 +1891,56 @@ namespace
 				banner->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowTransparentForInput
 					| Qt::WindowDoesNotAcceptFocus | Qt::WindowStaysOnTopHint);
 				banner->setParent(nullptr);
+				banner->setFixedSize(size);
 			}
 
-			banner->move(screen->mapToGlobal(QPointF(screen->width() - banner->width() - 12,
-				screen->height() - banner->height() - 12)).toPoint());
+			banner->move(screen->position() + QPoint(screen->width() - size.width() - 12,
+				screen->height() - size.height() - 12));
 			banner->raise();
 			banner->show();
 			return;
 		}
 
-		QWidget* const host = window && window->centralWidget() ? window->centralWidget() : window;
+		// No console screen: the banner is drawn inside the console's settings
+		// while they are open, in their bottom right corner.
+		QWidget* const settings = settings_window();
 
-		if (!host)
+		if (!settings)
 		{
+			banner->hide();
 			return;
 		}
 
-		if (banner->parentWidget() != host)
+		if (banner->parentWidget() != settings)
 		{
 			banner->hide();
 			banner->setWindowFlags(Qt::Widget);
-			banner->setParent(host);
+			banner->setParent(settings);
+			banner->setFixedSize(size);
 		}
 
-		banner->move(host->width() - banner->width() - 12, host->height() - banner->height() - 12);
+		banner->move(settings->width() - size.width() - 12, settings->height() - size.height() - 12);
 		banner->raise();
 		banner->show();
 	}
 
 	void refresh_factory_banner(QMainWindow* window)
 	{
-		QLabel* const banner = factory_banner(window, false);
+		QLabel* const banner = factory_banner(window, true);
 
-		if (g_cfg.sys.factory_service_mode && (console_screen() || in_settings()))
+		if (!banner)
 		{
-			factory_banner(window, true)->show();
-			place_factory_banner(window);
 			return;
 		}
 
-		if (banner)
+		if (!g_cfg.sys.factory_service_mode || (!console_screen() && !settings_window()))
 		{
 			banner->hide();
+			return;
 		}
+
+		banner->show();
+		place_factory_banner(window);
 	}
 
 	void flash_boot_failure_led(QMainWindow* window, bool yellow)

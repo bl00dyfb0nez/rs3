@@ -43,10 +43,10 @@
 #define UFS_OPEN(p, flags) ::open(p, flags, 0600)
 #define UFS_CLOSE ::close
 
-#ifdef __APPLE__
-#define UFS_SEEK ::lseek   // off_t is already 64-bit on macOS
+#ifdef __linux__
+#define UFS_SEEK ::lseek64  // glibc's off_t is 32-bit unless _FILE_OFFSET_BITS asks otherwise
 #else
-#define UFS_SEEK ::lseek64
+#define UFS_SEEK ::lseek    // off_t is already 64-bit on macOS and the BSDs
 #endif
 #define UFS_READ ::read
 #define UFS_WRITE ::write
