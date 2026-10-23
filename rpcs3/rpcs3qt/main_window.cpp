@@ -261,6 +261,11 @@ void main_window::Init()
 	// does not boot.
 	refresh_power_led(this);
 
+	// The power button starts where the console is: nothing is running, so it
+	// is in standby and the button turns it on.
+	ui->sysPowerAct->setText(tr("Power &On"));
+	ui->sysPowerAct->setToolTip(tr("The console's power button: a short press turns it on from standby, or off into it."));
+
 	// The light is on the console's own window, and the console has no window
 	// event when its boot chain finishes: a tick keeps it in step - red while the
 	// console boots, green once it is up, and travelling with the game window.
@@ -2032,27 +2037,11 @@ namespace
 
 	// The boot chain of a firmware image or a flash dump.  A file the reader
 	// cannot handle comes back as an unreadable chain instead of taking the
-	// window down with it.
+	// window down with it - the reader reports that in the chain itself, so
+	// nothing is thrown here (the GUI is built without exception handling).
 	ps3::boot::chain inspect_boot_chain(const std::string& path, ps3::boot::geometry flash)
 	{
-		try
-		{
-			return ps3::boot::inspect_file(path, flash);
-		}
-		catch (const std::exception& e)
-		{
-			ps3::boot::chain out;
-			out.flash = flash;
-			out.failures.emplace_back(std::string{"the boot chain could not be read: "} + e.what());
-			return out;
-		}
-		catch (...)
-		{
-			ps3::boot::chain out;
-			out.flash = flash;
-			out.failures.emplace_back("the boot chain could not be read");
-			return out;
-		}
+		return ps3::boot::inspect_file(path, flash);
 	}
 }
 
@@ -2645,6 +2634,9 @@ void main_window::OnEmuRun(bool /*start_playtime*/)
 	ui->toolbar_start->setToolTip(pause_tooltip);
 	ui->toolbar_stop->setToolTip(stop_tooltip);
 
+	// The console is on: the button now turns it off.
+	ui->sysPowerAct->setText(tr("Power &Off"));
+
 	EnableMenus(true);
 
 	update_gui_pad_thread();
@@ -2702,7 +2694,9 @@ void main_window::OnEmuStop()
 
 	EnableMenus(false);
 
-	// Emulation is gone: the console is back in standby.
+	// Emulation is gone: the console is back in standby, and the power button
+	// turns it on again.
+	ui->sysPowerAct->setText(tr("Power &On"));
 	refresh_power_led(this);
 
 	if (title.isEmpty())
@@ -2771,6 +2765,9 @@ void main_window::OnEmuReady()
 	ui->toolbar_start->setIcon(m_icon_play);
 	ui->toolbar_start->setText(tr("Play"));
 	ui->toolbar_start->setToolTip(play_tooltip);
+
+	// The console is on, waiting at the menu: the button turns it off.
+	ui->sysPowerAct->setText(tr("Power &Off"));
 
 	EnableMenus(true);
 
@@ -3623,6 +3620,32 @@ void main_window::CreateConnects()
 	connect(ui->sysStopAct, &QAction::triggered, this, []()
 	{
 		gui_log.notice("User triggered stop action in menu bar");
+		Emu.GracefulShutdown(false, true);
+	});
+	// The console's power button.  A short press on a running machine puts it
+	// into standby: the same clean stop as Stop, so the light goes red and
+	// nothing is left half-run.  A press on a machine in standby turns it on,
+	// booting what it last had - the selected game, the last boot, or the last
+	// played one - the way the button on the machine boots it back up.
+	connect(ui->sysPowerAct, &QAction::triggered, this, [this]()
+	{
+		const system_state status = Emu.GetStatus();
+
+		if (status == system_state::starting)
+		{
+			gui_log.notice("Power button: the console is still booting");
+			statusBar()->showMessage(tr("The console is still booting."), 8000);
+			return;
+		}
+
+		if (status == system_state::stopped)
+		{
+			gui_log.notice("Power button: on, from standby");
+			OnPlayOrPause();
+			return;
+		}
+
+		gui_log.notice("Power button: off, the console goes to standby");
 		Emu.GracefulShutdown(false, true);
 	});
 	connect(ui->sysRebootAct, &QAction::triggered, this, [this]()

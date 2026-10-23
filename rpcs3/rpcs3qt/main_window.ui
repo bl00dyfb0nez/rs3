@@ -235,6 +235,7 @@
     <addaction name="sysPauseAct"/>
     <addaction name="sysStopAct"/>
     <addaction name="sysRebootAct"/>
+    <addaction name="sysPowerAct"/>
     <addaction name="separator"/>
     <addaction name="insertDiscAct"/>
     <addaction name="ejectDiscAct"/>
@@ -1026,6 +1027,11 @@
    </property>
    <property name="text">
     <string>Restart</string>
+   </property>
+  </action>
+  <action name="sysPowerAct">
+   <property name="text">
+    <string>Power &amp;On</string>
    </property>
   </action>
   <action name="showCatHDDGameAct">
