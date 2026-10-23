@@ -1524,14 +1524,15 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		out.coreos_patch_span = static_cast<std::uint32_t>(std::strtoul(m_emu_settings->GetSetting(emu_settings_type::CoreosPatchSpan).c_str(), nullptr, 10));
 
 		// The boot chain is sealed for the console's id, so the dump's two
-		// containers pair with each other the way a real dump's do.
+		// containers pair with each other the way a real dump's do.  IDPS is
+		// stored most significant byte first.  u128 is a native type on GCC and
+		// Clang but a struct on MSVC, so it is taken a byte at a time through the
+		// shift and conversion both of them provide, never through lo and hi.
 		const u128 idps = g_cfg.sys.console_idps.get();
 
-		// IDPS is stored most significant byte first.
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 16; i++)
 		{
-			out.idps[15 - i] = static_cast<std::uint8_t>(idps.lo >> (i * 8));
-			out.idps[7 - i] = static_cast<std::uint8_t>(idps.hi >> (i * 8));
+			out.idps[15 - i] = static_cast<std::uint8_t>(static_cast<u64>(idps >> (i * 8)));
 		}
 
 		return out;

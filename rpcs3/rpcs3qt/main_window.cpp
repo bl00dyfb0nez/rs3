@@ -3640,8 +3640,28 @@ void main_window::CreateConnects()
 
 		if (status == system_state::stopped)
 		{
+			// A console whose boot chain does not boot comes on dark and stays
+			// there: pressing the button again has nothing to run.
+			if (g_cfg.sys.boot_bricked)
+			{
+				gui_log.notice("Power button: the console's boot chain does not boot");
+				statusBar()->showMessage(tr("Power: the console's boot chain does not boot."), 8000);
+				refresh_power_led(this);
+				return;
+			}
+
+			// Nothing picked and nothing remembered: the button is pressed on a
+			// console with no disc in it, so it is said rather than silently ignored.
+			const bool has_target = m_selected_game || !Emu.GetLastBoot().empty() || !m_recent_game.actions.isEmpty();
+
 			gui_log.notice("Power button: on, from standby");
 			OnPlayOrPause();
+
+			if (!has_target)
+			{
+				statusBar()->showMessage(tr("Power: there is nothing to boot yet - select a game first."), 8000);
+			}
+
 			return;
 		}
 

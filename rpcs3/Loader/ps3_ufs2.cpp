@@ -43,11 +43,10 @@
 #define UFS_OPEN(p, flags) ::open(p, flags, 0600)
 #define UFS_CLOSE ::close
 
-#ifdef __linux__
-#define UFS_SEEK ::lseek64  // glibc's off_t is 32-bit unless _FILE_OFFSET_BITS asks otherwise
-#else
-#define UFS_SEEK ::lseek    // off_t is already 64-bit on macOS and the BSDs
-#endif
+// lseek, not lseek64: off_t is 64 bits wide on every target this builds for
+// (64-bit glibc, macOS, the BSDs), and lseek64 does not exist outside the
+// Linux C library - FreeBSD declares only lseek.
+#define UFS_SEEK ::lseek
 #define UFS_READ ::read
 #define UFS_WRITE ::write
 #define UFS_COMMIT ::fsync
