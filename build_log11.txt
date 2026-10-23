@@ -2082,3 +2082,8 @@ C:\Users\Thewoodsman\rpcs3\3rdparty\llvm\llvm\llvm\include\llvm/Transforms/Utils
 [1728/1732] Scanning C:\Users\Thewoodsman\rpcs3\rpcs3\main.cpp for CXX dependencies
 [1729/1732] Generating CXX dyndep file rpcs3\CMakeFiles\rpcs3.dir\Release\CXX.dd
 [1730/1732] Building CXX object rpcs3\CMakeFiles\rpcs3.dir\Release\main.cpp.obj
+[1731/1732] Linking CXX executable bin\rpcs3.exe
+
+Build complete! Output is in "C:\Users\Thewoodsman\rpcs3\build\bin\"
+
+Total build time: 0h 13m 12s
