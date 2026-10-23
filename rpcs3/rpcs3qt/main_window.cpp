@@ -8,6 +8,7 @@
 #include "screenshot_manager_dialog.h"
 #include "kernel_explorer.h"
 #include "game_list_frame.h"
+#include "gs_frame.h"
 #include "debugger_frame.h"
 #include "log_frame.h"
 #include "settings_dialog.h"
@@ -98,11 +99,14 @@
 #include <QApplication>
 #include <QDialog>
 #include <QEventLoop>
+#include <QGuiApplication>
 #include <QLabel>
+#include <QPointer>
 #include <QPushButton>
 #include <QStatusBar>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QWindow>
 
 #ifdef _WIN32
 #include "raw_mouse_settings_dialog.h"
@@ -256,6 +260,15 @@ void main_window::Init()
 	// The console's power LED: red in standby, dark if the boot chain it holds
 	// does not boot.
 	refresh_power_led(this);
+
+	// The light is on the console's own window, and the console has no window
+	// event when its boot chain finishes: a tick keeps it in step - red while the
+	// console boots, green once it is up, and travelling with the game window.
+	QTimer* const led_tick = new QTimer(this);
+	led_tick->setObjectName(QStringLiteral("power_led_tick"));
+	led_tick->setInterval(250);
+	connect(led_tick, &QTimer::timeout, this, [this]() { refresh_power_led(this); });
+	led_tick->start();
 
 	// And the Factory Service Mode banner, if the console is in service mode.
 	refresh_factory_banner(this);
@@ -1546,6 +1559,14 @@ namespace
 	// lv0ldr generation, before 3.60 - flash yellow, the YLOD.  The later
 	// consoles, the default, flash red: the red light that replaced the yellow
 	// there (docs/sysconerr.txt, 1200 and 2024).
+	//
+	// The light sits inside the game window, on the console's own screen: that is
+	// the window the emulated machine is looked at in, and the one that is up
+	// while it boots.  Standby has no such window, so there the light is in the
+	// corner of the content area - a console in standby still shows its red
+	// light.  Green is the console having booted, not the emulator having
+	// started: Emulator::Run reports the boot before running it, so the light
+	// stays red while the boot chain is still going.
 	enum class led_colour
 	{
 		red,
@@ -1575,6 +1596,27 @@ namespace
 		}
 	}
 
+	// The window showing the emulated console, while one is up.  A gs_frame is a
+	// QWindow, so it takes no child widgets: over it the light has to be a
+	// window of its own.
+	QWindow* console_screen()
+	{
+		for (QWindow* const window : QGuiApplication::topLevelWindows())
+		{
+			if (window->isVisible() && qobject_cast<gs_frame*>(window))
+			{
+				return window;
+			}
+		}
+
+		return nullptr;
+	}
+
+	// The light itself, and the window it belongs to: it has to survive the game
+	// window coming and going, so it is held here rather than in a parent.
+	QPointer<QLabel> g_power_led;
+	QPointer<QMainWindow> g_console_window;
+
 	QLabel* power_led(QMainWindow* window, bool create)
 	{
 		if (!window)
@@ -1582,23 +1624,71 @@ namespace
 			return nullptr;
 		}
 
-		// The corner of the content area, not of the frame: the menu bar and the
-		// toolbar own the very top of the window.
-		QWidget* const host = window->centralWidget() ? window->centralWidget() : window;
+		g_console_window = window;
 
-		QLabel* led = host->findChild<QLabel*>(QStringLiteral("power_led"), Qt::FindDirectChildrenOnly);
-
-		if (!led && create)
+		if (!g_power_led && create)
 		{
-			led = new QLabel(host);
-			led->setObjectName(QStringLiteral("power_led"));
-			led->setFixedSize(16, 16);
-			led->setAttribute(Qt::WA_TransparentForMouseEvents);
-			led->move(8, 8);
-			led->raise();
+			g_power_led = new QLabel();
+			g_power_led->setObjectName(QStringLiteral("power_led"));
+			g_power_led->setFixedSize(16, 16);
+			g_power_led->setAttribute(Qt::WA_TransparentForMouseEvents);
+			g_power_led->setAttribute(Qt::WA_ShowWithoutActivating);
+			g_power_led->setFocusPolicy(Qt::NoFocus);
+			g_power_led->setProperty("led_state", -1);
 		}
 
-		return led;
+		return g_power_led;
+	}
+
+	// The light is worn by whichever window shows the console.  Over the game
+	// window it is a frameless, click-through window of its own that takes no
+	// focus and follows it; in standby it is a child of the content area again.
+	void place_power_led(QMainWindow* window)
+	{
+		QLabel* const led = power_led(window, false);
+
+		if (!led)
+		{
+			return;
+		}
+
+		if (QWindow* const screen = console_screen())
+		{
+			if (led->parentWidget())
+			{
+				led->hide();
+				led->setAttribute(Qt::WA_TranslucentBackground);
+				led->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowTransparentForInput
+					| Qt::WindowDoesNotAcceptFocus | Qt::WindowStaysOnTopHint);
+				led->setParent(nullptr);
+			}
+
+			led->move(screen->mapToGlobal(QPointF(8, 8)).toPoint());
+			led->raise();
+			led->show();
+			return;
+		}
+
+		// The corner of the content area, not of the frame: the menu bar and the
+		// toolbar own the very top of the window.
+		QWidget* const host = window && window->centralWidget() ? window->centralWidget() : window;
+
+		if (!host)
+		{
+			return;
+		}
+
+		if (led->parentWidget() != host)
+		{
+			led->hide();
+			led->setAttribute(Qt::WA_TranslucentBackground, false);
+			led->setWindowFlags(Qt::Widget);
+			led->setParent(host);
+		}
+
+		led->move(8, 8);
+		led->raise();
+		led->show();
 	}
 
 	// Steady state: green while emulation runs (a paused game is still on), red
@@ -1618,6 +1708,9 @@ namespace
 			timer->stop();
 		}
 
+		led->setProperty("flashing", false);
+		led->setProperty("led_state", static_cast<int>(state));
+
 		switch (state)
 		{
 		case led_state::running:
@@ -1635,20 +1728,59 @@ namespace
 			break;
 		}
 
-		led->raise();
+		place_power_led(window);
 		led->show();
 	}
 
-	// The state the window should be showing, from the console's own state.
+	// The state the window should be showing, from the console's own state.  Runs
+	// from a tick as well, because a console that finishes booting has no window
+	// event of its own.
 	void refresh_power_led(QMainWindow* window)
 	{
-		if (g_cfg.sys.boot_bricked)
+		if (!window)
 		{
-			set_power_led(window, led_state::bricked);
 			return;
 		}
 
-		set_power_led(window, Emu.IsRunning() || Emu.IsPaused() ? led_state::running : led_state::standby);
+		QLabel* const led = power_led(window, false);
+
+		// A refusal's flashes are the light's answer: the tick may move the light
+		// with the game window, but it must not paint over the blink.
+		if (led && led->property("flashing").toBool())
+		{
+			place_power_led(window);
+			return;
+		}
+
+		led_state state = led_state::standby;
+
+		if (g_cfg.sys.boot_bricked)
+		{
+			state = led_state::bricked;
+		}
+		else
+		{
+			// Green is a console that has booted.  system_state::starting is the
+			// boot chain still running, so the light is still red there; a console
+			// that is paused or frozen is a booted one that is being held.
+			const system_state status = Emu.GetStatus();
+
+			const bool booted = status == system_state::running
+				|| status == system_state::paused
+				|| status == system_state::frozen;
+
+			state = booted ? led_state::running : led_state::standby;
+		}
+
+		// This runs from the tick, so the light is only touched when it has to
+		// change - otherwise it would be restyled five times a second.
+		if (led && led->property("led_state").toInt() == static_cast<int>(state))
+		{
+			place_power_led(window);
+			return;
+		}
+
+		set_power_led(window, state);
 	}
 
 	bool failure_yellow()
@@ -1733,6 +1865,8 @@ namespace
 			? QCoreApplication::translate("main_window", "The console's answer to a boot chain it will not run: three beeps and a flashing yellow light, the YLOD of the early phat models.")
 			: QCoreApplication::translate("main_window", "The console's answer to a boot chain it will not run: three beeps and a flashing red light, the light that replaced the yellow on later consoles."));
 		led->setStyleSheet(led_css(colour, true));
+		led->setProperty("led_state", -1);
+		led->setProperty("flashing", true);
 		led->raise();
 		led->show();
 		led->setProperty("flash_step", 0);
@@ -1757,7 +1891,8 @@ namespace
 
 					// Back to whatever the console is now: standby, or dark if the
 					// image it was given is a brick.
-					refresh_power_led(qobject_cast<QMainWindow*>(led->window()));
+					led->setProperty("flashing", false);
+					refresh_power_led(g_console_window);
 					return;
 				}
 
@@ -2421,7 +2556,8 @@ void main_window::OnEmuRun(bool /*start_playtime*/)
 
 	update_gui_pad_thread();
 
-	set_power_led(this, led_state::running);
+	// The light is not set here: this runs when the boot is starting, and the
+	// console's light comes on when it has booted (the tick follows it).
 
 	m_system_state = system_state::running;
 }
@@ -2439,8 +2575,6 @@ void main_window::OnEmuResume()
 	ui->toolbar_start->setText(tr("Pause"));
 	ui->toolbar_start->setToolTip(pause_tooltip);
 	ui->toolbar_stop->setToolTip(stop_tooltip);
-
-	set_power_led(this, led_state::running);
 
 	m_system_state = system_state::starting; // Let's just use this state to distinguish between resumed and running
 }
