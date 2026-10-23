@@ -267,7 +267,7 @@ void main_window::Init()
 	QTimer* const led_tick = new QTimer(this);
 	led_tick->setObjectName(QStringLiteral("power_led_tick"));
 	led_tick->setInterval(250);
-	connect(led_tick, &QTimer::timeout, this, [this]() { refresh_power_led(this); });
+	connect(led_tick, &QTimer::timeout, this, [this]() { refresh_power_led(this); place_factory_banner(this); });
 	led_tick->start();
 
 	// And the Factory Service Mode banner, if the console is in service mode.
@@ -1562,11 +1562,12 @@ namespace
 	//
 	// The light sits inside the game window, on the console's own screen: that is
 	// the window the emulated machine is looked at in, and the one that is up
-	// while it boots.  Standby has no such window, so there the light is in the
-	// corner of the content area - a console in standby still shows its red
-	// light.  Green is the console having booted, not the emulator having
-	// started: Emulator::Run reports the boot before running it, so the light
-	// stays red while the boot chain is still going.
+	// while it boots.  It is not mirrored anywhere else - with no console screen
+	// it is drawn in the corner of the content area only while the console's
+	// settings are open, since that is where the machine is described.  Green is
+	// the console having booted, not the emulator having started: Emulator::Run
+	// reports the boot before running it, so the light stays red while the boot
+	// chain is still going.
 	enum class led_colour
 	{
 		red,
@@ -1610,6 +1611,24 @@ namespace
 		}
 
 		return nullptr;
+	}
+
+	// The console's settings are where the machine is described - its boot
+	// loader, its syscon flags, its light.  While one is open the console's light
+	// and its service mode banner are drawn in the main window as well: the
+	// dialog is what is being looked at, and the screen they belong on may not be
+	// up at all.  Outside the settings they live on the console's screen only.
+	bool in_settings()
+	{
+		for (QWidget* const widget : QApplication::topLevelWidgets())
+		{
+			if (widget->isVisible() && qobject_cast<settings_dialog*>(widget))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	// The light itself, and the window it belongs to: it has to survive the game
@@ -1670,6 +1689,14 @@ namespace
 			led->move(screen->mapToGlobal(QPointF(8, 8)).toPoint());
 			led->raise();
 			led->show();
+			return;
+		}
+
+		// No console screen: the light is a mirror of the console in the window
+		// that configures it, so it is drawn there only while that window is open.
+		if (!in_settings())
+		{
+			led->hide();
 			return;
 		}
 
@@ -1793,10 +1820,17 @@ namespace
 		return ps3::identity::failure_led_for(generation) == ps3::identity::failure_led::yellow;
 	}
 
-	// Factory Service Mode is a red translucent rectangle in the bottom right
-	// corner of the screen with "Playstation 3. Factory/Service Mode" in it
-	// (docs/fsm.txt).  The emulated console shows it while the syscon EEPROM
-	// flag at 0x48C07 is set.
+	// Factory Service Mode is a red rectangle in the bottom right corner of the
+	// screen with "Playstation 3. Factory/Service Mode" in it (docs/fsm.txt).
+	// The emulated console shows it while the syscon EEPROM flag at 0x48C07 is
+	// set, so it is drawn on the console's screen like the power LED, and in the
+	// main window only while the console's settings are open.
+	//
+	// The banner is opaque where the original is translucent: a translucent
+	// window over the game window is not composited at all here (the swapchain
+	// bypasses the compositor), so it would not be seen where it matters.
+	QPointer<QLabel> g_factory_banner;
+
 	QLabel* factory_banner(QMainWindow* window, bool create)
 	{
 		if (!window)
@@ -1804,24 +1838,24 @@ namespace
 			return nullptr;
 		}
 
-		QWidget* const host = window->centralWidget() ? window->centralWidget() : window;
-		QLabel* banner = host->findChild<QLabel*>(QStringLiteral("factory_service_banner"), Qt::FindDirectChildrenOnly);
-
-		if (!banner && create)
+		if (!g_factory_banner && create)
 		{
-			banner = new QLabel(host);
-			banner->setObjectName(QStringLiteral("factory_service_banner"));
-			banner->setAttribute(Qt::WA_TransparentForMouseEvents);
-			banner->setText(QCoreApplication::translate("main_window", "Playstation 3. Factory/Service Mode"));
-			banner->setAlignment(Qt::AlignCenter);
-			banner->setStyleSheet(QStringLiteral(
-				"background-color: rgba(150, 0, 0, 170);"
+			g_factory_banner = new QLabel();
+			g_factory_banner->setObjectName(QStringLiteral("factory_service_banner"));
+			g_factory_banner->setAttribute(Qt::WA_TransparentForMouseEvents);
+			g_factory_banner->setAttribute(Qt::WA_ShowWithoutActivating);
+			g_factory_banner->setFocusPolicy(Qt::NoFocus);
+			g_factory_banner->setText(QCoreApplication::translate("main_window", "Playstation 3. Factory/Service Mode"));
+			g_factory_banner->setAlignment(Qt::AlignCenter);
+			g_factory_banner->setStyleSheet(QStringLiteral(
+				"background-color: #8c0000;"
 				"color: white;"
-				"border: 1px solid rgba(255, 90, 90, 220);"
+				"border: 1px solid #ff5a5a;"
 				"padding: 6px 12px;"));
+			g_factory_banner->adjustSize();
 		}
 
-		return banner;
+		return g_factory_banner;
 	}
 
 	void place_factory_banner(QMainWindow* window)
@@ -1833,22 +1867,56 @@ namespace
 			return;
 		}
 
-		QWidget* const host = window->centralWidget() ? window->centralWidget() : window;
 		banner->adjustSize();
+
+		if (QWindow* const screen = console_screen())
+		{
+			if (banner->parentWidget())
+			{
+				banner->hide();
+				banner->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowTransparentForInput
+					| Qt::WindowDoesNotAcceptFocus | Qt::WindowStaysOnTopHint);
+				banner->setParent(nullptr);
+			}
+
+			banner->move(screen->mapToGlobal(QPointF(screen->width() - banner->width() - 12,
+				screen->height() - banner->height() - 12)).toPoint());
+			banner->raise();
+			banner->show();
+			return;
+		}
+
+		QWidget* const host = window && window->centralWidget() ? window->centralWidget() : window;
+
+		if (!host)
+		{
+			return;
+		}
+
+		if (banner->parentWidget() != host)
+		{
+			banner->hide();
+			banner->setWindowFlags(Qt::Widget);
+			banner->setParent(host);
+		}
+
 		banner->move(host->width() - banner->width() - 12, host->height() - banner->height() - 12);
 		banner->raise();
+		banner->show();
 	}
 
 	void refresh_factory_banner(QMainWindow* window)
 	{
-		if (g_cfg.sys.factory_service_mode)
+		QLabel* const banner = factory_banner(window, false);
+
+		if (g_cfg.sys.factory_service_mode && (console_screen() || in_settings()))
 		{
 			factory_banner(window, true)->show();
 			place_factory_banner(window);
 			return;
 		}
 
-		if (QLabel* const banner = factory_banner(window, false))
+		if (banner)
 		{
 			banner->hide();
 		}
