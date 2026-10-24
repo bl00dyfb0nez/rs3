@@ -556,7 +556,12 @@ void main_window::Boot(const std::string& path, const std::string& title_id, boo
 		return;
 	}
 
-	if (g_cfg.sys.factory_service_mode)
+	// The recovery environment is what a console that will not boot hands over
+	// to: emer_init runs even when the flash's chain is refused, and it is not
+	// GameOS, so service mode does not replace it with Lv2diag either.
+	const bool recovery_boot = path.ends_with("emer_init.self");
+
+	if (g_cfg.sys.factory_service_mode && !recovery_boot)
 	{
 		// In service mode lv2 runs the application mounted at
 		// dev_usb000/Lv2diag.self instead of GameOS (docs/fsm.txt), so a normal
@@ -578,18 +583,15 @@ void main_window::Boot(const std::string& path, const std::string& title_id, boo
 		}
 	}
 
-	if (g_cfg.sys.boot_bricked)
+	if (g_cfg.sys.boot_bricked && !recovery_boot)
 	{
 		// A console whose boot chain does not boot starts nothing at all: it
 		// answers with the three beeps and the dark light, and the window stays
-		// exactly where it is - no crash, and no game either.
+		// exactly where it is - no crash, and no game either.  Recovery is the
+		// exception above: it is the environment that is reached from here.
 		gui_log.error("Boot refused: the console's boot chain does not boot (bricked console).");
 		answer_boot_refusal(this, failure_yellow());
-		statusBar()->showMessage(tr("This console is bricked: its boot chain does not boot, so nothing can be launched. Install firmware whose chain boots to clear it."), 12000);
-
-		// A console that cannot boot is a soft brick: it still answers, and the
-		// recovery menu is how it comes back.  Offered after the beeps.
-		QTimer::singleShot(1300, this, [this]() { ShowRecoveryMenu(); });
+		statusBar()->showMessage(tr("This console is bricked: its boot chain does not boot, so the firmware cannot start. Install firmware whose chain boots, or boot emer_init.self from the Boot menu."), 12000);
 		return;
 	}
 
@@ -831,18 +833,61 @@ void main_window::BootVSH()
 
 void main_window::BootRecovery()
 {
-	// Booting emer_init: the console comes up in its recovery environment instead
-	// of the firmware.  It is a boot, so anything running is stopped first, and
-	// the console's screen is emer_init's menu - the same screen a chain that
-	// does not boot is handed over to.
-	gui_log.notice("Booting emer_init.self (recovery mode)...");
-
-	if (!Emu.IsStopped())
+	// emer_init.self is the console's recovery environment: a system self like
+	// vsh.self, booted by the console so that its own menu comes up on the
+	// screen.  It is not part of every installed firmware image, so a console
+	// without it is asked for the file rather than handed a menu of RPCS3's own.
+	//
+	// It is the console's environment, not a generic one: emer_init reports the
+	// console's IDPS and PSID the way every system self does, and the dumps on
+	// the Advanced PS3 Tools page are what say what those are.  Without both of
+	// them there is no console for it to come up as.
+	const auto dump_present = [](const std::string& dump_path)
 	{
-		Emu.GracefulShutdown(false);
+		ps3::identity::dump value{};
+		return !dump_path.empty() && ps3::identity::read_dump(dump_path, value);
+	};
+
+	if (!dump_present(g_cfg.sys.idps_dump.get()) || !dump_present(g_cfg.sys.psid_dump.get()))
+	{
+		QMessageBox::warning(this, tr("Recovery Mode"),
+			tr("Recovery mode runs the console's own emer_init, so it needs the console's dumps first.\n\n"
+				"Set the IDPS and PSID dump files on Advanced PS3 Tools > Console, then boot it again."));
+		return;
 	}
 
-	ShowRecoveryMenu();
+	const std::string dev_flash = g_cfg_vfs.get_dev_flash();
+
+	std::string path;
+
+	for (const char* const candidate : {"/vsh/etc/emer_init.self", "/vsh/module/emer_init.self", "/emer_init.self"})
+	{
+		const std::string full = dev_flash + candidate;
+
+		if (fs::is_file(full))
+		{
+			path = full;
+			break;
+		}
+	}
+
+	if (path.empty())
+	{
+		const QString last_dir = m_gui_settings->GetValue(gui::fd_boot_game).toString();
+		const QString chosen = QFileDialog::getOpenFileName(this, tr("Select emer_init.self"),
+			last_dir, tr("PlayStation 3 self files (*.self);;All files (*.*)"));
+
+		if (chosen.isEmpty())
+		{
+			return;
+		}
+
+		m_gui_settings->SetValue(gui::fd_boot_game, QFileInfo(chosen).dir().path());
+		path = chosen.toStdString();
+	}
+
+	gui_log.notice("Booting emer_init.self (recovery mode) from %s", path);
+	Boot(path);
 }
 
 void main_window::BootRsxCapture(std::string path)
@@ -2180,10 +2225,6 @@ void main_window::HandlePupInstallation(main_window* mw, const QString& file_pat
 			mw->statusBar()->showMessage(tr("Firmware refused: this image carries a boot chain the console would not boot."), 10000);
 
 			warn_boot_refusal(mw, tr("Firmware installation refused.\n\nThis image carries a boot chain the console would refuse to boot: three beeps and %1.%2\n\nNothing was loaded and nothing was written.").arg(light, reasons));
-
-			// A soft brick: the console still answers, and recovery is how it comes
-			// back.  Offered once the beeps have played.
-			QTimer::singleShot(1300, mw, [mw]() { mw->ShowRecoveryMenu(); });
 		}
 
 		return;
@@ -3789,7 +3830,7 @@ void main_window::CreateConnects()
 		connect(dlg, &settings_dialog::EmuSettingsApplied, this, &main_window::update_gui_pad_thread);
 		connect(dlg, &settings_dialog::EmuSettingsApplied, m_log_frame, &log_frame::LoadSettings);
 		connect(dlg, &settings_dialog::ConsoleStateChanged, this, &main_window::RefreshConsoleState);
-		connect(dlg, &settings_dialog::RecoveryMenuRequest, this, &main_window::ShowRecoveryMenu);
+		connect(dlg, &settings_dialog::RecoveryMenuRequest, this, &main_window::BootRecovery);
 		dlg->setAttribute(Qt::WA_DeleteOnClose);
 		dlg->open();
 	};
@@ -4954,535 +4995,6 @@ void main_window::RefreshConsoleState()
 	refresh_factory_banner(this);
 }
 
-namespace
-{
-	// emer_init.self's recovery mode, as the console shows it: the controller
-	// page first, then the menu - the six options with the highlighted one on a
-	// blue bar and "X Enter" at the bottom.  It is a screen of its own rather
-	// than a dialog box because that is what the console boots into: emer_init
-	// is a firmware environment, not a window, and it is driven from the
-	// keyboard the way the console's is.  It needs no moc, so it lives here.
-	class recovery_screen : public QFrame
-	{
-	public:
-		recovery_screen()
-		{
-			setObjectName(QStringLiteral("recovery_screen"));
-			setWindowTitle(QStringLiteral("PS3 Recovery Menu"));
-			// An ordinary window: it opens at the console's 16:9 picture size but
-			// can be moved, resized and closed like any other, so it never pins
-			// itself over the rest of the desktop.
-			resize(960, 540);
-			setMinimumSize(640, 360);
-			setStyleSheet(QStringLiteral(
-				"QFrame#recovery_screen { background-color: #000000; }"
-				"QLabel#recovery_rule { background-color: #303030; }"
-				"QLabel#recovery_prompt { color: #f0f0f0; font-size: 16px; }"
-				"QLabel#recovery_option { color: #b8b8b8; font-size: 17px; padding: 5px 18px; }"
-				"QLabel#recovery_option[selected=\"true\"] { color: #ffffff; background-color: #2b6fd4; }"
-				"QLabel#recovery_footer { color: #f0f0f0; font-size: 14px; font-weight: bold; }"));
-			setFocusPolicy(Qt::StrongFocus);
-
-			auto* layout = new QVBoxLayout(this);
-			layout->setContentsMargins(0, 42, 0, 0);
-			layout->setSpacing(0);
-
-			auto* top_rule = new QLabel(this);
-			top_rule->setObjectName(QStringLiteral("recovery_rule"));
-			top_rule->setFixedHeight(1);
-			layout->addWidget(top_rule);
-			layout->addStretch();
-
-			// docs/recovery.txt: emer_init comes up on this and only shows the
-			// menu once the PS button is pressed.
-			m_prompt = new QLabel(QStringLiteral("Connect the controller using a USB cable, and then press the PS button."), this);
-			m_prompt->setObjectName(QStringLiteral("recovery_prompt"));
-			m_prompt->setAlignment(Qt::AlignCenter);
-			m_prompt->setWordWrap(true);
-			m_prompt->setContentsMargins(120, 0, 120, 0);
-			layout->addWidget(m_prompt);
-			layout->addStretch();
-
-			m_bottom_rule = new QLabel(this);
-			m_bottom_rule->setObjectName(QStringLiteral("recovery_rule"));
-			m_bottom_rule->setFixedHeight(1);
-			m_bottom_rule->hide();
-			layout->addWidget(m_bottom_rule);
-
-			m_footer = new QLabel(QStringLiteral("\u2715   Enter"), this);
-			m_footer->setObjectName(QStringLiteral("recovery_footer"));
-			m_footer->setAlignment(Qt::AlignCenter);
-			m_footer->setFixedHeight(44);
-			m_footer->hide();
-			layout->addWidget(m_footer);
-
-			m_close_rule = new QLabel(this);
-			m_close_rule->setObjectName(QStringLiteral("recovery_rule"));
-			m_close_rule->setFixedHeight(1);
-			m_close_rule->hide();
-			layout->addWidget(m_close_rule);
-
-			m_footer_timer = new QTimer(this);
-			m_footer_timer->setSingleShot(true);
-			m_footer_timer->setInterval(5000);
-
-			connect(m_footer_timer, &QTimer::timeout, this, [this]()
-			{
-				m_footer->setText(QStringLiteral("\u2715   Enter"));
-			});
-		}
-
-		// The options in the order emer_init lists them.  They stay hidden
-		// behind the controller page until the PS button is pressed.
-		void AddOption(const QString& text, std::function<void()> action)
-		{
-			auto* layout = qobject_cast<QVBoxLayout*>(this->layout());
-
-			// The options are a centred column: the console draws them on a
-			// list in the middle of the picture, not across it.
-			auto* holder = new QWidget(this);
-			holder->setFixedWidth(520);
-			auto* column = new QVBoxLayout(holder);
-			column->setContentsMargins(0, 0, 0, 0);
-			column->setSpacing(2);
-
-			auto* row = new QLabel(text, holder);
-			row->setObjectName(QStringLiteral("recovery_option"));
-			row->setProperty("selected", false);
-			row->setFixedHeight(30);
-			row->installEventFilter(this);
-			column->addWidget(row);
-
-			auto* centering = new QHBoxLayout();
-			centering->setContentsMargins(0, 0, 0, 0);
-			centering->addStretch();
-			centering->addWidget(holder);
-			centering->addStretch();
-
-			// They replace the controller page in the middle of the screen, so
-			// they go in before it: hidden, they take no room at all.
-			layout->insertLayout(2, centering);
-
-			holder->hide();
-			m_holders.append(holder);
-			m_rows.append(row);
-			m_actions.append(std::move(action));
-
-			if (m_rows.size() == 1)
-			{
-				Select(0);
-			}
-		}
-
-		// A line in the footer instead of "X Enter", for the answer an option
-		// gives - "Default settings restored.", "The file system was repaired."
-		// It goes back to the button hint on its own.
-		void ShowStatus(const QString& text)
-		{
-			m_footer->setText(text);
-			m_footer_timer->start();
-		}
-
-	protected:
-		void keyPressEvent(QKeyEvent* event) override
-		{
-			if (!m_menu_open)
-			{
-				// The PS button is what gets past the controller page.  Enter
-				// stands in for it here, the way X stands for the console's
-				// cross button.
-				switch (event->key())
-				{
-				case Qt::Key_Return:
-				case Qt::Key_Enter:
-				case Qt::Key_Space:
-					ShowMenu();
-					return;
-				case Qt::Key_Escape:
-					close();
-					return;
-				default:
-					break;
-				}
-
-				QFrame::keyPressEvent(event);
-				return;
-			}
-
-			switch (event->key())
-			{
-			case Qt::Key_Up:
-			case Qt::Key_W:
-				Select(m_selected - 1);
-				return;
-			case Qt::Key_Down:
-			case Qt::Key_S:
-				Select(m_selected + 1);
-				return;
-			case Qt::Key_Return:
-			case Qt::Key_Enter:
-			case Qt::Key_Space:
-				Activate();
-				return;
-			case Qt::Key_Escape:
-				// No console has an Escape key; this one is the way out of a
-				// window that is meant to be a boot target.
-				close();
-				return;
-			default:
-				break;
-			}
-
-			QFrame::keyPressEvent(event);
-		}
-
-		bool eventFilter(QObject* watched, QEvent* event) override
-		{
-			if (!m_menu_open)
-			{
-				if (event->type() == QEvent::MouseButtonPress)
-				{
-					ShowMenu();
-				}
-
-				return QFrame::eventFilter(watched, event);
-			}
-
-			if (event->type() == QEvent::MouseButtonPress)
-			{
-				const int index = m_rows.indexOf(qobject_cast<QLabel*>(watched));
-
-				if (index >= 0)
-				{
-					Select(index);
-					setFocus();
-				}
-			}
-			else if (event->type() == QEvent::MouseButtonDblClick)
-			{
-				const int index = m_rows.indexOf(qobject_cast<QLabel*>(watched));
-
-				if (index >= 0)
-				{
-					Select(index);
-					Activate();
-				}
-			}
-
-			return QFrame::eventFilter(watched, event);
-		}
-
-	private:
-		void ShowMenu()
-		{
-			if (m_menu_open)
-			{
-				return;
-			}
-
-			m_menu_open = true;
-			m_prompt->hide();
-
-			for (QWidget* const holder : m_holders)
-			{
-				holder->show();
-			}
-
-			m_bottom_rule->show();
-			m_footer->show();
-			m_close_rule->show();
-
-			Select(m_selected);
-			setFocus();
-		}
-
-		void Select(int index)
-		{
-			if (m_rows.isEmpty())
-			{
-				return;
-			}
-
-			index = (index + m_rows.size()) % m_rows.size();
-			m_selected = index;
-
-			for (int i = 0; i < m_rows.size(); i++)
-			{
-				QLabel* const row = m_rows[i];
-				row->setProperty("selected", i == index);
-				row->style()->unpolish(row);
-				row->style()->polish(row);
-			}
-		}
-
-		void Activate()
-		{
-			if (m_selected < 0 || m_selected >= m_actions.size())
-			{
-				return;
-			}
-
-			if (const auto action = m_actions[m_selected])
-			{
-				action();
-			}
-		}
-
-		QLabel* m_prompt = nullptr;
-		QLabel* m_bottom_rule = nullptr;
-		QLabel* m_close_rule = nullptr;
-		QLabel* m_footer = nullptr;
-		QTimer* m_footer_timer = nullptr;
-		QList<QWidget*> m_holders;
-		QList<QLabel*> m_rows;
-		QList<std::function<void()>> m_actions;
-		int m_selected = 0;
-		bool m_menu_open = false;
-	};
-
-	// The recovery screen while the console is in emer_init, so the same one is
-	// raised instead of a second being opened.
-	QPointer<recovery_screen> g_recovery_screen;
-}
-
-void main_window::ShowRecoveryMenu()
-{
-	// docs/recovery.txt: emer_init.self's recovery mode, option by option, with
-	// each one doing what an emulator can honestly do.  It is the console's
-	// screen rather than a dialog: emer_init is a firmware environment the
-	// console boots into, so the screen is shown on its own and driven from the
-	// keyboard - up and down move the bar, X/Enter picks the option.
-	if (g_recovery_screen)
-	{
-		g_recovery_screen->show();
-		g_recovery_screen->raise();
-		return;
-	}
-
-	auto* const screen = new recovery_screen();
-	screen->setAttribute(Qt::WA_DeleteOnClose);
-	g_recovery_screen = screen;
-
-	// 1. Restart System.  emer_init hands the console back to its firmware: the
-	// brick is the image it refused, not the console, so the restart clears it
-	// and boots the VSH that is in dev_flash.
-	screen->AddOption(tr("1. Restart System"), [this, screen]()
-	{
-		screen->close();
-		g_cfg.sys.boot_bricked.set(false);
-		RefreshConsoleState();
-		gui_log.notice("Recovery: restart system (simulated brick cleared), booting the VSH.");
-		BootVSH();
-	});
-
-	// 2. Restore Default Settings.  The settings the XMB keeps are files under
-	// /dev_flash2/etc, and this is what emer_init does with them: it unlinks the
-	// registry, the copies it can fall back on, and the directories that hold
-	// them.  The console's own settings - its boot loader, its IDPS - are not
-	// the XMB's and are not touched.
-	screen->AddOption(tr("2. Restore Default Settings"), [this, screen]()
-	{
-		const std::string flash2 = g_cfg_vfs.get(g_cfg_vfs.dev_flash2, rpcs3::utils::get_emu_dir());
-
-		const char* const files[] =
-		{
-			"etc/xRegistry.sys",
-			"etc/backup/xRegistry.sys",
-			"etc/xRegistry.sys.val",
-			"etc/xRegistry.sys.revert",
-			"etc/backup/xRegistry.sys.revert",
-			"etc/backup.01/xRegistry.sys",
-			"etc/backup.01/xRegistry.sys.revert",
-			"etc/restore/xRegistry.sys",
-			"etc/restore/backup/xRegistry.sys",
-		};
-
-		int unlinked = 0;
-
-		for (const char* const file : files)
-		{
-			const std::string path = flash2 + file;
-
-			if (!fs::is_file(path))
-			{
-				continue;
-			}
-
-			if (fs::remove_file(path))
-			{
-				unlinked++;
-			}
-			else
-			{
-				gui_log.error("Recovery: could not unlink %s", path);
-			}
-		}
-
-		for (const char* const dir : {"etc/backup/", "etc/backup.01/", "etc/restore/"})
-		{
-			const std::string path = flash2 + dir;
-
-			if (!fs::is_dir(path))
-			{
-				continue;
-			}
-
-			if (!fs::remove_all(path, true, true))
-			{
-				gui_log.error("Recovery: could not remove %s", path);
-			}
-		}
-
-		m_emu_settings->RestoreDefaults();
-		RefreshConsoleState();
-		gui_log.notice("Recovery: restore default settings - %d file(s) unlinked under %s", unlinked, flash2);
-		screen->ShowStatus(tr("Default settings restored."));
-	});
-
-	// 3. Restore File System.  emer_init mounts CELL_FS_SIMPLEFS on
-	// /dev_simple_hdd0 and sets bit 2 of the byte at 0x10520 - the flag the next
-	// boot reads to know the file system was repaired.  RPCS3 models that device
-	// as dev_hdd0/simplefs.tmp, so the same byte is set there.
-	screen->AddOption(tr("3. Restore File System"), [this, screen]()
-	{
-		const std::string path = g_cfg_vfs.get(g_cfg_vfs.dev_hdd0, rpcs3::utils::get_emu_dir()) + "simplefs.tmp";
-		constexpr u64 flag_at = 0x10520;
-
-		fs::file device(path, fs::read + fs::write + fs::create);
-
-		if (!device)
-		{
-			gui_log.error("Recovery: could not open the simplefs device %s (%s)", path, fs::g_tls_error);
-			screen->ShowStatus(tr("The file system could not be repaired."));
-			return;
-		}
-
-		if (device.size() < flag_at + 4 && !device.trunc(flag_at + 4))
-		{
-			gui_log.error("Recovery: could not grow the simplefs device %s", path);
-			screen->ShowStatus(tr("The file system could not be repaired."));
-			return;
-		}
-
-		u8 flag = 0;
-
-		if (!device.seek(flag_at) || !device.read(&flag, 1))
-		{
-			gui_log.error("Recovery: could not read the simplefs flags of %s", path);
-			screen->ShowStatus(tr("The file system could not be repaired."));
-			return;
-		}
-
-		flag |= 4;
-
-		if (!device.seek(flag_at) || !device.write(&flag, 1))
-		{
-			gui_log.error("Recovery: could not write the simplefs flags of %s", path);
-			screen->ShowStatus(tr("The file system could not be repaired."));
-			return;
-		}
-
-		gui_log.notice("Recovery: restore file system - flags at 0x%x of %s now 0x%x", flag_at, path, flag);
-		screen->ShowStatus(tr("The file system was repaired."));
-	});
-
-	// 4. Rebuild Database.  docs/recovery.txt: /dev_hdd0/mms/db.err with these
-	// four bytes is what asks the console to rebuild its database on the next
-	// boot.
-	screen->AddOption(tr("4. Rebuild Database"), [this, screen]()
-	{
-		const std::string path = vfs::get("/dev_hdd0/mms/db.err");
-		bool written = false;
-
-		if (!path.empty())
-		{
-			fs::file marker(path, fs::create + fs::write + fs::trunc);
-			const u8 request[4] = {0x00, 0x00, 0x03, 0xE9};
-
-			if (marker && marker.write(request, sizeof(request)))
-			{
-				gui_log.notice("Recovery: wrote %s", path);
-				written = true;
-			}
-			else
-			{
-				gui_log.error("Recovery: could not write %s", path);
-			}
-		}
-
-		if (m_game_list_frame)
-		{
-			m_game_list_frame->Refresh();
-		}
-
-		screen->ShowStatus(written
-			? tr("The database will be rebuilt on the next boot.")
-			: tr("The database request could not be written."));
-	});
-
-	// 5. Restore PS3 System.
-	screen->AddOption(tr("5. Restore PS3™ System"), [this, screen]()
-	{
-		if (QMessageBox::question(screen, tr("Restore PS3 System"),
-			tr("Restore the console's settings to their defaults and clear the simulated brick?\n\n"
-				"On a console this option formats the hard drive. Here the emulated drive and its saves are "
-				"kept - delete the dev_hdd0 folder yourself if you want them gone too."),
-			QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
-		{
-			return;
-		}
-
-		m_emu_settings->RestoreDefaults();
-		g_cfg.sys.boot_bricked.set(false);
-		RefreshConsoleState();
-		screen->close();
-		gui_log.notice("Recovery: restore PS3 system (settings defaulted, simulated brick cleared).");
-	});
-
-	// 6. System Update.  docs/recovery.txt: the recovery updater does not ask
-	// for a file.  It scans a fixed list of places - the disc, the eight USB
-	// devices and the VSH's two update folders - and updates from the first
-	// PS3UPDAT.PUP it finds there.
-	screen->AddOption(tr("6. System Update"), [this, screen]()
-	{
-		const char* const places[] =
-		{
-			"/dev_bdvd/PS3/UPDATE/PS3UPDAT.PUP",
-			"/dev_usb000/PS3/UPDATE/PS3UPDAT.PUP",
-			"/dev_usb001/PS3/UPDATE/PS3UPDAT.PUP",
-			"/dev_usb002/PS3/UPDATE/PS3UPDAT.PUP",
-			"/dev_usb003/PS3/UPDATE/PS3UPDAT.PUP",
-			"/dev_usb004/PS3/UPDATE/PS3UPDAT.PUP",
-			"/dev_usb005/PS3/UPDATE/PS3UPDAT.PUP",
-			"/dev_usb006/PS3/UPDATE/PS3UPDAT.PUP",
-			"/dev_usb007/PS3/UPDATE/PS3UPDAT.PUP",
-			"/dev_hdd0/game/SCEEXE000/ARCDIR/PS3UPDAT.PUP",
-			"/dev_hdd0/vsh/PS3UPDAT.PUP",
-		};
-
-		for (const char* const place : places)
-		{
-			const std::string path = vfs::get(place);
-
-			if (path.empty() || !fs::is_file(path))
-			{
-				continue;
-			}
-
-			gui_log.notice("Recovery: system update from %s", place);
-			InstallPup(this, QString::fromStdString(path));
-			return;
-		}
-
-		gui_log.notice("Recovery: system update - no PS3UPDAT.PUP in the places emer_init scans.");
-		screen->ShowStatus(tr("No update file found: put PS3UPDAT.PUP in PS3/UPDATE/ on a USB device."));
-	});
-
-	screen->show();
-	screen->raise();
-	screen->activateWindow();
-	screen->setFocus();
-}
 
 void main_window::AddGamesFromDirs(QStringList&& paths)
 {

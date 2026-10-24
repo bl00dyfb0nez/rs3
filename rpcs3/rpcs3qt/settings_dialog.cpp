@@ -1530,8 +1530,8 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		emit RecoveryMenuRequest();
 	});
 	SubscribeTooltip(ui->button_recovery_mode,
-		tr("Open the Playstation 3 Recovery Menu (emer_init.self): restart system, restore default settings, "
-			"restore file system, rebuild database, restore PS3 system, system update."));
+		tr("Boot the console's recovery environment (emer_init.self). The menu that comes up is the console's own; "
+			"RPCS3 boots the file the installed firmware carries and asks for it when the firmware has none."));
 
 	// The emulated console's flash: a 16 MiB NOR image built from its modeled
 	// state, and the CoreOS patch the flash writer or bgtoolset installs into

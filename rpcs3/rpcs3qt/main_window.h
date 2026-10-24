@@ -122,10 +122,6 @@ private Q_SLOTS:
 	// Service Mode flag - and puts the window's light and banner in step with it.
 	void RefreshConsoleState();
 
-	// The recovery menu of docs/recovery.txt, offered when the console soft
-	// bricks and reachable from the Advanced PS3 Tools page.
-	void ShowRecoveryMenu();
-
 	void handle_shortcut(gui::shortcuts::shortcut shortcut_key, const QKeySequence& key_sequence);
 	void update_gui_pad_thread();
 
