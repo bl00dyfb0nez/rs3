@@ -231,6 +231,7 @@ enum class emu_settings_type
 	FirmwareMode,
 	BootSource,
 	CoreosImage,
+	CoreosBank,
 	FactoryServiceMode,
 	FanCurve,
 	RsxType,

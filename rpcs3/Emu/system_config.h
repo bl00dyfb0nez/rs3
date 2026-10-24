@@ -365,6 +365,10 @@ struct cfg_root : cfg::node
 		// was installed from, and the files the bank names.  Empty when none was
 		// extracted, which is every install before this was added.
 		cfg::string coreos_image{this, "CoreOS image", ""};
+		// banksel: the bank the console boots its CoreOS from.  ros0 is the active
+		// bank and the default; ros1 is the spare behind it, which a console is
+		// told to boot when the active one is being replaced or has failed.
+		cfg::string coreos_bank{this, "CoreOS bank", "ros0"};
 		// Factory Service Mode, the flag the console keeps in its System Controller
 		// EEPROM at 0x48C07 (docs/fsm.txt): anything but 0xFF means the console
 		// boots into service mode, where lv2 runs dev_usb000/Lv2diag.self instead

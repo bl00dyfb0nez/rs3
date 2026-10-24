@@ -655,6 +655,26 @@ namespace ps3::boot
 				{
 					out.sdk_version.pop_back();
 				}
+
+				// The bank writes four decimals - "4.9300" - while the console and
+				// its firmware are named by two: 4.93.  The trailing zeros are the
+				// file's padding, not part of the version.
+				if (const auto dot = out.sdk_version.find('.'); dot != std::string::npos)
+				{
+					std::size_t end = dot + 3;
+
+					if (end > out.sdk_version.size())
+					{
+						end = out.sdk_version.size();
+					}
+
+					while (end > dot + 1 && out.sdk_version[end - 1] == '0')
+					{
+						--end;
+					}
+
+					out.sdk_version.resize(end);
+				}
 			}
 		}
 

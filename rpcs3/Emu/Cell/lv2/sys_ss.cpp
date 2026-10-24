@@ -7,6 +7,7 @@
 #include "Emu/Cell/PPUThread.h"
 #include "Emu/system_config.h"
 #include "Loader/ps3_identity.h"
+#include "Loader/ps3_syscon.h"
 #include "util/sysinfo.hpp"
 
 #include <charconv>
@@ -38,24 +39,8 @@ struct lv2_update_manager
 
 	u64 system_sw_version;
 
-	std::unordered_map<u32, u8> eeprom_map // offset, value
-	{
-		// system language
-		// *i think* this gives english
-		{0x48C18, 0x00},
-		{0x48C19, 0x00},
-		{0x48C1A, 0x00},
-		{0x48C1B, 0x01},
-		// system language end
-
-		// vsh target (seems it can be 0xFFFFFFFE, 0xFFFFFFFF, 0x00000001 default: 0x00000000 / vsh sets it to 0x00000000 on boot if it isn't 0x00000000)
-		{0x48C1C, 0x00},
-		{0x48C1D, 0x00},
-		{0x48C1E, 0x00},
-		{0x48C1F, 0x00}
-		// vsh target end
-	};
-	mutable std::shared_mutex eeprom_mutex;
+	// The System Controller's EEPROM lives in ps3::syscon: the console's own
+	// bytes and the terminal on its UART read and write the same memory.
 
 	std::unordered_set<u32> malloc_set;
 	mutable std::shared_mutex malloc_mutex;
@@ -207,13 +192,33 @@ namespace
 	// The console's own id and PSN id, as configured: a dump file if one is
 	// chosen, otherwise the value in the settings.  Read once, because a dump
 	// does not change while the emulator runs.
+	// The dump a setting names, or the one dropped in the BIOS folder when none
+	// is named or the one named is not there.
+	bool read_identity(const cfg::string& setting, std::initializer_list<std::string_view> names, ps3::identity::dump& dump, std::string& used)
+	{
+		if (const std::string path = setting.get(); !path.empty() && ps3::identity::read_dump(path, dump))
+		{
+			used = path;
+			return true;
+		}
+
+		if (const std::string path = ps3::identity::find_in_bios(names); !path.empty() && ps3::identity::read_dump(path, dump))
+		{
+			used = path;
+			return true;
+		}
+
+		return false;
+	}
+
 	u128 console_idps()
 	{
 		static const u128 value = []() -> u128
 		{
 			ps3::identity::dump dump{};
+			std::string path;
 
-			if (const std::string path = g_cfg.sys.idps_dump.get(); !path.empty() && ps3::identity::read_dump(path, dump))
+			if (read_identity(g_cfg.sys.idps_dump, {"idps.bin", "idps.txt"}, dump, path))
 			{
 				sys_ss.notice("Console IDPS read from %s", path);
 
@@ -238,8 +243,9 @@ namespace
 		static const u128 value = []() -> u128
 		{
 			ps3::identity::dump dump{};
+			std::string path;
 
-			if (const std::string path = g_cfg.sys.psid_dump.get(); !path.empty() && ps3::identity::read_dump(path, dump))
+			if (read_identity(g_cfg.sys.psid_dump, {"psid.bin", "psid.txt"}, dump, path))
 			{
 				sys_ss.notice("Console PSID read from %s", path);
 
@@ -502,15 +508,11 @@ error_code sys_ss_update_manager(ppu_thread& ppu, u64 pkg_id, u64 a1, u64 a2, u6
 			return CELL_EFAULT;
 		}
 
-		u8 value_out = 0xFF; // 0xFF if not set
-		{
-			std::shared_lock shared_lock(update_manager.eeprom_mutex);
-
-			if (const auto iterator = update_manager.eeprom_map.find(offset); iterator != update_manager.eeprom_map.end())
-			{
-				value_out = iterator->second;
-			}
-		}
+		// The EEPROM is the System Controller's: the same bytes the virtual UART
+		// terminal reads and writes, with the recover mode byte reflecting the
+		// console's service mode.
+		ps3::syscon::set_recover_mode(g_cfg.sys.factory_service_mode.get());
+		const u8 value_out = ps3::syscon::read_eeprom(offset);
 
 		static_cast<void>(ppu.test_stopped());
 		vm::write8(value_ptr, value_out);
@@ -523,12 +525,7 @@ error_code sys_ss_update_manager(ppu_thread& ppu, u64 pkg_id, u64 a1, u64 a2, u6
 		const auto value = ::narrow<u8>(a2);
 
 		ppu.state += cpu_flag::wait;
-		std::unique_lock unique_lock(update_manager.eeprom_mutex);
-
-		if (value != 0xFF)
-			update_manager.eeprom_map[offset] = value;
-		else
-			update_manager.eeprom_map.erase(offset); // 0xFF: unset
+		ps3::syscon::write_eeprom(offset, value);
 
 		break;
 	}

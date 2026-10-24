@@ -82,6 +82,33 @@ namespace ps3::identity
 		return true;
 	}
 
+	std::string bios_dir()
+	{
+		// Next to config.yml, which is the config subdirectory, not the data
+		// directory the emulator is run from.
+		return fs::get_config_dir(true) + "bios/";
+	}
+
+	std::string find_in_bios(std::initializer_list<std::string_view> names)
+	{
+		const std::string dir = bios_dir();
+
+		// The folder is where those dumps go, so it exists even when it is empty.
+		fs::create_path(dir);
+
+		for (const std::string_view name : names)
+		{
+			std::string path = dir + std::string(name);
+
+			if (fs::is_file(path))
+			{
+				return path;
+			}
+		}
+
+		return {};
+	}
+
 	const char* name(generation value)
 	{
 		return value == generation::metldr_2 ? "metldr.2" : "metldr";

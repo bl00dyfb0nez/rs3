@@ -389,6 +389,7 @@
     <addaction name="toolsExtractTARAct"/>
     <addaction name="separator"/>
     <addaction name="toolsSystemCommandsAct"/>
+    <addaction name="toolsUartConsoleAct"/>
     <addaction name="toolsmemory_viewerAct"/>
     <addaction name="toolsDumpGuestMemoryAct"/>
     <addaction name="toolskernel_explorerAct"/>
@@ -777,6 +778,14 @@
   <action name="toolsCgDisasmAct">
    <property name="text">
     <string>Cg Disasm</string>
+   </property>
+  </action>
+  <action name="toolsUartConsoleAct">
+   <property name="text">
+    <string>UART Console</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+U</string>
    </property>
   </action>
   <action name="toolskernel_explorerAct">

@@ -577,6 +577,7 @@
     <ClCompile Include="Loader\ps3_boot_chain.cpp" />
     <ClCompile Include="Loader\ps3_coreos.cpp" />
     <ClCompile Include="Loader\ps3_identity.cpp" />
+    <ClCompile Include="Loader\ps3_syscon.cpp" />
     <ClCompile Include="Loader\ps3_flash.cpp" />
 
     <ClCompile Include="Loader\ps3_bar.cpp" />
@@ -1115,6 +1116,7 @@
     <ClInclude Include="Loader\ps3_boot_chain.h" />
     <ClInclude Include="Loader\ps3_coreos.h" />
     <ClInclude Include="Loader\ps3_identity.h" />
+    <ClInclude Include="Loader\ps3_syscon.h" />
     <ClInclude Include="Loader\ps3_flash.h" />
 
     <ClInclude Include="Loader\ps3_bar.h" />

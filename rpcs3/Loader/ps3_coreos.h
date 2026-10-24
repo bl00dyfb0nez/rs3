@@ -77,6 +77,16 @@ namespace ps3::coreos
 	// what the console actually carries.
 	image read_bank(const std::string& path);
 
+	// The other half of the console's pair: ros0 and ros1 are the same bank, the
+	// active one and the spare behind it, so the name of one gives the path of
+	// the other in the same directory.  Empty when the name is neither.
+	std::string spare_path(const std::string& path);
+
+	// The bank dropped in the BIOS folder, for a console whose bank was never
+	// chosen in the settings: ros0 unless the spare is asked for, and the other
+	// one when only it is there.  Empty when neither is.
+	std::string bios_bank(bool spare);
+
 	// What a bank holds, stage by stage: the three the console runs below the
 	// loaders, and the reason it would stop when one of them is not there.
 	struct verdict

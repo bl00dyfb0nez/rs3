@@ -4,6 +4,7 @@
 #include "qt_utils.h"
 #include "permissions.h"
 #include "welcome_dialog.h"
+#include "Loader/ps3_identity.h"
 #include "main_window.h"
 #include "emu_settings.h"
 #include "gui_settings.h"
@@ -283,6 +284,12 @@ void gui_application::Init()
 	m_emu_settings = std::make_shared<emu_settings>(m_render_creator);
 	m_gui_settings = std::make_shared<gui_settings>();
 	m_persistent_settings = std::make_shared<persistent_settings>();
+
+	// The BIOS folder: where a console's dumps are dropped - idps, psid, the two
+	// ros banks and emer_init.self - so the emulator finds them without a path
+	// being set for each one.  Created up front, because an empty folder is
+	// where those files are meant to go.
+	fs::create_path(ps3::identity::bios_dir());
 
 	if (m_gui_settings->GetValue(gui::m_attachCommandLine).toBool())
 	{

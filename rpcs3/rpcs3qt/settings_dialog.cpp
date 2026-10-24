@@ -36,6 +36,8 @@
 #include "emu_settings_type.h"
 #include "render_creator.h"
 #include "Loader/ps3_coreos.h"
+#include "Loader/ps3_identity.h"
+#include "Loader/ps3_syscon.h"
 #include "Loader/ps3_flash.h"
 #include "Loader/ps3_bar.h"
 #include "Loader/ps3_xreg.h"
@@ -1398,6 +1400,14 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 	connect(ui->button_idps_dump, &QPushButton::clicked, this, [this, pick_dump]() { pick_dump(ui->edit_idps_dump); });
 	connect(ui->button_psid_dump, &QPushButton::clicked, this, [this, pick_dump]() { pick_dump(ui->edit_psid_dump); });
 
+	// The BIOS folder, next to the settings: a console's dumps dropped there are
+	// found without a path being set for each one.
+	SubscribeTooltip(ui->edit_idps_dump,
+		tr("The console's IDPS: 16 bytes, raw or as 32 hex characters.\n\nLeave this empty and drop the dump in "
+			"the BIOS folder (%1) as idps.bin or idps.txt instead. The same folder takes psid.bin or psid.txt, "
+			"ros0.bin and ros1.bin for the CoreOS, and emer_init.self for recovery, so a console can be set up by "
+			"copying its files there.").arg(QString::fromStdString(ps3::identity::bios_dir())));
+
 	// The boot loader is a string in the config, so the two names are added here
 	// rather than coming from the setting's own list of options.
 	ui->combo_boot_loader->addItem(tr("metldr.2 + lv0ldr.2 (3.60 and later)"), "metldr.2");
@@ -1534,9 +1544,11 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 
 	SubscribeTooltip(ui->button_coreos_extract,
 		tr("Carve the ros bank out of the console's flash dump: ros0 at 0x0C0000, the table with lv0, lv1.self, "
-			"lv2_kernel.self and the rest, written out as ros0.bin and ros1.bin. The firmware PUP does not carry "
-			"the bank - its CoreOS.PKG is the updater's program - so it comes from the dump. Importing one replaces "
-			"the bank the settings record."));
+			"lv2_kernel.self and the rest, written out as ros0.bin and ros1.bin - the active bank and the spare, as "
+			"a console carries them. The firmware PUP does not carry the bank - its CoreOS.PKG is the updater's "
+			"program - so it comes from the dump. Importing one replaces the bank the settings record. Dropping "
+			"ros0.bin and ros1.bin in the BIOS folder (%1) finds them without the import.")
+			.arg(QString::fromStdString(ps3::identity::bios_dir())));
 
 	// What a dump says about the console it came from: the chain at the bottom
 	// of its flash, the chip that chain sits in, and the model family those
@@ -1709,6 +1721,48 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		tr("Boot the console's recovery environment (emer_init.self). The menu that comes up is the console's own; "
 			"RPCS3 boots the file the installed firmware carries and asks for it when the firmware has none."));
 
+	// The System Controller's UART: a terminal on the wire a test bench talks to,
+	// answered by the controller RPCS3 emulates.  Nothing is attached to a host
+	// serial port - the traffic stays inside the emulator.
+	ui->combo_uart_type->addItem(tr("CXR - 57600, C:<checksum>:<command>"), false);
+	ui->combo_uart_type->addItem(tr("SW - 115200, <command>:<checksum>"), true);
+
+	ui->text_uart->setPlainText(QString::fromStdString(ps3::syscon::transcript()));
+
+	const auto send_uart = [this]()
+	{
+		const std::string command = ui->edit_uart_command->text().toStdString();
+
+		if (command.empty())
+		{
+			return;
+		}
+
+		const bool sw = ui->combo_uart_type->currentData().toBool();
+		static_cast<void>(ps3::syscon::uart_command(command, sw));
+
+		ui->text_uart->setPlainText(QString::fromStdString(ps3::syscon::transcript()));
+		ui->text_uart->moveCursor(QTextCursor::End);
+		ui->edit_uart_command->clear();
+	};
+
+	connect(ui->button_uart_send, &QPushButton::clicked, this, send_uart);
+	connect(ui->edit_uart_command, &QLineEdit::returnPressed, this, send_uart);
+
+	connect(ui->button_uart_clear, &QPushButton::clicked, this, []()
+	{
+		ps3::syscon::clear();
+	});
+
+	connect(ui->button_uart_clear, &QPushButton::clicked, ui->text_uart, [this]()
+	{
+		ui->text_uart->clear();
+	});
+
+	SubscribeTooltip(ui->combo_uart_type,
+		tr("The framing the controller answers in: CXR is 57600 baud and carries the checksum before the command, "
+			"SW is 115200 baud and carries it after it. The PS3 UART Guide covers both."));
+
 	// The emulated console's flash: a 16 MiB NOR image built from its modeled
 	// state, and the CoreOS patch the flash writer or bgtoolset installs into
 	// it.  Both are simulated - there is no chip and no ciphertext to copy.
@@ -1774,6 +1828,36 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 	{
 		select_flash_chip(m_emu_settings->GetSettingDefault(emu_settings_type::FlashChip));
 	});
+
+	// banksel: the console carries two CoreOS banks, and this is the flag that
+	// says which one it boots - ros0 is the active bank and what a console runs
+	// unless it is told otherwise, ros1 the spare behind it.
+	ui->combo_coreos_bank->addItem(tr("ros0 - the active bank (banksel default)"), "ros0");
+	ui->combo_coreos_bank->addItem(tr("ros1 - the spare"), "ros1");
+
+	const auto select_coreos_bank = [this](const std::string& bank)
+	{
+		const int index = ui->combo_coreos_bank->findData(QString::fromStdString(bank));
+		ui->combo_coreos_bank->setCurrentIndex(index < 0 ? 0 : index);
+	};
+
+	select_coreos_bank(m_emu_settings->GetSetting(emu_settings_type::CoreosBank));
+
+	connect(ui->combo_coreos_bank, &QComboBox::currentIndexChanged, this, [this](int index)
+	{
+		m_emu_settings->SetSetting(emu_settings_type::CoreosBank, ui->combo_coreos_bank->itemData(index).toString().toStdString());
+	});
+
+	connect(m_emu_settings.get(), &emu_settings::RestoreDefaultsSignal, ui->combo_coreos_bank, [this, select_coreos_bank]()
+	{
+		select_coreos_bank(m_emu_settings->GetSettingDefault(emu_settings_type::CoreosBank));
+	});
+
+	SubscribeTooltip(ui->combo_coreos_bank,
+		tr("banksel - the bank the console boots its CoreOS from. ros0 is the active bank, the one the flash "
+			"writer patches and the console runs by default; ros1 is the spare behind it, the second copy a "
+			"console keeps so a failed write still leaves a bootable machine. Recovery and boot read the bank "
+			"chosen here, and fall back to the other when it cannot be read."));
 
 	m_emu_settings->EnhanceCheckBox(ui->check_console_dex, emu_settings_type::ConsoleDex);
 

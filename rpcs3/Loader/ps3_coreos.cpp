@@ -3,6 +3,7 @@
 #include "Loader/ps3_boot_chain.h"
 #include "Loader/ps3_coreos.h"
 #include "Loader/ps3_flash.h"
+#include "Loader/ps3_identity.h"
 
 #include <span>
 
@@ -366,6 +367,45 @@ namespace ps3::coreos
 		}
 
 		return true;
+	}
+
+	std::string spare_path(const std::string& path)
+	{
+		if (path.empty())
+		{
+			return {};
+		}
+
+		// Only the file name is looked at, so a directory that happens to be
+		// called ros0 does not turn into a path of its own.
+		const std::size_t slash = path.find_last_of("/\\");
+		const std::size_t name = slash == std::string::npos ? 0 : slash + 1;
+
+		for (const auto& [active, spare] : {std::pair{"ros0", "ros1"}, std::pair{"ros1", "ros0"}})
+		{
+			const std::size_t found = path.find(active, name);
+
+			if (found != std::string::npos)
+			{
+				std::string out = path;
+				out.replace(found, 4, spare);
+				return out;
+			}
+		}
+
+		return {};
+	}
+
+	std::string bios_bank(bool spare)
+	{
+		// ros0 is the active bank and the default; the spare is only what is read
+		// when the active bank is not in the folder at all.
+		if (spare)
+		{
+			return ps3::identity::find_in_bios({"ros1.bin", "ros0.bin"});
+		}
+
+		return ps3::identity::find_in_bios({"ros0.bin", "ros1.bin"});
 	}
 
 	image read_bank(const std::string& path)

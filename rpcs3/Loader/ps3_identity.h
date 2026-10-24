@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <initializer_list>
 #include <string>
 #include <string_view>
 
@@ -41,6 +42,14 @@ namespace ps3::identity
 
 	// A file holding one: 16 raw bytes, or the same as hex text.
 	bool read_dump(const std::string& path, dump& out);
+
+	// The BIOS folder, in the config directory: a console's dumps are dropped
+	// there - idps, psid, the ros banks and emer_init.self - and the emulator
+	// finds them without a path having to be set for each one.
+	std::string bios_dir();
+
+	// The first of `names` that exists in the BIOS folder, or an empty string.
+	std::string find_in_bios(std::initializer_list<std::string_view> names);
 
 	const char* name(generation value);
 

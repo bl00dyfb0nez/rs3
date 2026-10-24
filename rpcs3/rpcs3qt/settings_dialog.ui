@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>856</width>
-    <height>688</height>
+    <width>760</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -5394,6 +5394,16 @@
                </property>
               </widget>
              </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="label_coreos_bank">
+               <property name="text">
+                <string>banksel</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1" colspan="2">
+              <widget class="QComboBox" name="combo_coreos_bank"/>
+             </item>
              <item row="8" column="0" colspan="3">
               <widget class="QLabel" name="label_bar_hint">
                <property name="text">
@@ -5707,6 +5717,120 @@
           </item>
            <item>
             <spacer name="dumpsPage3Spacer">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Policy::MinimumExpanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="dumpsPage4">
+          <attribute name="title">
+           <string>UART</string>
+          </attribute>
+          <attribute name="toolTip">
+           <string>The System Controller's UART</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="dumpsPage4Layout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label_dumpsPage4_desc">
+             <property name="text">
+              <string>The System Controller's UART, emulated inside RPCS3: a terminal on the wire the test bench software uses, with the AES handshake and the controller's own commands. Its EEPROM is the one the console reads and writes.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="gb_uart">
+             <property name="title">
+              <string>UART</string>
+             </property>
+             <layout class="QGridLayout" name="gb_uart_layout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_uart_type">
+                <property name="text">
+                 <string>Mode</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="combo_uart_type"/>
+              </item>
+              <item row="0" column="2">
+               <widget class="QPushButton" name="button_uart_clear">
+                <property name="text">
+                 <string>Clear</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="3">
+               <widget class="QPlainTextEdit" name="text_uart">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>180</height>
+                 </size>
+                </property>
+                <property name="placeholderText">
+                 <string>The controller's answers appear here: type a command below, or open the wire with AUTH1 first, the way the test bench does.</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="2">
+               <widget class="QLineEdit" name="edit_uart_command">
+                <property name="placeholderText">
+                 <string>scopen</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QPushButton" name="button_uart_send">
+                <property name="text">
+                 <string>Send</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0" colspan="3">
+               <widget class="QLabel" name="label_uart_hint">
+                <property name="text">
+                 <string>The controller answers on its own: EEP GET and EEP SET address its EEPROM, r and w read and write bytes, eepcsum adds the system block up, patchvereep reports the installed firmware and errlog answers the error log. The recover mode byte is 0x48C07, the one service mode sets.</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="dumpsPage4Spacer">
              <property name="orientation">
               <enum>Qt::Orientation::Vertical</enum>
              </property>

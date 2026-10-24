@@ -241,6 +241,7 @@ const std::map<emu_settings_type, cfg_location> settings_location =
 	{ emu_settings_type::FirmwareMode,          get_cfg_location(local_cfg.sys.firmware_mode) },
 	{ emu_settings_type::BootSource,            get_cfg_location(local_cfg.sys.boot_source) },
 	{ emu_settings_type::CoreosImage,           get_cfg_location(local_cfg.sys.coreos_image) },
+	{ emu_settings_type::CoreosBank,            get_cfg_location(local_cfg.sys.coreos_bank) },
 	{ emu_settings_type::FactoryServiceMode,    get_cfg_location(local_cfg.sys.factory_service_mode) },
 	{ emu_settings_type::FanCurve,              get_cfg_location(local_cfg.sys.fan_curve) },
 	{ emu_settings_type::RsxType,               get_cfg_location(local_cfg.sys.rsx_type) },

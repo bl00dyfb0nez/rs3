@@ -85,6 +85,7 @@
 #include "Loader/PUP.h"
 #include "Loader/ps3_boot_chain.h"
 #include "Loader/ps3_coreos.h"
+#include "Loader/ps3_syscon.h"
 #include "Loader/ps3_identity.h"
 #include "Loader/TAR.h"
 #include "Loader/PSF.h"
@@ -99,6 +100,10 @@
 #include "ui_main_window.h"
 
 #include <QApplication>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QPlainTextEdit>
+#include <QTextCursor>
 #include <QDialog>
 #include <QEventLoop>
 #include <QGuiApplication>
@@ -592,7 +597,7 @@ void main_window::Boot(const std::string& path, const std::string& title_id, boo
 		// exception above: it is the environment that is reached from here.
 		gui_log.error("Boot refused: the console's boot chain does not boot (bricked console).");
 		answer_boot_refusal(this, failure_yellow());
-		statusBar()->showMessage(tr("This console is bricked: its boot chain does not boot, so the firmware cannot start. Install firmware whose chain boots, or boot emer_init.self from the Boot menu."), 12000);
+		statusBar()->showMessage(tr("This console is bricked: its boot chain does not boot, so the firmware cannot start. Press the power button to enter recovery mode, install firmware whose chain boots, or boot emer_init.self from the Boot menu."), 12000);
 		return;
 	}
 
@@ -602,11 +607,38 @@ void main_window::Boot(const std::string& path, const std::string& title_id, boo
 	// carry those stages is one it stops in, so nothing is started - the same
 	// answer a console gives.  Stock keeps RPCS3's own boot, which has no bank
 	// to read; recovery is the environment that is reached from here.
-	if (!recovery_boot && g_cfg.sys.boot_source.get() != "stock" && !g_cfg.sys.coreos_image.get().empty())
+	if (!recovery_boot && g_cfg.sys.boot_source.get() != "stock")
 	{
-		const std::string coreos_path = g_cfg.sys.coreos_image.get();
+		std::string coreos_path = g_cfg.sys.coreos_image.get();
 
-		if (!fs::is_file(coreos_path))
+		// No bank chosen in the settings: the BIOS folder is where a console's
+		// bank is dropped to be found without a path being set.
+		if (coreos_path.empty())
+		{
+			coreos_path = ps3::coreos::bios_bank(g_cfg.sys.coreos_bank.get() == "ros1");
+		}
+
+		// banksel: the bank the console boots its CoreOS from.  ros0 is the
+		// active bank; ros1 is the spare, and the other name in the same
+		// directory is where it sits.
+		if (g_cfg.sys.coreos_bank.get() == "ros1" && !coreos_path.empty())
+		{
+			if (const std::string spare = ps3::coreos::spare_path(coreos_path); !spare.empty() && fs::is_file(spare))
+			{
+				coreos_path = spare;
+			}
+			else
+			{
+				gui_log.warning("Console CoreOS: banksel asks for ros1 and there is no spare next to %s", coreos_path);
+			}
+		}
+
+		if (coreos_path.empty())
+		{
+			// Neither a bank in the settings nor one in the folder: there is
+			// nothing the console carries to judge.
+		}
+		else if (!fs::is_file(coreos_path))
 		{
 			// The setting names a bank that is no longer there - an install moved
 			// or a config carried over.  There is nothing the console carries, so
@@ -888,17 +920,60 @@ void main_window::BootRecovery()
 	// is set, so recovery does not stop on a console whose dumps are not there.
 	std::string path;
 
-	if (const std::string coreos_path = g_cfg.sys.coreos_image.get(); !coreos_path.empty())
+	// The console carries two banks, ros0 and ros1: the active one and the spare
+	// behind it.  A bank that is gone or unreadable is not the end of the
+	// console's CoreOS - the spare is read in its place, which is what the
+	// second copy is for.  A console whose bank was never chosen in the
+	// settings still has one when it was dropped in the BIOS folder, which is
+	// what the folder is for.
 	{
-		if (!fs::is_file(coreos_path))
+		std::string coreos_path = g_cfg.sys.coreos_image.get();
+		ps3::coreos::image bank;
+
+		if (coreos_path.empty())
+		{
+			coreos_path = ps3::coreos::bios_bank(g_cfg.sys.coreos_bank.get() == "ros1");
+		}
+
+		// banksel: ros0 is the bank the console boots unless it is told to boot
+		// the spare, which is what ros1 is there for.
+		if (g_cfg.sys.coreos_bank.get() == "ros1" && !coreos_path.empty())
+		{
+			if (const std::string spare = ps3::coreos::spare_path(coreos_path); !spare.empty() && fs::is_file(spare))
+			{
+				coreos_path = spare;
+			}
+			else
+			{
+				gui_log.warning("Recovery mode: banksel asks for ros1 and there is no spare next to %s", coreos_path);
+			}
+		}
+
+		if (fs::is_file(coreos_path))
+		{
+			bank = ps3::coreos::read_bank(coreos_path);
+		}
+		else if (!coreos_path.empty())
 		{
 			gui_log.warning("Recovery mode: the CoreOS bank %s is not a file, so it is not read.", coreos_path);
 		}
-		else if (const ps3::coreos::image bank = ps3::coreos::read_bank(coreos_path); !bank.found)
+
+		if (!bank.found)
 		{
-			gui_log.warning("Recovery mode: %s is not a CoreOS bank: %s", coreos_path, bank.error);
+			const std::string spare = ps3::coreos::spare_path(coreos_path);
+
+			if (!spare.empty() && fs::is_file(spare))
+			{
+				if (ps3::coreos::image other = ps3::coreos::read_bank(spare); other.found)
+				{
+					gui_log.notice("Recovery mode: %s is not a bank, reading the console's spare %s", coreos_path, spare);
+					coreos_path = spare;
+					bank = std::move(other);
+				}
+			}
 		}
-		else
+
+		if (bank.found)
 		{
 			std::string error;
 
@@ -911,6 +986,10 @@ void main_window::BootRecovery()
 			{
 				gui_log.warning("Recovery mode: %s", error);
 			}
+		}
+		else if (!bank.error.empty())
+		{
+			gui_log.warning("Recovery mode: %s is not a CoreOS bank: %s", coreos_path, bank.error);
 		}
 	}
 
@@ -927,6 +1006,17 @@ void main_window::BootRecovery()
 				path = full;
 				break;
 			}
+		}
+	}
+
+	if (path.empty())
+	{
+		// The same file dropped in the BIOS folder: a console's emer_init can be
+		// put there on its own, without a bank to carry it.
+		if (const std::string found = ps3::identity::find_in_bios({"emer_init.self"}); !found.empty())
+		{
+			path = found;
+			gui_log.notice("Recovery mode: emer_init.self taken from the BIOS folder (%s)", path);
 		}
 	}
 
@@ -3829,13 +3919,15 @@ void main_window::CreateConnects()
 
 		if (status == system_state::stopped)
 		{
-			// A console whose boot chain does not boot comes on dark and stays
-			// there: pressing the button again has nothing to run.
+			// A console whose boot chain does not boot has no firmware to start,
+			// so the button goes where the hold goes on a real machine: the
+			// recovery environment.  Holding power until the second beep is what
+			// enters recovery on a console; here the button is the whole gesture.
 			if (g_cfg.sys.boot_bricked)
 			{
-				gui_log.notice("Power button: the console's boot chain does not boot");
-				statusBar()->showMessage(tr("Power: the console's boot chain does not boot."), 8000);
-				refresh_power_led(this);
+				gui_log.notice("Power button: the console's boot chain does not boot, entering recovery mode");
+				statusBar()->showMessage(tr("Power: the boot chain does not boot - entering recovery mode."), 8000);
+				BootRecovery();
 				return;
 			}
 
@@ -4294,6 +4386,69 @@ void main_window::CreateConnects()
 			connect(m_system_cmd_dialog, &QDialog::finished, this, [this]() { m_system_cmd_dialog = nullptr; });
 		}
 		m_system_cmd_dialog->show();
+	});
+
+	// The System Controller's UART console, reachable without opening the
+	// settings: the same terminal its page carries, on the wire the test bench
+	// talks to.  It is a window of the emulator's own, so nothing is attached to
+	// the host's serial ports.
+	connect(ui->toolsUartConsoleAct, &QAction::triggered, this, [this]()
+	{
+		QDialog* dialog = new QDialog(this);
+		dialog->setAttribute(Qt::WA_DeleteOnClose);
+		dialog->setWindowTitle(tr("SysCon UART"));
+		dialog->resize(720, 420);
+
+		auto* layout = new QVBoxLayout(dialog);
+		auto* header = new QHBoxLayout();
+
+		auto* type = new QComboBox(dialog);
+		type->addItem(tr("CXR - 57600, C:<checksum>:<command>"), false);
+		type->addItem(tr("SW - 115200, <command>:<checksum>"), true);
+
+		auto* clear = new QPushButton(tr("Clear"), dialog);
+
+		header->addWidget(new QLabel(tr("Mode"), dialog));
+		header->addWidget(type, 1);
+		header->addWidget(clear);
+		layout->addLayout(header);
+
+		auto* console = new QPlainTextEdit(dialog);
+		console->setReadOnly(true);
+		console->setPlainText(QString::fromStdString(ps3::syscon::transcript()));
+		layout->addWidget(console, 1);
+
+		auto* bottom = new QHBoxLayout();
+		auto* command = new QLineEdit(dialog);
+		command->setPlaceholderText(tr("scopen"));
+		auto* send = new QPushButton(tr("Send"), dialog);
+
+		bottom->addWidget(command, 1);
+		bottom->addWidget(send);
+		layout->addLayout(bottom);
+
+		const auto transmit = [console, command, type]()
+		{
+			if (command->text().isEmpty())
+			{
+				return;
+			}
+
+			static_cast<void>(ps3::syscon::uart_command(command->text().toStdString(), type->currentData().toBool()));
+			console->setPlainText(QString::fromStdString(ps3::syscon::transcript()));
+			console->moveCursor(QTextCursor::End);
+			command->clear();
+		};
+
+		connect(send, &QPushButton::clicked, dialog, transmit);
+		connect(command, &QLineEdit::returnPressed, dialog, transmit);
+		connect(clear, &QPushButton::clicked, dialog, [console]()
+		{
+			ps3::syscon::clear();
+			console->clear();
+		});
+
+		dialog->show();
 	});
 
 	connect(ui->toolsDecryptSprxLibsAct, &QAction::triggered, this, &main_window::DecryptSPRXLibraries);

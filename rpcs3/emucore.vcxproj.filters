@@ -819,6 +819,9 @@
     <ClCompile Include="Loader\ps3_identity.cpp">
       <Filter>Loader</Filter>
     </ClCompile>
+    <ClCompile Include="Loader\ps3_syscon.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
     <ClCompile Include="Loader\ps3_flash.cpp">
       <Filter>Loader</Filter>
     </ClCompile>
@@ -2152,6 +2155,9 @@
       <Filter>Loader</Filter>
     </ClInclude>
     <ClInclude Include="Loader\ps3_identity.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\ps3_syscon.h">
       <Filter>Loader</Filter>
     </ClInclude>
     <ClInclude Include="Loader\ps3_flash.h">
