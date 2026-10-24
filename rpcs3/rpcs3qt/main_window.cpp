@@ -2556,29 +2556,23 @@ void main_window::HandlePupInstallation(main_window* mw, const QString& file_pat
 	{
 		gui_log.success("Successfully installed PS3 firmware version %s.", version_string);
 
-		// The console's CoreOS.  The firmware keeps its dev_flash as files, but
-		// the boot chain stands on a ros bank, and that is CoreOS.PKG: lv0,
-		// lv1.self, lv2_kernel.self and the rest of what the bank names.  It is
-		// extracted next to the emulator's config and recorded, so the boot
-		// chain and the flash dump carry the firmware that was installed.  Stock
+		// The console's CoreOS is not part of the firmware.  CoreOS.PKG is the
+		// updater's own program (a SELF around a compressed PowerPC ELF), not
+		// the ros bank, so an install only brings dev_flash.  The bank is the
+		// console's and comes out of its flash dump - Advanced PS3 Tools carves
+		// it - so an install leaves whichever bank was carved in place.  Stock
 		// is RPCS3's own emulation and has no bank to carry.
 		if (g_cfg.sys.boot_source.get() == "stock")
 		{
-			gui_log.notice("CoreOS: not extracted (stock boot, which starts vsh.self directly).");
+			gui_log.notice("CoreOS: none (stock boot, which starts vsh.self directly).");
+		}
+		else if (!g_cfg.sys.coreos_image.get().empty())
+		{
+			gui_log.notice("CoreOS: the bank carved from the flash dump stays as it is (%s).", g_cfg.sys.coreos_image.get());
 		}
 		else
 		{
-			const ps3::coreos::installed coreos = ps3::coreos::install(path, fs::get_config_dir() + "coreos/");
-
-			if (coreos.ok)
-			{
-				g_cfg.sys.coreos_image.set(coreos.bank);
-				gui_log.success("CoreOS extracted for the boot chain:\n%s", coreos.summary);
-			}
-			else
-			{
-				gui_log.error("CoreOS: not extracted (%s).", coreos.error);
-			}
+			gui_log.warning("CoreOS: no bank yet. The firmware PUP carries none - CoreOS.PKG is the updater's program - so import the console's flash dump in Advanced PS3 Tools: that is what the ros bank the boot chain runs is carved from.");
 		}
 
 		if (mw)

@@ -1,24 +1,32 @@
 #pragma once
 
+#include "Loader/ps3_flash.h"
+
 #include <cstdint>
 #include <span>
 #include <string>
 #include <vector>
 
-// The console's CoreOS, out of the firmware PUP it was installed from.
+// The console's CoreOS, out of the flash image the console carries.
 //
-// A PUP carries CoreOS.PKG (entry 0x200) as an encrypted SELF whose payload is
-// a TAR: lv0, lv0.2, lv1.self, lv2_kernel.self, the isolated SPU modules, the
-// revoke packages and emer_init.  The console's installer unpacks that TAR into
-// a ros bank - the region its flash carries at 0x0C0000 and 0x7C0000 on NOR,
-// twice inside the ros region of the NAND/eMMC map.
+// The ros bank is the console's, not the firmware's: a ros region at 0x0C0000
+// and 0x7C0000 on NOR, twice inside the ros region of the NAND/eMMC map, and
+// each bank holds lv0, lv0.2, lv1.self, lv2_kernel.self, the isolated SPU
+// modules, the revoke packages and emer_init behind a table that names them.
+//
+// The firmware PUP cannot supply it.  CoreOS.PKG (entry 0x200) is a SELF whose
+// payload is a zlib-compressed PowerPC ELF - the updater's own program, with no
+// TAR, no lv0 and no lv1.self anywhere in it - and the console's installer does
+// not build a bank out of it; the bank is flashed with the console's own image
+// and updated in place by the CoreOS patches of the flash writers.
 //
 // The bank is what the boot chain stands on: bootldr hands over to lv0, and lv0
 // runs lv1ldr -> lv1 and lv2ldr -> lv2 out of it, so a console without a bank
 // whose table names those stages has nothing to boot.  RPCS3 keeps the firmware
-// as files under dev_flash and never had the bank; this module reads it back
-// out of the PUP, so the emulated console can carry the CoreOS it was installed
-// with - the bank the boot-chain checks and the flash dump then describe.
+// as files under dev_flash and never had the bank; this module carves it out of
+// the console's flash dump (or reads a bank file), so the emulated console can
+// carry the CoreOS its dump carries - the bank the boot-chain checks and the
+// generated flash dump then describe.
 //
 // The layout is the console's own: a 0x30-byte header (the bank size at +0x08,
 // version 1 at +0x10, the entry count at +0x14, the size again at +0x18), one
@@ -31,13 +39,9 @@ namespace ps3::coreos
 {
 	using bytes = std::vector<std::uint8_t>;
 
-	// CoreOS.PKG is PUP entry 0x200, and the version the PUP carries is 0x100.
-	inline constexpr std::uint64_t pup_coreos_entry = 0x200;
-	inline constexpr std::uint64_t pup_version_entry = 0x100;
-
 	// One ros bank, and the shape of its header and table.
 	inline constexpr std::uint32_t bank_size = 0x700000;
-	inline constexpr std::uint32_t header_size = 0x30;
+	inline constexpr std::uint32_t header_size = 0x20;
 	inline constexpr std::uint32_t record_size = 0x30;
 	inline constexpr std::uint32_t name_size = 0x20;
 
@@ -51,7 +55,8 @@ namespace ps3::coreos
 	struct image
 	{
 		bool found = false;
-		std::string version;     // the PUP's version.txt, e.g. "4.93"
+		std::string version;     // the bank's sdk_version, e.g. "4.9300"
+		std::string source;      // the dump it was carved from
 		std::vector<file> files; // in the bank's order
 		bytes bank;              // what ros0 and ros1 hold
 		std::string error;       // why it could not be read
@@ -59,9 +64,9 @@ namespace ps3::coreos
 		std::string summary() const;
 	};
 
-	// CoreOS.PKG from `pup_path`, decrypted and its TAR extracted into
-	// `files_dir`, laid out as the bank the console's installer writes.
-	image read(const std::string& pup_path, const std::string& files_dir);
+	// The ros bank inside a flash image: ros0 at 0x0C0000 on both maps, and the
+	// map the chip uses decides how large the image has to be.
+	image read_dump(const std::string& dump_path, ps3::flash::chip flash);
 
 	// Writes `img` as `dir/ros0.bin` and `dir/ros1.bin` - the console's two
 	// banks, identical as they are on a console.
@@ -95,9 +100,9 @@ namespace ps3::coreos
 	verdict inspect(std::span<const std::uint8_t> bank);
 	verdict inspect_file(const std::string& path);
 
-	// The emulator's copy of the console's CoreOS: `dir` holds ros0.bin,
-	// ros1.bin and the TAR's files under `files/`.  `bank` is the file the
-	// settings record; empty when the extraction failed.
+	// The emulator's copy of the console's CoreOS: `dir` holds ros0.bin and
+	// ros1.bin, carved out of the dump.  `bank` is the file the settings
+	// record; empty when the dump carried no bank.
 	struct installed
 	{
 		bool ok = false;
@@ -107,5 +112,5 @@ namespace ps3::coreos
 		std::string error;
 	};
 
-	installed install(const std::string& pup_path, const std::string& dir);
+	installed install(const std::string& dump_path, const std::string& dir, ps3::flash::chip flash);
 }

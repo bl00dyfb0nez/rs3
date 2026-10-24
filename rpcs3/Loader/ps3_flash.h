@@ -68,7 +68,7 @@ namespace ps3::flash
 		std::string hdd_serial;
 		chip flash = chip::nor;              // NOR, or the eMMC/NAND map of a superslim
 		bool dex = false;                    // a debug console (DEX), whose dev_flash is not sealed
-		std::string coreos_image;            // the bank extracted from the installed firmware, empty when none
+		std::string coreos_image;            // the bank carved from the console's flash dump, empty when none
 		std::string coreos_patch;            // path of the installed CoreOS image, empty when none
 		std::uint32_t coreos_patch_span = 0; // bytes written into the bank
 	};

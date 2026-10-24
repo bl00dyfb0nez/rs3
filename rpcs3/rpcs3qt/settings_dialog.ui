@@ -5144,14 +5144,14 @@
              <item row="5" column="1" colspan="2">
               <widget class="QPushButton" name="button_coreos_extract">
                <property name="text">
-                <string>Extract from firmware...</string>
+                <string>Carve from flash dump...</string>
                </property>
               </widget>
              </item>
              <item row="6" column="0" colspan="3">
               <widget class="QLabel" name="label_coreos_state">
                <property name="text">
-                <string>CoreOS: none extracted</string>
+                <string>CoreOS: no bank carved</string>
                </property>
                <property name="wordWrap">
                 <bool>true</bool>

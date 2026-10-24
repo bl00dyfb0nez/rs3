@@ -80,15 +80,16 @@ namespace ps3::boot
 		bool is_360() const { return name == "metldr.2" || name == "lv0ldr.2"; }
 	};
 
-	// The CoreOS bank the loaders stand on.  Its header is 0x30 bytes - the bank
+	// The CoreOS bank the loaders stand on.  Its header is 0x20 bytes - the bank
 	// size at +0x08, version 1 at +0x10, the entry count at +0x14 and the size
-	// again at +0x18 - and 0x30-byte entries follow from +0x30: a 0x20-byte
-	// name, the file's offset in the bank (big-endian 64-bit) and its size.  A
-	// 4301C's ros0 and ros1 both hold 25 entries in this order: default.spp
-	// (0xE0200, 0x1388A0 bytes), lv1.self (0x218B00, 0xE7600), lv0 (0x300100,
-	// 0x500), lv0.2 (0x300600, 0x183508), lv2_kernel.self (0x483B08, 0x70F94)
-	// and eurus_fw.bin, each starting where the one before it ends.  The offsets
-	// are inside the bank, not in the flash image.
+	// again at +0x18 - and 0x30-byte entries follow from +0x20: the file's
+	// offset in the bank and its size as big-endian 64-bit words, then the
+	// 0x20-byte name.  A 4301C's ros0 and ros1 both hold 25 entries: default.spp
+	// (0xDD9E8, 0x27A0 bytes), lv1.self (0xE0200, 0x1388A0), lv0 (0x218B00,
+	// 0xE7600), lv0.2 (0x300100, 0x500), lv2_kernel.self (0x300600, 0x183508),
+	// eurus_fw.bin (0x483B08, 0x70F94) and emer_init.self, in table order, each
+	// body starting where the one before it ends.  The offsets are inside the
+	// bank, not in the flash image.
 	struct bank_entry
 	{
 		std::string name;
@@ -126,9 +127,9 @@ namespace ps3::boot
 		std::uint64_t offset = 0;     // absolute in the image
 		std::uint64_t size = 0;       // the extent the console loads
 		std::uint64_t slot_size = 0;  // what the bank table reserves for it
+		std::uint64_t self_size = 0;  // the length the SELF at the slot declares
 		bool found = false;
 		bool self_readable = false;   // a SELF header was read at the slot
-		bool extent_from_self = false; // the extent is the SELF's, past the slot
 		std::string error;            // why the console cannot run it
 
 		bool usable() const { return found && error.empty(); }

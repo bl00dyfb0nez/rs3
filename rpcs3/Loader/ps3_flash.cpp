@@ -261,7 +261,9 @@ namespace ps3::flash
 				{"vsh.self",             lv0_2_slot + lv0_2_size + 0x10000, 0},
 			};
 
-			zeros(image, bank, 0x30);
+			// The header is 0x20 bytes and the records follow from it: the
+			// offset and the size as big-endian 64-bit words, then the name.
+			zeros(image, bank, 0x20);
 			put_be64(image, bank + 0x08, ros_size);
 			put_be32(image, bank + 0x10, 1);
 			put_be32(image, bank + 0x14, static_cast<std::uint32_t>(std::size(entries)));
@@ -269,10 +271,10 @@ namespace ps3::flash
 
 			for (std::size_t i = 0; i < std::size(entries); i++)
 			{
-				const std::uint32_t at = bank + 0x30 + static_cast<std::uint32_t>(i) * 0x30;
-				text_at(image, at, entries[i].name, 0x20, 0);
-				put_be64(image, at + 0x20, entries[i].offset);
-				put_be64(image, at + 0x28, entries[i].size);
+				const std::uint32_t at = bank + 0x20 + static_cast<std::uint32_t>(i) * 0x30;
+				put_be64(image, at, entries[i].offset);
+				put_be64(image, at + 0x08, entries[i].size);
+				text_at(image, at + 0x10, entries[i].name, 0x20, 0);
 			}
 		}
 
@@ -292,9 +294,19 @@ namespace ps3::flash
 
 			bytes bank(ros_size, 0);
 
+			// The carved file carries the table and the bodies, not the erased
+			// tail of the bank: what is there is copied and the rest stays zero,
+			// the way an unused bank reads.
 			if (!file || !file.read(reinterpret_cast<char*>(bank.data()), ros_size))
 			{
-				return;
+				const std::streamsize got = file ? file.gcount() : 0;
+
+				if (got <= 0)
+				{
+					return;
+				}
+
+				std::fill(bank.begin() + static_cast<std::ptrdiff_t>(got), bank.end(), std::uint8_t{0});
 			}
 
 			std::copy(bank.begin(), bank.end(), image.begin() + bank0);
@@ -682,7 +694,7 @@ namespace ps3::flash
 		}
 		else
 		{
-			out += " The CoreOS bodies are not left erased: they are the bank extracted from the firmware.\n";
+			out += " The CoreOS bodies are not left erased: they are the bank carved from the console's flash dump.\n";
 		}
 
 		out += "\n";
@@ -698,7 +710,7 @@ namespace ps3::flash
 		if (!c.coreos_image.empty())
 		{
 			const ps3::coreos::verdict bank = ps3::coreos::inspect_file(c.coreos_image);
-			out += "\nCoreOS: extracted from the installed firmware, " + c.coreos_image + ".\n" + bank.summary() + "\n";
+			out += "\nCoreOS: carved from the console's flash dump, " + c.coreos_image + ".\n" + bank.summary() + "\n";
 		}
 
 		if (c.coreos_patch.empty())

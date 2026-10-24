@@ -1465,30 +1465,29 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 
 	SubscribeTooltip(ui->combo_boot_source,
 		tr("Which boot the console performs.\n\n"
-			"Advanced PS3 Tools runs the emulated console: installing firmware extracts its CoreOS - lv0, lv1.self, "
+			"Advanced PS3 Tools runs the emulated console: its flash dump carries a CoreOS bank - lv0, lv1.self, "
 			"lv2_kernel.self and the rest of the ros bank - and boot stops when the bank does not carry those stages, "
-			"the way the console stops. The flash dump then carries that bank too.\n\n"
-			"Stock is original RPCS3: the firmware is installed to dev_flash as before, no CoreOS is extracted, and a "
+			"the way the console stops. The bank is carved from the dump below; the firmware PUP does not carry it.\n\n"
+			"Stock is original RPCS3: the firmware is installed to dev_flash as before, no CoreOS is carved, and a "
 			"boot starts /dev_flash/vsh/module/vsh.self directly."));
 
-	// The console's CoreOS: the bank the boot chain runs, extracted from the
-	// firmware PUP.  The label says whether a bank is there and whether the
-	// console could run it - the same verdict boot applies.
+	// The console's CoreOS: the bank the boot chain runs, carved out of the
+	// console's flash dump.  The label says whether a bank is there and whether
+	// the console could run it - the same verdict boot applies.
 	const auto refresh_coreos_state = [this]()
 	{
 		const QString image = QString::fromStdString(m_emu_settings->GetSetting(emu_settings_type::CoreosImage));
 
 		if (image.isEmpty())
 		{
-			ui->label_coreos_state->setText(tr("CoreOS: none extracted. Installing firmware extracts it from the image; the bank is what the boot chain runs."));
+			ui->label_coreos_state->setText(tr("CoreOS: no bank carved. Import the console's flash dump; the bank at 0x0C0000 is what the boot chain runs."));
 			return;
 		}
 
 		const ps3::coreos::verdict bank = ps3::coreos::inspect_file(image.toStdString());
 
 		ui->label_coreos_state->setText(bank.runs()
-			? tr("CoreOS: %1 - %2 files, lv0, lv1.self and lv2_kernel.self present (sdk_version %3).")
-				.arg(QFileInfo(image).fileName(), QString::number(bank.count), QString::fromStdString(bank.sdk_version))
+			? tr("CoreOS: imported (%1).").arg(QFileInfo(image).fileName())
 			: tr("CoreOS: %1 - the console would stop in it: %2")
 				.arg(QFileInfo(image).fileName(), QString::fromStdString(bank.error)));
 	};
@@ -1497,34 +1496,38 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 
 	connect(ui->button_coreos_extract, &QPushButton::clicked, this, [this, refresh_coreos_state]()
 	{
-		const QString path = QFileDialog::getOpenFileName(this, tr("Select the firmware the CoreOS is extracted from"), {},
-			tr("Firmware images (*.PUP *.pup);;All files (*.*)"));
+		const QString path = QFileDialog::getOpenFileName(this, tr("Select the console's flash dump"), {},
+			tr("Flash images (*.bin *.img *.rom);;All files (*.*)"));
 
 		if (path.isEmpty())
 		{
 			return;
 		}
 
-		const ps3::coreos::installed coreos = ps3::coreos::install(path.toStdString(), fs::get_config_dir() + "coreos/");
+		// The map follows the chip the console is modeled with: a superslim's
+		// eMMC uses the NAND map, whose ros region starts where NOR's ros0 does.
+		const ps3::flash::chip flash = m_emu_settings->GetSetting(emu_settings_type::FlashChip) == "emmc"
+			? ps3::flash::chip::emmc : ps3::flash::chip::nor;
+
+		const ps3::coreos::installed coreos = ps3::coreos::install(path.toStdString(), fs::get_config_dir() + "coreos/", flash);
 
 		if (!coreos.ok)
 		{
-			QMessageBox::warning(this, tr("CoreOS"), tr("The CoreOS could not be extracted:\n\n%1").arg(QString::fromStdString(coreos.error)));
+			QMessageBox::warning(this, tr("CoreOS"), tr("The CoreOS could not be carved:\n\n%1").arg(QString::fromStdString(coreos.error)));
 			return;
 		}
 
 		m_emu_settings->SetSetting(emu_settings_type::CoreosImage, coreos.bank);
 		refresh_coreos_state();
 
-		QMessageBox::information(this, tr("CoreOS"),
-			tr("The console's CoreOS is extracted to %1.\n\n%2")
-				.arg(QString::fromStdString(coreos.bank), QString::fromStdString(coreos.summary)));
+		QMessageBox::information(this, tr("CoreOS"), tr("Imported!"));
 	});
 
 	SubscribeTooltip(ui->button_coreos_extract,
-		tr("Extract the CoreOS.PKG of a firmware PUP into the ros bank the console boots from. Installing firmware "
-			"does this already; this is the same read for a PUP that is not installed, and it replaces the bank the "
-			"settings record."));
+		tr("Carve the ros bank out of the console's flash dump: ros0 at 0x0C0000, the table with lv0, lv1.self, "
+			"lv2_kernel.self and the rest, written out as ros0.bin and ros1.bin. The firmware PUP does not carry "
+			"the bank - its CoreOS.PKG is the updater's program - so it comes from the dump. Importing one replaces "
+			"the bank the settings record."));
 
 	// The fan is simulated: the emulator has no thermal sensors, it fabricates
 	// the temperature and runs the selected board's SYSCON thermal table over

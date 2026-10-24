@@ -173,16 +173,13 @@ namespace ps3::boot
 			out.offset = std::uint64_t{ros.offset} + found->offset;
 			out.size = found->size;
 			out.slot_size = found->size;
+			out.self_size = found->self_size;
 
-			// A stage whose SELF declares more than its slot is one whose payload
-			// runs on past the slot - that is lv0, whose four loaders live in the
-			// bytes between 0x300600 and 0x3E7210 on a 4.93 bank.
-			if (found->self_size > found->size)
-			{
-				out.size = found->self_size;
-				out.extent_from_self = true;
-			}
-
+			// The extent the console loads is the slot the table gives.  The SELF
+			// at the slot is sealed, so the size it declares is not relied on for
+			// the extent: an encrypted lv1.self's header word reads past its own
+			// slot.  It is recorded because lv0's payload is what carries the
+			// four loaders.
 			out.self_readable = found->self_size != 0;
 
 			if (found->offset + out.size > ros.size)
@@ -221,7 +218,11 @@ namespace ps3::boot
 			// they are there is lv0's SELF reaching past its 0x500-byte slot.
 			static constexpr const char* loader_names[] = {"lv1ldr", "lv2ldr", "appldr", "isoldr"};
 
-			const bool carries = out.lv0.usable() && out.lv0.extent_from_self;
+			// lv0's file carries them when its SELF declares a payload large
+			// enough to hold four loader ELFs: on a 4.93 bank lv0 is 0xE7600
+			// bytes and its SELF declares 0xE7100 of them.  A stub stops at a few
+			// hundred bytes, and the four loaders are not in it.
+			const bool carries = out.lv0.usable() && out.lv0.self_size >= 0x10000;
 
 			for (const char* const name : loader_names)
 			{
@@ -236,8 +237,8 @@ namespace ps3::boot
 
 				if (!carries && out.lv0.usable() && out.lv0.self_readable)
 				{
-					s.error = std::string{name} + ": lv0's SELF declares " + hex64(out.lv0.size) +
-						" bytes, no more than its " + hex64(out.lv0.slot_size) + "-byte slot, so the loaders it encapsulates are not in the image";
+					s.error = std::string{name} + ": lv0's SELF declares only " + hex64(out.lv0.self_size) +
+						" bytes, too little to carry the loaders it encapsulates";
 				}
 
 				out.encapsulated.push_back(std::move(s));
@@ -264,8 +265,8 @@ namespace ps3::boot
 			if (!carries && out.lv0.usable() && out.lv0.self_readable)
 			{
 				out.failures.emplace_back("lv0 (" + out.lv0.file + ") does not carry the four loaders it encapsulates (lv1ldr, lv2ldr, appldr, isoldr): "
-					"its SELF declares " + hex64(out.lv0.size) + " bytes, no more than its " + hex64(out.lv0.slot_size) +
-					"-byte slot, so lv1, lv2 and vsh.self never start");
+					"its SELF declares only " + hex64(out.lv0.self_size) +
+					" bytes, too little to carry them, so lv1, lv2 and vsh.self never start");
 			}
 		}
 
@@ -437,7 +438,7 @@ namespace ps3::boot
 		bank out;
 		out.offset = offset;
 
-		if (offset > image.size() || image.size() - offset < 0x30)
+		if (offset > image.size() || image.size() - offset < 0x20)
 		{
 			out.error = "the header is past the end of the image";
 			return out;
@@ -449,16 +450,17 @@ namespace ps3::boot
 		const std::uint32_t count = be32(h + 0x14);
 		const std::uint64_t size2 = be64(h + 0x18);
 
-		// The two size words are the same field written twice; the version is 1
-		// and the table is short.  Anything else is not a bank header.
+		// The header is 0x20 bytes: 8 reserved, the bank size, version 1, the
+		// entry count and the size again.  A 4.93 console's ros0 reads
+		// 6FFFE0, 1, 25, 6FFFE0.  Anything else is not a bank header.
 		if (version != 1 || !count || count > 0x100 || size1 != size2
-			|| size1 < 0x30ull + std::uint64_t{count} * 0x30ull || size1 > 0x2000000ull)
+			|| size1 < 0x20ull + std::uint64_t{count} * 0x30ull || size1 > 0x2000000ull)
 		{
 			out.error = "the header is not a CoreOS bank's";
 			return out;
 		}
 
-		if (std::uint64_t{offset} + 0x30ull + std::uint64_t{count} * 0x30ull > image.size())
+		if (std::uint64_t{offset} + 0x20ull + std::uint64_t{count} * 0x30ull > image.size())
 		{
 			out.error = "the bank table runs past the end of the image";
 			return out;
@@ -471,21 +473,25 @@ namespace ps3::boot
 
 		std::size_t named = 0;
 
+		// A record is 0x30 bytes: the offset in the bank and the size as
+		// big-endian 64-bit words, then the 0x20-byte name.  The table starts
+		// at 0x20 and the bodies start where the first record says (0x4C0 on a
+		// console), which is why the last name's field can end past it.
 		for (std::uint32_t i = 0; i < count; i++)
 		{
-			const std::uint32_t at = offset + 0x30 + i * 0x30;
+			const std::uint32_t at = offset + 0x20 + i * 0x30;
 			bank_entry e;
-			e.name = entry_name(image, at);
-			e.offset = be64(image.data() + at + 0x20);
-			e.size = be64(image.data() + at + 0x28);
+			e.offset = be64(image.data() + at);
+			e.size = be64(image.data() + at + 0x08);
+			e.name = entry_name(image, at + 0x10);
 			e.erased = e.offset == ~std::uint64_t{0} && e.size == ~std::uint64_t{0};
 			e.present = !e.name.empty() && !e.erased && e.size != 0;
 			named += e.name.empty() ? 0 : 1;
 
-			// The SELF at the slot starts 0x10 bytes in: magic "SCE\0", the header
-			// size at +0x0C and the file's own length at +0x18.  lv0's length is
-			// the one that matters: 0xE7100 against a 0x500-byte slot, i.e. the
-			// bytes its four loaders sit in.
+			// The SELF at the slot starts 0x10 bytes in: magic "SCE\0", the
+			// header size at +0x0C and the ELF size at +0x18.  lv0.2's is the
+			// one that matters: 0xE7100 against a 0x500-byte slot, i.e. the
+			// bytes the four .2 loaders sit in.
 			if (e.present)
 			{
 				const std::uint64_t self_at = std::uint64_t{offset} + e.offset + 0x10;
@@ -798,11 +804,6 @@ namespace ps3::boot
 				}
 
 				line += " @ " + hex64(s.offset) + ": " + hex64(s.size) + " bytes";
-
-				if (s.extent_from_self)
-				{
-					line += " (the SELF's extent, past its " + hex64(s.slot_size) + "-byte slot)";
-				}
 
 				if (!s.error.empty())
 				{
