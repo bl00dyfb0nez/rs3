@@ -454,7 +454,7 @@ namespace ps3::coreos
 		out += lv1 ? ", lv1.self" : ", no lv1.self";
 		out += lv2 ? ", lv2_kernel.self" : ", no lv2_kernel.self";
 
-		if (out.loaders)
+		if (loaders)
 		{
 			out += " (lv0 declares " + hex(lv0_size) + " bytes, its loaders with it)";
 		}
