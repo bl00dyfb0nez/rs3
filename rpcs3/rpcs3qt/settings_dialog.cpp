@@ -1376,7 +1376,7 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 	m_emu_settings->EnhanceLineEdit(ui->edit_hdd_serial, emu_settings_type::HDDSerialNumber);
 	SubscribeTooltip(ui->gb_edit_hdd_serial, tooltips.settings.hdd_serial);
 
-	// PS3 Dumps
+	// Advanced PS3 Tools
 
 	m_emu_settings->EnhanceLineEdit(ui->edit_idps_dump, emu_settings_type::IdpsDump);
 	m_emu_settings->EnhanceLineEdit(ui->edit_psid_dump, emu_settings_type::PsidDump);

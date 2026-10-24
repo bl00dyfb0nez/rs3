@@ -260,7 +260,7 @@ namespace gui
 	// on the older ones (the USB tab hides the rows the console does not have).
 	const gui_save fs_usb_port_count = gui_save(fs, "usb_port_count", 2);
 
-	// The PS3 Dumps page: the HDD image the formatter writes, the ERK it is
+	// The Advanced PS3 Tools page: the HDD image the formatter writes, the ERK it is
 	// sealed with, and the physical device that is only reachable through the
 	// advanced wizard.
 	const gui_save dumps_hdd_image    = gui_save(fs, "dumps_hdd_image", "");

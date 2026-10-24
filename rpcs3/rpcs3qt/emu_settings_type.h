@@ -224,7 +224,7 @@ enum class emu_settings_type
 	PSNCountry,
 	EnableClans,
 
-	// PS3 Dumps
+	// Advanced PS3 Tools (formerly PS3 Dumps)
 	IdpsDump,
 	PsidDump,
 	BootLoader,

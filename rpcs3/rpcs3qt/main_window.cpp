@@ -1674,8 +1674,8 @@ namespace
 		label->setFixedSize(size);
 	}
 
-	// The light itself, and the window it belongs to: it has to survive the game
-	// window coming and going, so it is held here rather than in a parent.
+	// The light itself: it is moved between the console's windows, so it is held
+	// here rather than owned by one of them.
 	QPointer<QLabel> g_power_led;
 
 	QLabel* power_led(QMainWindow* window, bool create)
@@ -1832,7 +1832,7 @@ namespace
 		}
 
 		// This runs from the tick, so the light is only touched when it has to
-		// change - otherwise it would be restyled five times a second.
+		// change - otherwise it would be restyled four times a second.
 		if (led && led->property("led_state").toInt() == static_cast<int>(state))
 		{
 			place_power_led(window);

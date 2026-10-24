@@ -30,7 +30,7 @@ Q_SIGNALS:
 	void EmuSettingsApplied();
 	void signal_restore_dependant_defaults();
 
-	// The PS3 Dumps page changed the console's recorded state (a simulated
+	// The Advanced PS3 Tools page changed the console's recorded state (a simulated
 	// brick cleared) or asked for the recovery menu.
 	void ConsoleStateChanged();
 	void RecoveryMenuRequest();

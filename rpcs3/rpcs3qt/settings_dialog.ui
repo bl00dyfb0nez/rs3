@@ -5018,7 +5018,7 @@
      </widget>
      <widget class="QWidget" name="dumpsTab">
       <attribute name="title">
-       <string>PS3 Dumps</string>
+       <string>Advanced PS3 Tools</string>
       </attribute>
       <layout class="QVBoxLayout" name="dumpsTab_layout">
        <item>
@@ -5028,7 +5028,7 @@
          </property>
          <widget class="QWidget" name="dumpsPage1">
           <attribute name="title">
-           <string>1</string>
+           <string>Console</string>
           </attribute>
           <attribute name="toolTip">
            <string>Console identity and the simulated brick</string>
@@ -5200,7 +5200,7 @@
          </widget>
          <widget class="QWidget" name="dumpsPage2">
           <attribute name="title">
-           <string>2</string>
+           <string>Flash</string>
           </attribute>
           <attribute name="toolTip">
            <string>Flash and the HDD image</string>
@@ -5494,7 +5494,7 @@
          </widget>
          <widget class="QWidget" name="dumpsPage3">
           <attribute name="title">
-           <string>3</string>
+           <string>xRegistry</string>
           </attribute>
           <attribute name="toolTip">
            <string>xRegistry and what these dumps are</string>
