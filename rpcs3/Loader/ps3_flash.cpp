@@ -174,6 +174,69 @@ namespace ps3::flash
 			return text;
 		}
 
+		std::string hex_bytes(const std::uint8_t* data, std::size_t size)
+		{
+			static constexpr char digits[] = "0123456789ABCDEF";
+			std::string out;
+			out.reserve(size * 2);
+
+			for (std::size_t i = 0; i < size; i++)
+			{
+				out.push_back(digits[data[i] >> 4]);
+				out.push_back(digits[data[i] & 0xF]);
+			}
+
+			return out;
+		}
+
+		// A big-endian word in the image, when the span being read covers it.
+		bool read_be32(std::span<const std::uint8_t> image, std::uint64_t at, std::uint32_t& out)
+		{
+			if (at + 4 > image.size())
+			{
+				return false;
+			}
+
+			out = (std::uint32_t(image[at]) << 24) | (std::uint32_t(image[at + 1]) << 16)
+				| (std::uint32_t(image[at + 2]) << 8) | std::uint32_t(image[at + 3]);
+			return true;
+		}
+
+		// The board revisions an IDPS carries, and the generation, RSX and fan
+		// table each board goes with (docs/idps.txt, docs/rsxdef.txt,
+		// docs/thermal.txt).  Only the revisions the docs read out are here: the
+		// byte is the console's motherboard revision, not its model name.
+		struct model_revision
+		{
+			std::uint8_t revision;
+			const char* board;
+			const char* generation;
+			const char* rsx;
+			const char* fan;
+		};
+
+		constexpr model_revision model_revisions[]
+		{
+			{0x0B, "JTP-001", "CECH-25xx (slim)", "CXD5302 (40nm)", "JTP-001"},
+			{0x0C, "KTE-001", "CECH-30xx (slim)", "CXD5302 (40nm)", "JTP-001"},
+			{0x0D, "MSX/MPX-001", "CECH-40xx (superslim)", "D5305 (28nm)", ""},
+			{0x12, "PQX-001", "CECH-42xx (superslim)", "D5305 (28nm)", ""},
+			{0x14, "REX-001", "CECH-43xx (superslim)", "D5305 (28nm)", ""},
+		};
+
+		const model_revision* model_for(std::uint8_t revision)
+		{
+			for (const model_revision& model : model_revisions)
+			{
+				if (model.revision == revision)
+				{
+					return &model;
+				}
+			}
+
+			return nullptr;
+		}
+
 		std::uint32_t window_bytes(writer_mode mode)
 		{
 			return mode == writer_mode::stock ? writer_stock_bytes : writer_493_end - writer_start;
@@ -739,6 +802,11 @@ namespace ps3::flash
 		out += "Boot chain: " + (chain.empty() ? std::string{"none found"} : chain) + "\n";
 		out += "Console: " + (model.empty() ? family : model + " - " + family) + "\n";
 
+		if (!idps.empty())
+		{
+			out += "IDPS: " + idps + (board.empty() ? std::string{} : " (" + board + ")") + "\n";
+		}
+
 		if (!firmware.empty())
 		{
 			out += "CoreOS: " + firmware + "\n";
@@ -817,6 +885,68 @@ namespace ps3::flash
 
 		const ps3::boot::chain chain = ps3::boot::inspect(image, out.flash == chip::nor ? ps3::boot::geometry::nor : ps3::boot::geometry::nand);
 
+		// The console's identity is in its EID0: the IDPS sits 0x70 bytes into
+		// the eEID area (NOR 0x2F070, NAND 0x80870, docs/flash.txt), and its
+		// sixth byte is the motherboard revision the model detection reads
+		// (docs/idps.txt).  A carved window or a partial dump need not carry it,
+		// so it is only read when the span covers it.
+		const std::uint64_t idps_at = out.flash == chip::nor ? 0x2F070 : 0x80870;
+
+		if (image.size() >= static_cast<std::size_t>(idps_at) + 0x10)
+		{
+			const std::uint8_t* const idps = image.data() + idps_at;
+			const bool blank = std::all_of(idps, idps + 0x10, [](std::uint8_t byte) { return byte == 0x00 || byte == 0xFF; });
+
+			if (!blank)
+			{
+				out.idps = hex_bytes(idps, 0x10);
+
+				if (const model_revision* const model = model_for(idps[5]))
+				{
+					out.board = model->board;
+					out.generation = model->generation;
+					out.rsx = model->rsx;
+
+					if (*model->fan)
+					{
+						out.fan = model->fan;
+					}
+
+					out.notes += "IDPS: " + out.idps + ", board " + out.board + ".\n";
+				}
+				else
+				{
+					out.board = "revision " + hex(idps[5]);
+					out.notes += "IDPS: " + out.idps + ", unknown board " + out.board + ".\n";
+				}
+			}
+		}
+
+		// The bootldr's container says how large the loader is: a superslim's is
+		// 0x301F0 (0x301B blocks, docs/bootldr.txt), against 0x2EAF0 on the
+		// consoles before it.  That names the generation even when the dump
+		// carries no usable IDPS.
+		{
+			const std::uint64_t at = out.flash == chip::nor ? bootldr_offset : 0x0;
+			std::uint32_t blocks = 0;
+			std::uint32_t mirrored = 0;
+
+			if (read_be32(image, at, blocks) && read_be32(image, at + 0x10, mirrored) && blocks && blocks == mirrored)
+			{
+				const std::uint64_t container = 0x40 + std::uint64_t{blocks} * 0x10;
+
+				if (container == 0x301F0)
+				{
+					if (out.generation.empty())
+					{
+						out.generation = "CECH-40xx / CECH-42xx / CECH-43xx (superslim)";
+					}
+
+					out.notes += "bootldr: 0x301F0 (0x301B blocks) - a superslim container.\n";
+				}
+			}
+		}
+
 		// The chain is the two loaders at the bottom of it.  A dump that carries
 		// only one of them is still worth reporting: that is what a bad write
 		// leaves behind, and the boot refuses it for the same reason.
@@ -848,7 +978,12 @@ namespace ps3::flash
 		// slim and superslim.
 		const bool loader_2 = chain.metldr.name == "metldr.2" || chain.lv0ldr.name == "lv0ldr.2";
 
-		if (out.flash == chip::nor)
+		if (!out.generation.empty())
+		{
+			// The dump's own bytes name the generation, so they decide it.
+			out.family = out.generation;
+		}
+		else if (out.flash == chip::nor)
 		{
 			out.family = !chain.ros.found
 				? "CECH-40xx / CECH-43xx (superslim: the NOR carries the chain, /dev_flash lives on eMMC)"
@@ -932,12 +1067,12 @@ namespace ps3::flash
 		{
 			out.rsx = "D5305 (28nm)";
 		}
-		else if (out.medium == "NAND" || (out.flash == chip::nor && !loader_2))
+		else if (out.rsx.empty() && (out.medium == "NAND" || (out.flash == chip::nor && !loader_2)))
 		{
 			out.rsx = "CXD2971 (90nm)";
 			out.fan = "COK-002";
 		}
-		else if (loader_2)
+		else if (out.rsx.empty() && loader_2)
 		{
 			out.rsx = "CXD5302 (40nm)";
 			out.fan = "JTP-001";

@@ -84,6 +84,12 @@ namespace ps3::flash
 	// superslim, which is what tells the two apart when both use the same map:
 	// a 16 MiB image is a NOR chip, 256 MiB is that NAND, and anything larger is
 	// an eMMC.
+	//
+	// Two more things name the generation when the dump carries them: the IDPS
+	// in EID0, whose sixth byte is the board revision model detection reads
+	// (docs/idps.txt), and the bootldr container, whose size is 0x301F0
+	// (0x301B blocks) on a superslim and 0x2EAF0 on the consoles before it
+	// (docs/bootldr.txt).
 	struct detected
 	{
 		bool found = false;
@@ -94,6 +100,9 @@ namespace ps3::flash
 		chip flash = chip::nor;
 		std::string medium;       // "NOR", "NAND" or "eMMC"
 		std::string family;       // "CECH-25xx / CECH-30xx (slim)"
+		std::string generation;   // the generation the dump's own bytes name, when they do
+		std::string idps;         // the console's IDPS, when the dump carries EID0
+		std::string board;        // the board revision that IDPS names, e.g. "KTE-001"
 		std::string model;        // "CECH-3001A", when the image or its name names one
 		std::string rsx;          // the RSX part the family carries (docs/rsxdef.txt)
 		std::string fan;          // the fan table that goes with it

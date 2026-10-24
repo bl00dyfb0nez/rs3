@@ -233,6 +233,7 @@ enum class emu_settings_type
 	CoreosImage,
 	CoreosBank,
 	FactoryServiceMode,
+	PowerLed,
 	FanCurve,
 	RsxType,
 	CoreosPatch,

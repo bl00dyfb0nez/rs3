@@ -1616,10 +1616,12 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		}
 	});
 
-	SubscribeTooltip(ui->button_flash_detect,
-		tr("Read the console out of a flash dump: whether its chain is metldr + lv0ldr (before 3.60) or "
+	SubscribeTooltip(ui->button_flash_detect,			tr("Read the console out of a flash dump: whether its chain is metldr + lv0ldr (before 3.60) or "
 			"metldr.2 + lv0ldr.2 (3.60 and later), whether that chain sits in a 16 MiB NOR, the 256 MiB NAND of a "
 			"console before the CECHL, or a superslim's larger eMMC, and the model family that goes with them.\n\n"
+			"The console's own IDPS is read from EID0 as well: its sixth byte is the board revision, which names "
+			"the generation (KTE-001 is CECH-30xx, MSX/MPX-001 CECH-40xx, PQX-001 CECH-42xx, REX-001 "
+			"CECH-43xx).  A bootldr container of 0x301F0 bytes is a superslim's, against 0x2EAF0 before it.\n\n"
 			"The model name itself is not stored in flash, so it comes from the dump's file name when it carries "
 			"one, and the settings that match - boot loader, chip, RSX and fan table - are only changed if you "
 			"accept them."));
@@ -1697,6 +1699,15 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 	SubscribeTooltip(ui->check_factory_service_mode,
 		tr("Boot into Factory Service Mode. On a console this is the System Controller EEPROM byte at 0x48C07 "
 			"set to anything but 0xFF; in service mode lv2 runs dev_usb000/Lv2diag.self instead of GameOS."));
+
+	// The console's light is drawn on its screen - in the top right corner of
+	// these settings, and in the top left corner of the game window.  It can be
+	// turned off here without changing the console it describes.
+	m_emu_settings->EnhanceCheckBox(ui->check_power_led, emu_settings_type::PowerLed);
+	SubscribeTooltip(ui->check_power_led,
+		tr("Show the console's power LED: green while the console runs, and dark in standby or when its boot "
+			"chain does not boot. It is drawn in the top right corner of these settings and in the top left "
+			"corner of the game window. Turn this off to leave the screen to the game."));
 
 	// A console whose boot chain does not boot is a simulated brick, and that
 	// state is recorded in config.yml.  Clearing it here undoes the brick the

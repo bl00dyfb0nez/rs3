@@ -374,6 +374,10 @@ struct cfg_root : cfg::node
 		// boots into service mode, where lv2 runs dev_usb000/Lv2diag.self instead
 		// of GameOS.
 		cfg::_bool factory_service_mode{this, "Factory Service Mode", false};
+		// The power LED drawn on the console's screen: green while it runs, and
+		// dark otherwise.  Showing it is a presentation choice, so it can be
+		// turned off without changing the console it describes.
+		cfg::_bool power_led{this, "Power LED", true};
 		// The fan table the emulated console's SYSCON thermal configuration
 		// carries (docs/thermal.txt): the duty steps the fan climbs as the cell
 		// temperature rises.  The emulator has no thermal sensors, so both the

@@ -1901,11 +1901,10 @@ namespace
 		return g_power_led;
 	}
 
-	// Where the console's light is drawn: inside a window of the console's own,
-	// never over one.  It sits in the top left corner of the main window's
-	// content area, and in the bottom left corner of the console's settings while
-	// they are open - the page the machine is described on.  Both corners are
-	// kept inside the window: the light cannot hang outside it.
+	// Where the console's light is drawn: the top left corner of the console's
+	// game window while it is up, and the top right corner of its settings while
+	// they are open - the page the machine is described on.  Nowhere else: the
+	// light belongs to the console's screen, not to the emulator's own window.
 	void place_power_led(QMainWindow* window)
 	{
 		QLabel* const led = power_led(window, false);
@@ -1915,42 +1914,71 @@ namespace
 			return;
 		}
 
-		QWidget* const settings = settings_window();
-		QWidget* const host = settings ? settings : window->centralWidget();
-
-		if (!host)
+		// The light is a presentation choice: turning it off leaves the screen to
+		// the game without changing the console it describes.
+		if (!g_cfg.sys.power_led)
 		{
 			led->hide();
 			return;
 		}
 
-		// Moving between windows is the only time the light has to be put above
-		// the content it lands in; the tick only follows a resize.
-		const bool moved = led->parentWidget() != host;
-
-		if (moved)
-		{
-			led->hide();
-			led->setWindowFlags(Qt::Widget);
-			led->setParent(host);
-			led->setFixedSize(16, 16);
-			led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
-		}
-
 		// The distance from the corner is the same on every size of window, and
 		// never more than the window has room for.
-		const int margin = 8;
-		const int max_x = std::max(0, host->width() - led->width());
-		const int max_y = std::max(0, host->height() - led->height());
-		const int y = settings ? std::max(0, host->height() - led->height() - margin) : margin;
+		constexpr int margin = 12;
 
-		led->move(std::min(margin, max_x), std::min(y, max_y));
-
-		if (moved || !led->isVisible())
+		// The settings describe the machine, so while they are open the light is
+		// drawn in them, in their top right corner.
+		if (QWidget* const settings = settings_window())
 		{
+			// Moving between windows is the only time the light has to be put
+			// above the content it lands in; the tick only follows a resize.
+			const bool moved = led->parentWidget() != settings;
+
+			if (moved)
+			{
+				led->hide();
+				led->setWindowFlags(Qt::Widget);
+				led->setParent(settings);
+				led->setFixedSize(16, 16);
+				led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
+			}
+
+			const int max_x = std::max(0, settings->width() - led->width());
+			const int max_y = std::max(0, settings->height() - led->height());
+
+			led->move(std::min(max_x, std::max(0, settings->width() - led->width() - margin)), std::min(margin, max_y));
+
+			if (moved || !led->isVisible())
+			{
+				led->raise();
+				led->show();
+			}
+
+			return;
+		}
+
+		// The console's screen is a QWindow and takes no children, so the light
+		// is a frameless window of its own, laid over the top left corner of the
+		// game window - the same way the service mode banner is.
+		if (QWindow* const screen = console_screen())
+		{
+			if (led->parentWidget())
+			{
+				led->hide();
+				make_console_overlay(led, QSize(16, 16));
+				led->setParent(nullptr);
+				led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
+			}
+
+			led->move(screen->position() + QPoint(margin, margin));
 			led->raise();
 			led->show();
+			return;
 		}
+
+		// Neither the console's screen nor its settings: the light is not shown
+		// on the emulator's own window.
+		led->hide();
 	}
 
 	// Steady state: green while emulation runs (a paused game is still on), dark
@@ -1992,8 +2020,9 @@ namespace
 			break;
 		}
 
+		// Placed, and shown or hidden, by the placement: a light that is turned
+		// off must stay off when its state changes.
 		place_power_led(window);
-		led->show();
 	}
 
 	// The state the window should be showing, from the console's own state.  Runs
@@ -2168,6 +2197,11 @@ namespace
 
 	void flash_boot_failure_led(QMainWindow* window, bool yellow)
 	{
+		if (!g_cfg.sys.power_led)
+		{
+			return;
+		}
+
 		QLabel* const led = power_led(window, true);
 
 		if (!led)

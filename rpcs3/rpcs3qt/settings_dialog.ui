@@ -5192,6 +5192,13 @@
              <item row="9" column="1" colspan="2">
               <widget class="QComboBox" name="combo_rsx_type"/>
              </item>
+             <item row="10" column="0" colspan="3">
+              <widget class="QCheckBox" name="check_power_led">
+               <property name="text">
+                <string>Show the power LED</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </widget>
           </item>
