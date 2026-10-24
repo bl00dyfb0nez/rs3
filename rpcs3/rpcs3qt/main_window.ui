@@ -212,6 +212,7 @@
     <addaction name="bootGameAct"/>
     <addaction name="bootIsoAct"/>
     <addaction name="bootVSHAct"/>
+    <addaction name="bootRecoveryAct"/>
     <addaction name="bootElfMenu"/>
     <addaction name="bootSavestateAct"/>
     <addaction name="bootRecentSavestatesMenu"/>
@@ -1469,6 +1470,11 @@
   <action name="bootVSHAct">
    <property name="text">
     <string>Boot VSH/XMB</string>
+   </property>
+  </action>
+  <action name="bootRecoveryAct">
+   <property name="text">
+    <string>Boot Recovery (emer_init)</string>
    </property>
   </action>
   <action name="patchCreatorAct">

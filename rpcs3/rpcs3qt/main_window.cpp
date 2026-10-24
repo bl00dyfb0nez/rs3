@@ -53,6 +53,7 @@
 #include "config_database.h"
 #include "guest_memory_dumper.h"
 
+#include <algorithm>
 #include <thread>
 #include <unordered_set>
 
@@ -100,10 +101,16 @@
 #include <QDialog>
 #include <QEventLoop>
 #include <QGuiApplication>
+#include <QEvent>
+#include <QFrame>
+#include <QHBoxLayout>
+#include <QKeyEvent>
 #include <QLabel>
+#include <QList>
 #include <QPointer>
 #include <QPushButton>
 #include <QStatusBar>
+#include <QStyle>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWindow>
@@ -819,6 +826,22 @@ void main_window::BootVSH()
 {
 	gui_log.notice("Booting from BootVSH...");
 	Boot(g_cfg_vfs.get_dev_flash() + "/vsh/module/vsh.self");
+}
+
+void main_window::BootRecovery()
+{
+	// Booting emer_init: the console comes up in its recovery environment instead
+	// of the firmware.  It is a boot, so anything running is stopped first, and
+	// the console's screen is emer_init's menu - the same screen a chain that
+	// does not boot is handed over to.
+	gui_log.notice("Booting emer_init.self (recovery mode)...");
+
+	if (!Emu.IsStopped())
+	{
+		Emu.GracefulShutdown(false);
+	}
+
+	ShowRecoveryMenu();
 }
 
 void main_window::BootRsxCapture(std::string path)
@@ -1565,14 +1588,12 @@ namespace
 	// consoles, the default, flash red: the red light that replaced the yellow
 	// there (docs/sysconerr.txt, 1200 and 2024).
 	//
-	// The light sits inside the game window, on the console's own screen: that is
-	// the window the emulated machine is looked at in, and the one that is up
-	// while it boots.  It is not mirrored anywhere else - with no console screen
-	// it is drawn in the corner of the content area only while the console's
-	// settings are open, since that is where the machine is described.  Green is
-	// the console having booted, not the emulator having started: Emulator::Run
-	// reports the boot before running it, so the light stays red while the boot
-	// chain is still going.
+	// The light sits inside the window, in the corner of the content area, and in
+	// the corner of the console's settings while they are open - never as a
+	// window of its own over the console's screen.  Green is the console having
+	// booted, not the emulator having started: Emulator::Run reports the boot
+	// before running it, so the light stays red while the boot chain is still
+	// going, and a console that is off has no light at all.
 	enum class led_colour
 	{
 		red,
@@ -1641,7 +1662,7 @@ namespace
 	// no children, so this is how anything is drawn over the console's screen.
 	// Frameless, click-through, never focused, kept on top of the game window,
 	// and given its size once here so nothing can stretch it later.
-	void make_console_overlay(QLabel* label, const QSize& size, bool circular)
+	void make_console_overlay(QLabel* label, const QSize& size)
 	{
 		label->hide();
 		label->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowTransparentForInput
@@ -1650,14 +1671,6 @@ namespace
 		label->setAttribute(Qt::WA_ShowWithoutActivating);
 		label->setFocusPolicy(Qt::NoFocus);
 		label->setFixedSize(size);
-
-		if (circular)
-		{
-			// A circle rather than a square, cut with a mask instead of drawn
-			// translucent: a translucent window is not composited over the game
-			// window, so the light would not be seen where it matters.
-			label->setMask(QRegion(QRect(QPoint(0, 0), size), QRegion::Ellipse));
-		}
 	}
 
 	// The light itself, and the window it belongs to: it has to survive the game
@@ -1679,15 +1692,19 @@ namespace
 			g_power_led = new QLabel();
 			g_power_led->setObjectName(QStringLiteral("power_led"));
 			g_power_led->setProperty("led_state", -1);
-			make_console_overlay(g_power_led, QSize(16, 16), true);
+			g_power_led->setFixedSize(16, 16);
+			g_power_led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
+			g_power_led->setAttribute(Qt::WA_TransparentForMouseEvents);
 		}
 
 		return g_power_led;
 	}
 
-	// Where the console's light is drawn: the top left corner of the console's
-	// screen.  With no screen up it is drawn in the corner of the content area
-	// instead, and only while the console's settings are open.
+	// Where the console's light is drawn: inside a window of the console's own,
+	// never over one.  It sits in the top left corner of the main window's
+	// content area, and in the bottom left corner of the console's settings while
+	// they are open - the page the machine is described on.  Both corners are
+	// kept inside the window: the light cannot hang outside it.
 	void place_power_led(QMainWindow* window)
 	{
 		QLabel* const led = power_led(window, false);
@@ -1697,51 +1714,39 @@ namespace
 			return;
 		}
 
-		if (QWindow* const screen = console_screen())
-		{
-			if (led->parentWidget())
-			{
-				led->hide();
-				led->clearMask();
-				led->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowTransparentForInput
-					| Qt::WindowDoesNotAcceptFocus | Qt::WindowStaysOnTopHint);
-				led->setParent(nullptr);
-				led->setFixedSize(16, 16);
-				led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
-			}
-
-			led->move(screen->position() + QPoint(8, 8));
-			led->raise();
-			led->show();
-			return;
-		}
-
-		// No console screen: the light is drawn inside the console's settings
-		// while they are open, in their bottom left corner.
 		QWidget* const settings = settings_window();
+		QWidget* const host = settings ? settings : window->centralWidget();
 
-		if (!settings)
+		if (!host)
 		{
 			led->hide();
 			return;
 		}
 
-		if (led->parentWidget() != settings)
+		if (led->parentWidget() != host)
 		{
 			led->hide();
-			led->clearMask();
 			led->setWindowFlags(Qt::Widget);
-			led->setParent(settings);
+			led->setParent(host);
 			led->setFixedSize(16, 16);
+			led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
 		}
 
-		led->move(8, settings->height() - 24);
+		// The distance from the corner is the same on every size of window, and
+		// never more than the window has room for.
+		const int margin = 8;
+		const int max_x = std::max(margin, host->width() - led->width() - margin);
+		const int max_y = std::max(margin, host->height() - led->height() - margin);
+		const int y = settings ? std::min(max_y, host->height() - led->height() - margin) : margin;
+
+		led->move(std::min(margin, max_x), std::min(y, max_y));
 		led->raise();
 		led->show();
 	}
 
-	// Steady state: green while emulation runs (a paused game is still on), red
-	// in standby, dark for a console whose boot chain does not boot.
+	// Steady state: green while emulation runs (a paused game is still on), dark
+	// in standby - a console that is off has no light - and dark for a console
+	// whose boot chain does not boot.
 	void set_power_led(QMainWindow* window, led_state state)
 	{
 		QLabel* const led = power_led(window, true);
@@ -1772,8 +1777,9 @@ namespace
 			break;
 		case led_state::standby:
 		default:
-			led->setToolTip(QCoreApplication::translate("main_window", "Power LED: the console is in standby."));
-			led->setStyleSheet(led_css(led_colour::red, true));
+			// A console in standby is off: the light is not lit at all.
+			led->setToolTip(QCoreApplication::translate("main_window", "Power LED: the console is off."));
+			led->setStyleSheet(led_css(led_colour::off, false));
 			break;
 		}
 
@@ -1849,6 +1855,7 @@ namespace
 	// bypasses the compositor), so it would not be seen where it matters.
 	QPointer<QLabel> g_factory_banner;
 
+
 	QLabel* factory_banner(QMainWindow* window, bool create)
 	{
 		if (!window)
@@ -1869,7 +1876,7 @@ namespace
 				"padding: 6px 12px;"));
 
 			banner->ensurePolished();
-			make_console_overlay(banner, banner->sizeHint(), false);
+			make_console_overlay(banner, banner->sizeHint());
 
 			g_factory_banner = banner;
 		}
@@ -3338,6 +3345,7 @@ void main_window::CreateConnects()
 	connect(ui->bootGameAct, &QAction::triggered, this, &main_window::BootGame);
 	connect(ui->bootIsoAct, &QAction::triggered, this, &main_window::BootISO);
 	connect(ui->bootVSHAct, &QAction::triggered, this, &main_window::BootVSH);
+	connect(ui->bootRecoveryAct, &QAction::triggered, this, &main_window::BootRecovery);
 	connect(ui->actionopen_rsx_capture, &QAction::triggered, this, [this](){ BootRsxCapture(); });
 	connect(ui->actionCreate_RSX_Capture, &QAction::triggered, this, []()
 	{
@@ -4927,65 +4935,453 @@ void main_window::RefreshConsoleState()
 	refresh_factory_banner(this);
 }
 
-void main_window::ShowRecoveryMenu()
+namespace
 {
-	// docs/recovery.txt: the recovery menu of emer_init.self, option by option,
-	// with each one doing what an emulator can honestly do.  It is offered
-	// whenever the console soft bricks - a boot chain that does not boot - and
-	// it is reachable from the PS3 Dumps page.
-	auto* dialog = new QDialog(this);
-	dialog->setAttribute(Qt::WA_DeleteOnClose);
-	dialog->setWindowTitle(tr("Playstation 3 Recovery Menu"));
-	dialog->setModal(false);
-
-	auto* layout = new QVBoxLayout(dialog);
-
-	auto* title = new QLabel(tr("<b>Playstation 3. Recovery Mode (Emergency Init)</b><br>"
-		"<i>emer_init.self</i>, firmware 2.50 and later. On a console it is entered from standby with the power "
-		"button; here it is offered whenever the console does not come up - its boot chain does not boot."), dialog);
-	title->setWordWrap(true);
-	layout->addWidget(title);
-
-	const auto add = [this, dialog, layout](const QString& text, const std::function<void()>& action)
+	// emer_init.self's recovery mode, as the console shows it: the controller
+	// page first, then the menu - the six options with the highlighted one on a
+	// blue bar and "X Enter" at the bottom.  It is a screen of its own rather
+	// than a dialog box because that is what the console boots into: emer_init
+	// is a firmware environment, not a window, and it is driven from the
+	// keyboard the way the console's is.  It needs no moc, so it lives here.
+	class recovery_screen : public QFrame
 	{
-		auto* button = new QPushButton(text, dialog);
-		connect(button, &QPushButton::clicked, dialog, [dialog, action]()
+	public:
+		recovery_screen()
 		{
-			dialog->close();
-			action();
-		});
-		layout->addWidget(button);
+			setObjectName(QStringLiteral("recovery_screen"));
+			setWindowTitle(QStringLiteral("PS3 Recovery Menu"));
+			// The console's output is a 16:9 picture; the window is that
+			// picture and nothing else, so it is fixed to it like a screen.
+			setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+			setFixedSize(960, 540);
+			setStyleSheet(QStringLiteral(
+				"QFrame#recovery_screen { background-color: #000000; }"
+				"QLabel#recovery_rule { background-color: #303030; }"
+				"QLabel#recovery_prompt { color: #f0f0f0; font-size: 16px; }"
+				"QLabel#recovery_option { color: #b8b8b8; font-size: 17px; padding: 5px 18px; }"
+				"QLabel#recovery_option[selected=\"true\"] { color: #ffffff; background-color: #2b6fd4; }"
+				"QLabel#recovery_footer { color: #f0f0f0; font-size: 14px; font-weight: bold; }"));
+			setFocusPolicy(Qt::StrongFocus);
+
+			auto* layout = new QVBoxLayout(this);
+			layout->setContentsMargins(0, 42, 0, 0);
+			layout->setSpacing(0);
+
+			auto* top_rule = new QLabel(this);
+			top_rule->setObjectName(QStringLiteral("recovery_rule"));
+			top_rule->setFixedHeight(1);
+			layout->addWidget(top_rule);
+			layout->addStretch();
+
+			// docs/recovery.txt: emer_init comes up on this and only shows the
+			// menu once the PS button is pressed.
+			m_prompt = new QLabel(QStringLiteral("Connect the controller using a USB cable, and then press the PS button."), this);
+			m_prompt->setObjectName(QStringLiteral("recovery_prompt"));
+			m_prompt->setAlignment(Qt::AlignCenter);
+			m_prompt->setWordWrap(true);
+			m_prompt->setContentsMargins(120, 0, 120, 0);
+			layout->addWidget(m_prompt);
+			layout->addStretch();
+
+			m_bottom_rule = new QLabel(this);
+			m_bottom_rule->setObjectName(QStringLiteral("recovery_rule"));
+			m_bottom_rule->setFixedHeight(1);
+			m_bottom_rule->hide();
+			layout->addWidget(m_bottom_rule);
+
+			m_footer = new QLabel(QStringLiteral("\u2715   Enter"), this);
+			m_footer->setObjectName(QStringLiteral("recovery_footer"));
+			m_footer->setAlignment(Qt::AlignCenter);
+			m_footer->setFixedHeight(44);
+			m_footer->hide();
+			layout->addWidget(m_footer);
+
+			m_close_rule = new QLabel(this);
+			m_close_rule->setObjectName(QStringLiteral("recovery_rule"));
+			m_close_rule->setFixedHeight(1);
+			m_close_rule->hide();
+			layout->addWidget(m_close_rule);
+
+			m_footer_timer = new QTimer(this);
+			m_footer_timer->setSingleShot(true);
+			m_footer_timer->setInterval(5000);
+
+			connect(m_footer_timer, &QTimer::timeout, this, [this]()
+			{
+				m_footer->setText(QStringLiteral("\u2715   Enter"));
+			});
+		}
+
+		// The options in the order emer_init lists them.  They stay hidden
+		// behind the controller page until the PS button is pressed.
+		void AddOption(const QString& text, std::function<void()> action)
+		{
+			auto* layout = qobject_cast<QVBoxLayout*>(this->layout());
+
+			// The options are a centred column: the console draws them on a
+			// list in the middle of the picture, not across it.
+			auto* holder = new QWidget(this);
+			holder->setFixedWidth(520);
+			auto* column = new QVBoxLayout(holder);
+			column->setContentsMargins(0, 0, 0, 0);
+			column->setSpacing(2);
+
+			auto* row = new QLabel(text, holder);
+			row->setObjectName(QStringLiteral("recovery_option"));
+			row->setProperty("selected", false);
+			row->setFixedHeight(30);
+			row->installEventFilter(this);
+			column->addWidget(row);
+
+			auto* centering = new QHBoxLayout();
+			centering->setContentsMargins(0, 0, 0, 0);
+			centering->addStretch();
+			centering->addWidget(holder);
+			centering->addStretch();
+
+			// They replace the controller page in the middle of the screen, so
+			// they go in before it: hidden, they take no room at all.
+			layout->insertLayout(2, centering);
+
+			holder->hide();
+			m_holders.append(holder);
+			m_rows.append(row);
+			m_actions.append(std::move(action));
+
+			if (m_rows.size() == 1)
+			{
+				Select(0);
+			}
+		}
+
+		// A line in the footer instead of "X Enter", for the answer an option
+		// gives - "Default settings restored.", "The file system was repaired."
+		// It goes back to the button hint on its own.
+		void ShowStatus(const QString& text)
+		{
+			m_footer->setText(text);
+			m_footer_timer->start();
+		}
+
+	protected:
+		void keyPressEvent(QKeyEvent* event) override
+		{
+			if (!m_menu_open)
+			{
+				// The PS button is what gets past the controller page.  Enter
+				// stands in for it here, the way X stands for the console's
+				// cross button.
+				switch (event->key())
+				{
+				case Qt::Key_Return:
+				case Qt::Key_Enter:
+				case Qt::Key_Space:
+					ShowMenu();
+					return;
+				case Qt::Key_Escape:
+					close();
+					return;
+				default:
+					break;
+				}
+
+				QFrame::keyPressEvent(event);
+				return;
+			}
+
+			switch (event->key())
+			{
+			case Qt::Key_Up:
+			case Qt::Key_W:
+				Select(m_selected - 1);
+				return;
+			case Qt::Key_Down:
+			case Qt::Key_S:
+				Select(m_selected + 1);
+				return;
+			case Qt::Key_Return:
+			case Qt::Key_Enter:
+			case Qt::Key_Space:
+				Activate();
+				return;
+			case Qt::Key_Escape:
+				// No console has an Escape key; this one is the way out of a
+				// window that is meant to be a boot target.
+				close();
+				return;
+			default:
+				break;
+			}
+
+			QFrame::keyPressEvent(event);
+		}
+
+		bool eventFilter(QObject* watched, QEvent* event) override
+		{
+			if (!m_menu_open)
+			{
+				if (event->type() == QEvent::MouseButtonPress)
+				{
+					ShowMenu();
+				}
+
+				return QFrame::eventFilter(watched, event);
+			}
+
+			if (event->type() == QEvent::MouseButtonPress)
+			{
+				const int index = m_rows.indexOf(qobject_cast<QLabel*>(watched));
+
+				if (index >= 0)
+				{
+					Select(index);
+					setFocus();
+				}
+			}
+			else if (event->type() == QEvent::MouseButtonDblClick)
+			{
+				const int index = m_rows.indexOf(qobject_cast<QLabel*>(watched));
+
+				if (index >= 0)
+				{
+					Select(index);
+					Activate();
+				}
+			}
+
+			return QFrame::eventFilter(watched, event);
+		}
+
+	private:
+		void ShowMenu()
+		{
+			if (m_menu_open)
+			{
+				return;
+			}
+
+			m_menu_open = true;
+			m_prompt->hide();
+
+			for (QWidget* const holder : m_holders)
+			{
+				holder->show();
+			}
+
+			m_bottom_rule->show();
+			m_footer->show();
+			m_close_rule->show();
+
+			Select(m_selected);
+			setFocus();
+		}
+
+		void Select(int index)
+		{
+			if (m_rows.isEmpty())
+			{
+				return;
+			}
+
+			index = (index + m_rows.size()) % m_rows.size();
+			m_selected = index;
+
+			for (int i = 0; i < m_rows.size(); i++)
+			{
+				QLabel* const row = m_rows[i];
+				row->setProperty("selected", i == index);
+				row->style()->unpolish(row);
+				row->style()->polish(row);
+			}
+		}
+
+		void Activate()
+		{
+			if (m_selected < 0 || m_selected >= m_actions.size())
+			{
+				return;
+			}
+
+			if (const auto action = m_actions[m_selected])
+			{
+				action();
+			}
+		}
+
+		QLabel* m_prompt = nullptr;
+		QLabel* m_bottom_rule = nullptr;
+		QLabel* m_close_rule = nullptr;
+		QLabel* m_footer = nullptr;
+		QTimer* m_footer_timer = nullptr;
+		QList<QWidget*> m_holders;
+		QList<QLabel*> m_rows;
+		QList<std::function<void()>> m_actions;
+		int m_selected = 0;
+		bool m_menu_open = false;
 	};
 
-	add(tr("1. Restart System"), [this]()
+	// The recovery screen while the console is in emer_init, so the same one is
+	// raised instead of a second being opened.
+	QPointer<recovery_screen> g_recovery_screen;
+}
+
+void main_window::ShowRecoveryMenu()
+{
+	// docs/recovery.txt: emer_init.self's recovery mode, option by option, with
+	// each one doing what an emulator can honestly do.  It is the console's
+	// screen rather than a dialog: emer_init is a firmware environment the
+	// console boots into, so the screen is shown on its own and driven from the
+	// keyboard - up and down move the bar, X/Enter picks the option.
+	if (g_recovery_screen)
 	{
-		// There is nothing to reboot into while the chain does not boot; the
-		// simulated brick is what the image left behind, so restarting clears it.
+		g_recovery_screen->raise();
+		g_recovery_screen->activateWindow();
+		g_recovery_screen->setFocus();
+		return;
+	}
+
+	auto* const screen = new recovery_screen();
+	screen->setAttribute(Qt::WA_DeleteOnClose);
+	g_recovery_screen = screen;
+
+	// The screen is a picture of the console's output, so it is centred like
+	// one rather than parented to the window it was asked for from.
+	if (QScreen* const monitor = QGuiApplication::primaryScreen())
+	{
+		const QRect area = monitor->availableGeometry();
+		screen->move(area.center() - QPoint(screen->width() / 2, screen->height() / 2));
+	}
+
+	// 1. Restart System.  emer_init hands the console back to its firmware: the
+	// brick is the image it refused, not the console, so the restart clears it
+	// and boots the VSH that is in dev_flash.
+	screen->AddOption(tr("1. Restart System"), [this, screen]()
+	{
+		screen->close();
 		g_cfg.sys.boot_bricked.set(false);
 		RefreshConsoleState();
-		gui_log.notice("Recovery: restart system (simulated brick cleared).");
+		gui_log.notice("Recovery: restart system (simulated brick cleared), booting the VSH.");
+		BootVSH();
 	});
 
-	add(tr("2. Restore Default Settings"), [this]()
+	// 2. Restore Default Settings.  The settings the XMB keeps are files under
+	// /dev_flash2/etc, and this is what emer_init does with them: it unlinks the
+	// registry, the copies it can fall back on, and the directories that hold
+	// them.  The console's own settings - its boot loader, its IDPS - are not
+	// the XMB's and are not touched.
+	screen->AddOption(tr("2. Restore Default Settings"), [this, screen]()
 	{
+		const std::string flash2 = g_cfg_vfs.get(g_cfg_vfs.dev_flash2, rpcs3::utils::get_emu_dir());
+
+		const char* const files[] =
+		{
+			"etc/xRegistry.sys",
+			"etc/backup/xRegistry.sys",
+			"etc/xRegistry.sys.val",
+			"etc/xRegistry.sys.revert",
+			"etc/backup/xRegistry.sys.revert",
+			"etc/backup.01/xRegistry.sys",
+			"etc/backup.01/xRegistry.sys.revert",
+			"etc/restore/xRegistry.sys",
+			"etc/restore/backup/xRegistry.sys",
+		};
+
+		int unlinked = 0;
+
+		for (const char* const file : files)
+		{
+			const std::string path = flash2 + file;
+
+			if (!fs::is_file(path))
+			{
+				continue;
+			}
+
+			if (fs::remove_file(path))
+			{
+				unlinked++;
+			}
+			else
+			{
+				gui_log.error("Recovery: could not unlink %s", path);
+			}
+		}
+
+		for (const char* const dir : {"etc/backup/", "etc/backup.01/", "etc/restore/"})
+		{
+			const std::string path = flash2 + dir;
+
+			if (!fs::is_dir(path))
+			{
+				continue;
+			}
+
+			if (!fs::remove_all(path, true, true))
+			{
+				gui_log.error("Recovery: could not remove %s", path);
+			}
+		}
+
 		m_emu_settings->RestoreDefaults();
 		RefreshConsoleState();
-		gui_log.notice("Recovery: restore default settings.");
+		gui_log.notice("Recovery: restore default settings - %d file(s) unlinked under %s", unlinked, flash2);
+		screen->ShowStatus(tr("Default settings restored."));
 	});
 
-	add(tr("3. Restore File System"), [this]()
+	// 3. Restore File System.  emer_init mounts CELL_FS_SIMPLEFS on
+	// /dev_simple_hdd0 and sets bit 2 of the byte at 0x10520 - the flag the next
+	// boot reads to know the file system was repaired.  RPCS3 models that device
+	// as dev_hdd0/simplefs.tmp, so the same byte is set there.
+	screen->AddOption(tr("3. Restore File System"), [this, screen]()
 	{
-		// RPCS3 keeps the firmware as files under dev_flash instead of in a file
-		// system the console checks, so the option says what replaces it.
-		gui_log.notice("Recovery: restore file system - the emulated firmware is replaced by reinstalling it.");
-		statusBar()->showMessage(tr("Recovery: RPCS3 has no file system to rewrite - reinstall the firmware (option 6) to replace it."), 12000);
+		const std::string path = g_cfg_vfs.get(g_cfg_vfs.dev_hdd0, rpcs3::utils::get_emu_dir()) + "simplefs.tmp";
+		constexpr u64 flag_at = 0x10520;
+
+		fs::file device(path, fs::read + fs::write + fs::create);
+
+		if (!device)
+		{
+			gui_log.error("Recovery: could not open the simplefs device %s (%s)", path, fs::g_tls_error);
+			screen->ShowStatus(tr("The file system could not be repaired."));
+			return;
+		}
+
+		if (device.size() < flag_at + 4 && !device.trunc(flag_at + 4))
+		{
+			gui_log.error("Recovery: could not grow the simplefs device %s", path);
+			screen->ShowStatus(tr("The file system could not be repaired."));
+			return;
+		}
+
+		u8 flag = 0;
+
+		if (!device.seek(flag_at) || !device.read(&flag, 1))
+		{
+			gui_log.error("Recovery: could not read the simplefs flags of %s", path);
+			screen->ShowStatus(tr("The file system could not be repaired."));
+			return;
+		}
+
+		flag |= 4;
+
+		if (!device.seek(flag_at) || !device.write(&flag, 1))
+		{
+			gui_log.error("Recovery: could not write the simplefs flags of %s", path);
+			screen->ShowStatus(tr("The file system could not be repaired."));
+			return;
+		}
+
+		gui_log.notice("Recovery: restore file system - flags at 0x%x of %s now 0x%x", flag_at, path, flag);
+		screen->ShowStatus(tr("The file system was repaired."));
 	});
 
-	add(tr("4. Rebuild Database"), [this]()
+	// 4. Rebuild Database.  docs/recovery.txt: /dev_hdd0/mms/db.err with these
+	// four bytes is what asks the console to rebuild its database on the next
+	// boot.
+	screen->AddOption(tr("4. Rebuild Database"), [this, screen]()
 	{
-		// docs/recovery.txt: /dev_hdd0/mms/db.err with these four bytes is what
-		// asks the console to rebuild its database on the next boot.
 		const std::string path = vfs::get("/dev_hdd0/mms/db.err");
+		bool written = false;
 
 		if (!path.empty())
 		{
@@ -4995,6 +5391,7 @@ void main_window::ShowRecoveryMenu()
 			if (marker && marker.write(request, sizeof(request)))
 			{
 				gui_log.notice("Recovery: wrote %s", path);
+				written = true;
 			}
 			else
 			{
@@ -5006,12 +5403,19 @@ void main_window::ShowRecoveryMenu()
 		{
 			m_game_list_frame->Refresh();
 		}
+
+		screen->ShowStatus(written
+			? tr("The database will be rebuilt on the next boot.")
+			: tr("The database request could not be written."));
 	});
 
-	add(tr("5. Restore PS3 System"), [this]()
+	// 5. Restore PS3 System.
+	screen->AddOption(tr("5. Restore PS3™ System"), [this, screen]()
 	{
-		if (QMessageBox::question(this, tr("Restore PS3 System"),
-			tr("Restore the console's settings to their defaults and clear the simulated brick?\n\n"
+		if (QMessageBox::question(screen, tr("Restore PS3 System"),
+			tr("Restore the console's settings to their defaults and clear the simulated brick?
+
+"
 				"On a console this option formats the hard drive. Here the emulated drive and its saves are "
 				"kept - delete the dev_hdd0 folder yourself if you want them gone too."),
 			QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
@@ -5022,33 +5426,55 @@ void main_window::ShowRecoveryMenu()
 		m_emu_settings->RestoreDefaults();
 		g_cfg.sys.boot_bricked.set(false);
 		RefreshConsoleState();
+		screen->close();
 		gui_log.notice("Recovery: restore PS3 system (settings defaulted, simulated brick cleared).");
 	});
 
-	add(tr("6. System Update..."), [this]()
+	// 6. System Update.  docs/recovery.txt: the recovery updater does not ask
+	// for a file.  It scans a fixed list of places - the disc, the eight USB
+	// devices and the VSH's two update folders - and updates from the first
+	// PS3UPDAT.PUP it finds there.
+	screen->AddOption(tr("6. System Update"), [this, screen]()
 	{
-		InstallPup(this);
+		const char* const places[] =
+		{
+			"/dev_bdvd/PS3/UPDATE/PS3UPDAT.PUP",
+			"/dev_usb000/PS3/UPDATE/PS3UPDAT.PUP",
+			"/dev_usb001/PS3/UPDATE/PS3UPDAT.PUP",
+			"/dev_usb002/PS3/UPDATE/PS3UPDAT.PUP",
+			"/dev_usb003/PS3/UPDATE/PS3UPDAT.PUP",
+			"/dev_usb004/PS3/UPDATE/PS3UPDAT.PUP",
+			"/dev_usb005/PS3/UPDATE/PS3UPDAT.PUP",
+			"/dev_usb006/PS3/UPDATE/PS3UPDAT.PUP",
+			"/dev_usb007/PS3/UPDATE/PS3UPDAT.PUP",
+			"/dev_hdd0/game/SCEEXE000/ARCDIR/PS3UPDAT.PUP",
+			"/dev_hdd0/vsh/PS3UPDAT.PUP",
+		};
+
+		for (const char* const place : places)
+		{
+			const std::string path = vfs::get(place);
+
+			if (path.empty() || !fs::is_file(path))
+			{
+				continue;
+			}
+
+			gui_log.notice("Recovery: system update from %s", place);
+			InstallPup(this, QString::fromStdString(path));
+			return;
+		}
+
+		gui_log.notice("Recovery: system update - no PS3UPDAT.PUP in the places emer_init scans.");
+		screen->ShowStatus(tr("No update file found: put PS3UPDAT.PUP in PS3/UPDATE/ on a USB device."));
 	});
 
-	add(tr("Enter Factory Service Mode"), [this]()
-	{
-		g_cfg.sys.factory_service_mode.set(true);
-		RefreshConsoleState();
-		gui_log.notice("Recovery: Factory Service Mode set.");
-	});
-
-	auto* close = new QPushButton(tr("Close"), dialog);
-	connect(close, &QPushButton::clicked, dialog, &QDialog::close);
-	layout->addWidget(close);
-
-	dialog->show();
-	dialog->raise();
+	screen->show();
+	screen->raise();
+	screen->activateWindow();
+	screen->setFocus();
 }
 
-/**
-Add valid disc games to gamelist (games.yml)
-@param paths = dir paths to scan for game
-*/
 void main_window::AddGamesFromDirs(QStringList&& paths)
 {
 	if (paths.isEmpty())

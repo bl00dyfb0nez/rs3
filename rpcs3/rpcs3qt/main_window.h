@@ -104,6 +104,7 @@ private Q_SLOTS:
 	void BootGame();
 	void BootISO();
 	void BootVSH();
+	void BootRecovery();
 	void BootSavestate();
 	void BootRsxCapture(std::string path = "");
 	void DecryptSPRXLibraries();
