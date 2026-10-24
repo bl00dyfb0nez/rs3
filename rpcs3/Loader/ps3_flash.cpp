@@ -796,7 +796,26 @@ namespace ps3::flash
 			out.medium = "eMMC";
 		}
 
-		const ps3::boot::chain chain = ps3::boot::inspect_file(dump_path, out.flash == chip::nor ? ps3::boot::geometry::nor : ps3::boot::geometry::nand);
+		// The chain sits at the bottom of the map: 16 MiB of NOR is read whole,
+		// and a NAND/eMMC map is read up to the end of its first 256 MiB - the
+		// region bootldr, the loaders and the ros bank all live in.
+		const std::uint64_t span = out.size < emmc_size ? out.size : emmc_size;
+		std::vector<std::uint8_t> image(static_cast<std::size_t>(span));
+
+		{
+			std::ifstream file(dump_path, std::ios::binary);
+
+			if (!file)
+			{
+				out.error = "the dump could not be opened: " + dump_path;
+				return out;
+			}
+
+			file.read(reinterpret_cast<char*>(image.data()), static_cast<std::streamsize>(image.size()));
+			image.resize(static_cast<std::size_t>(file.gcount()));
+		}
+
+		const ps3::boot::chain chain = ps3::boot::inspect(image, out.flash == chip::nor ? ps3::boot::geometry::nor : ps3::boot::geometry::nand);
 
 		// The chain is the two loaders at the bottom of it.  A dump that carries
 		// only one of them is still worth reporting: that is what a bad write
