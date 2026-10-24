@@ -1866,22 +1866,24 @@ namespace
 
 		led_state state = led_state::standby;
 
-		if (g_cfg.sys.boot_bricked)
+		// Green is a console that has booted.  system_state::starting is the boot
+		// chain still running, so the light is dark there; a console that is
+		// paused or frozen is a booted one that is being held.  A bricked console
+		// whose recovery environment is up counts as booted too: the brick keeps
+		// the firmware from starting, not the light off.
+		const system_state status = Emu.GetStatus();
+
+		const bool booted = status == system_state::running
+			|| status == system_state::paused
+			|| status == system_state::frozen;
+
+		if (booted)
+		{
+			state = led_state::running;
+		}
+		else if (g_cfg.sys.boot_bricked)
 		{
 			state = led_state::bricked;
-		}
-		else
-		{
-			// Green is a console that has booted.  system_state::starting is the
-			// boot chain still running, so the light is still red there; a console
-			// that is paused or frozen is a booted one that is being held.
-			const system_state status = Emu.GetStatus();
-
-			const bool booted = status == system_state::running
-				|| status == system_state::paused
-				|| status == system_state::frozen;
-
-			state = booted ? led_state::running : led_state::standby;
 		}
 
 		// This runs from the tick, so the light is only touched when it has to
