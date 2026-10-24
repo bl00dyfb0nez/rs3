@@ -2641,9 +2641,10 @@ bool ppu_load_exec(const ppu_exec_object& elf, bool virtual_load, const std::str
 
 	// Initialize memory stats (according to sdk version)
 	u32 mem_size;
-	if (Emu.IsVsh())
+	if (Emu.IsVsh() || Emu.IsRecovery())
 	{
-		// Because vsh.self comes before any generic application, more memory is available to it
+		// Because vsh.self and the recovery process come before any generic
+		// application, more memory is available to them.
 		mem_size = 0xF000000;
 	}
 	else if (sdk_version > 0x0021FFFF)
@@ -2694,9 +2695,12 @@ bool ppu_load_exec(const ppu_exec_object& elf, bool virtual_load, const std::str
 		load_libs.emplace("libsysmodule.sprx");
 	}
 
-	if (ar || Emu.IsVsh() || virtual_load)
+	if (ar || Emu.IsVsh() || Emu.IsRecovery() || virtual_load)
 	{
-		// Cannot be used with vsh.self or savestates (they self-manage itself)
+		// Cannot be used with vsh.self, the recovery process or savestates:
+		// they load the modules they need themselves, and preloading them here
+		// makes their own sys_prx_load_module() a no-op that then fails to start
+		// (emer_init loads libsysmodule.sprx itself, at 0x1B09AC).
 		load_libs.clear();
 	}
 
@@ -2747,7 +2751,7 @@ bool ppu_load_exec(const ppu_exec_object& elf, bool virtual_load, const std::str
 		void init_fxo_for_exec(utils::serial* ar, bool full);
 		init_fxo_for_exec(ar, false);
 
-		if (!ar && !Emu.IsVsh())
+		if (!ar && !Emu.IsVsh() && !Emu.IsRecovery())
 		{
 			init_system_shared_memory();
 		}

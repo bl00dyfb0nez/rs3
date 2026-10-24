@@ -449,6 +449,12 @@ public:
 	friend void init_fxo_for_exec(utils::serial*, bool);
 
 	static bool IsVsh();
+
+	// The console's recovery environment, emer_init.self.  lv2 starts it as the
+	// vflash recover process, not as a title: like vsh.self it is a system self
+	// that brings its own modules up and gets the memory of a process created
+	// before every application.
+	static bool IsRecovery();
 	static bool IsValidSfb(const std::string& path);
 
 	static void SaveSettings(std::string_view settings, const std::string& title_id);

@@ -403,6 +403,15 @@ void gs_frame::handle_shortcut(gui::shortcuts::shortcut shortcut_key, const QKey
 	}
 	case gui::shortcuts::shortcut::gw_home_menu:
 	{
+		// The recovery environment (emer_init) has no home menu: it is the menu
+		// the console shows when the firmware cannot start, so RPCS3's overlay
+		// stays shut there instead of covering it.
+		if (Emu.IsRecovery())
+		{
+			gui_log.notice("Home menu is not available in recovery mode (emer_init)");
+			break;
+		}
+
 		pad::g_home_menu_requested = true;
 		break;
 	}

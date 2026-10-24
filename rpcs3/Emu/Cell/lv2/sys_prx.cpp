@@ -894,13 +894,13 @@ error_code _sys_prx_register_module(ppu_thread& ppu, vm::cptr<char> name, vm::pt
 
 	if (info.type & 0x1)
 	{
-		if (Emu.IsVsh())
+		if (Emu.IsVsh() || Emu.IsRecovery())
 		{
 			ppu_manual_load_imports_exports(info.lib_stub_ea.addr(), info.lib_stub_size, info.lib_entries_ea.addr(), info.lib_entries_size, *std::make_unique<std::basic_string<char>>());
 		}
 		else
 		{
-			// Only VSH is allowed to load it manually
+			// Only the system selves (VSH, the recovery process) may load it manually
 			return not_an_error(CELL_PRX_ERROR_ELF_IS_REGISTERED);
 		}
 	}

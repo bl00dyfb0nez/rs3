@@ -2803,6 +2803,15 @@ game_boot_result Emulator::Load(const std::string& title_id, bool is_disc_patch,
 					m_dir = "/app_home/";
 				}
 
+				// lv2 creates the vflash recover process with the program and no
+				// arguments, and its safe-mode variant with -mode=safe (the strings
+				// lv2_kernel.self carries).  Recovery mode is the plain one; the
+				// safe-mode argument belongs to the console's Factory Service Mode.
+				if (Emu.IsRecovery() && g_cfg.sys.factory_service_mode)
+				{
+					argv.emplace_back("-mode=safe");
+				}
+
 				sys_log.notice("Elf path: %s", argv[0]);
 			}
 
@@ -5133,6 +5142,13 @@ bool Emulator::IsVsh()
 	const auto process = &g_ps3_process_info;
 
 	return process->self_info.valid && (process->self_info.prog_id_hdr.program_authority_id == 0x10700005FF000001L); // VSH.self ID
+}
+
+bool Emulator::IsRecovery()
+{
+	const auto process = &g_ps3_process_info;
+
+	return process->self_info.valid && (process->self_info.prog_id_hdr.program_authority_id == 0x10700003FC000001L); // emer_init.self ID
 }
 
 bool Emulator::IsValidSfb(const std::string& path)

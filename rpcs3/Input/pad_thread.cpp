@@ -656,8 +656,10 @@ void pad_thread::operator()()
 			}
 		}
 
-		// Handle home menu if requested
-		if (!is_vsh && !m_home_menu_open && Emu.IsRunning())
+		// Handle home menu if requested.  The overlay belongs to the firmware's
+		// VSH, so it has no place in VSH itself or in the recovery environment
+		// (emer_init), which the console runs when VSH cannot start.
+		if (!is_vsh && !Emu.IsRecovery() && !m_home_menu_open && Emu.IsRunning())
 		{
 			bool ps_button_pressed = false;
 
@@ -913,6 +915,14 @@ extern bool close_osk_from_ps_button();
 
 void pad_thread::open_home_menu()
 {
+	// Recovery mode keeps the overlay shut: emer_init draws the console's own
+	// menu and has no home menu of its own, so a PS button press there is just
+	// the console's input.
+	if (Emu.IsRecovery())
+	{
+		return;
+	}
+
 	// Check if the OSK is open and can be closed
 	if (!close_osk_from_ps_button())
 	{
