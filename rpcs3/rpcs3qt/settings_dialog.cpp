@@ -1412,6 +1412,30 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		ui->combo_boot_loader->setCurrentIndex(m_emu_settings->GetSettingDefault(emu_settings_type::BootLoader) == "metldr" ? 1 : 0);
 	});
 
+	// The firmware the console runs decides what its installer accepts: an OFW
+	// console takes only a chain it would boot, a CFW console takes any image
+	// but only the original loaders, which are the ones its patches sit on.
+	ui->combo_firmware_mode->addItem(tr("OFW - the firmware the console shipped with"), "OFW");
+	ui->combo_firmware_mode->addItem(tr("CFW - custom firmware"), "CFW");
+	ui->combo_firmware_mode->setCurrentIndex(m_emu_settings->GetSetting(emu_settings_type::FirmwareMode) == "CFW" ? 1 : 0);
+
+	connect(ui->combo_firmware_mode, &QComboBox::currentIndexChanged, this, [this](int index)
+	{
+		m_emu_settings->SetSetting(emu_settings_type::FirmwareMode, ui->combo_firmware_mode->itemData(index).toString().toStdString());
+	});
+
+	connect(m_emu_settings.get(), &emu_settings::RestoreDefaultsSignal, ui->combo_firmware_mode, [this]()
+	{
+		ui->combo_firmware_mode->setCurrentIndex(m_emu_settings->GetSettingDefault(emu_settings_type::FirmwareMode) == "CFW" ? 1 : 0);
+	});
+
+	SubscribeTooltip(ui->combo_firmware_mode,
+		tr("The firmware the emulated console runs.\n\n"
+			"An OFW console only installs an image whose boot chain it would boot: metldr + lv0ldr or metldr.2 + lv0ldr.2 "
+			"sealed for the same console, with a CoreOS bank whose stages all run.\n\n"
+			"A CFW console installs any image, because its patches replace the checks the loaders make - but those patches "
+			"sit on the original metldr + lv0ldr pair, so an image carrying the 3.60+ metldr.2/lv0ldr.2 loaders is refused."));
+
 	// The fan is simulated: the emulator has no thermal sensors, it fabricates
 	// the temperature and runs the selected board's SYSCON thermal table over
 	// it (docs/thermal.txt).  Like the boot loader this is a config string, so

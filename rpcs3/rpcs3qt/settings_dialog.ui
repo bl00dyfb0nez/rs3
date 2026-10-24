@@ -5022,522 +5022,637 @@
       </attribute>
       <layout class="QVBoxLayout" name="dumpsTab_layout">
        <item>
-        <widget class="QGroupBox" name="gb_dumps_identity">
-         <property name="title">
-          <string>Console identity</string>
-         </property>
-         <layout class="QGridLayout" name="gb_dumps_identity_layout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_idps_dump">
-            <property name="text">
-             <string>IDPS dump</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="edit_idps_dump">
-            <property name="placeholderText">
-             <string>16 bytes raw, or 32 hex characters</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="button_idps_dump">
-            <property name="text">
-             <string>Browse...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_psid_dump">
-            <property name="text">
-             <string>PSID dump</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="edit_psid_dump">
-            <property name="placeholderText">
-             <string>16 bytes raw, or 32 hex characters</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="button_psid_dump">
-            <property name="text">
-             <string>Browse...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_boot_loader">
-            <property name="text">
-             <string>Boot loader</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1" colspan="2">
-           <widget class="QComboBox" name="combo_boot_loader"/>
-          </item>
-          <item row="3" column="0" colspan="3">
-           <widget class="QCheckBox" name="check_factory_service_mode">
-            <property name="text">
-             <string>Factory Service Mode (syscon EEPROM 0x48C07)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_fan_curve">
-            <property name="text">
-             <string>Fan curve</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1" colspan="2">
-           <widget class="QComboBox" name="combo_fan_curve"/>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_rsx_type">
-            <property name="text">
-             <string>RSX</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1" colspan="2">
-           <widget class="QComboBox" name="combo_rsx_type"/>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="gb_dumps_brick">
-         <property name="title">
-          <string>Simulated brick</string>
-         </property>
-         <layout class="QHBoxLayout" name="gb_dumps_brick_layout">
-          <item>
-           <widget class="QPushButton" name="button_clear_brick">
-            <property name="text">
-             <string>Clear simulated brick</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="button_recovery_mode">
-            <property name="text">
-             <string>Recovery Mode...</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="gb_dumps_brick_spacer">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="gb_dumps_flash">
-         <property name="title">
-          <string>Flash</string>
-         </property>
-         <layout class="QGridLayout" name="gb_dumps_flash_layout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_writer_mode">
-            <property name="text">
-             <string>Flash writer</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QComboBox" name="combo_writer_mode"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="button_dump_flash">
-            <property name="text">
-             <string>Dump flash...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QLabel" name="label_flash_state">
-            <property name="text">
-             <string>CoreOS patch: none installed</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_flash_chip">
-            <property name="text">
-             <string>Chip</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1" colspan="2">
-           <widget class="QComboBox" name="combo_flash_chip"/>
-          </item>
-          <item row="3" column="0" colspan="3">
-           <widget class="QCheckBox" name="check_console_dex">
-            <property name="text">
-             <string>Debug console (DEX) - dev_flash is not sealed per console</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="button_flash_coreos">
-            <property name="text">
-             <string>Install CoreOS patch...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="3">
-           <widget class="QCheckBox" name="check_bar_backups">
-            <property name="text">
-             <string>BAR backups - read and write archive.dat from a backup directory</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_bar_dir">
-            <property name="text">
-             <string>Backup directory</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLineEdit" name="edit_bar_dir">
-            <property name="placeholderText">
-             <string>The folder holding archive.dat and archive_XX.dat</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QPushButton" name="button_bar_dir">
-            <property name="text">
-             <string>Browse...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0" colspan="2">
-           <widget class="QPushButton" name="button_bar_read">
-            <property name="text">
-             <string>Read backup index</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="2">
-           <widget class="QPushButton" name="button_bar_write">
-            <property name="text">
-             <string>Write index...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0" colspan="3">
-           <widget class="QPlainTextEdit" name="text_bar_list">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>140</height>
-             </size>
-            </property>
-            <property name="placeholderText">
-             <string>Read a backup directory to list what its archive.dat holds.</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0" colspan="3">
-           <widget class="QLabel" name="label_bar_hint">
-            <property name="text">
-             <string>archive.dat is the index of a PS3 backup and archive2.dat the index of its copy-protected content; the data lives in the archive_XX.dat files. The index names every file and directory, and only archive.dat carries a footer, with the console it was made on. Reading it here needs no key material beyond this console's own id.</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="gb_dumps_hdd">
-         <property name="title">
-          <string>HDD image</string>
-         </property>
-         <layout class="QGridLayout" name="gb_dumps_hdd_layout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_hdd_image">
-            <property name="text">
-             <string>Image</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" colspan="2">
-           <widget class="QLineEdit" name="edit_hdd_image">
-            <property name="placeholderText">
-             <string>A qcow2 image, created here if it does not exist</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QPushButton" name="button_hdd_image">
-            <property name="text">
-             <string>Browse...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_hdd_erk">
-            <property name="text">
-             <string>EID root key</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1" colspan="2">
-           <widget class="QLineEdit" name="edit_hdd_erk">
-            <property name="placeholderText">
-             <string>The 0x30-byte ERK a PS3 read out (raw or hex)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3">
-           <widget class="QPushButton" name="button_hdd_erk">
-            <property name="text">
-             <string>Browse...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_hdd_size">
-            <property name="text">
-             <string>Size (GB)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QSpinBox" name="spin_hdd_size">
-            <property name="minimum">
-             <number>20</number>
-            </property>
-            <property name="maximum">
-             <number>2000</number>
-            </property>
-            <property name="value">
-             <number>20</number>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QComboBox" name="combo_hdd_layer"/>
-          </item>
-          <item row="3" column="0" colspan="2">
-           <widget class="QCheckBox" name="check_hdd_physical">
-            <property name="text">
-             <string>Write to a physical device instead (advanced) (REQUIRES ADMIN / SUDO)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QPushButton" name="button_hdd_format">
-            <property name="text">
-             <string>Format image</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="3">
-           <widget class="QPushButton" name="button_hdd_list">
-            <property name="text">
-             <string>Open and list</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_hdd_device">
-            <property name="text">
-             <string>Device (REQUIRES ADMIN / SUDO)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1" colspan="2">
-           <widget class="QComboBox" name="combo_hdd_device"/>
-          </item>
-          <item row="4" column="3">
-           <widget class="QPushButton" name="button_hdd_device">
-            <property name="text">
-             <string>Rescan</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0" colspan="4">
-           <widget class="QPlainTextEdit" name="text_hdd_list">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>120</height>
-             </size>
-            </property>
-            <property name="placeholderText">
-             <string>Format an image to see what was written, or open one to list the gameOS volume.</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="gb_dumps_xreg">
-         <property name="title">
-          <string>xRegistry</string>
-         </property>
-         <layout class="QGridLayout" name="gb_dumps_xreg_layout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_xreg_path">
-            <property name="text">
-             <string>xRegistry.sys</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="edit_xreg_path">
-            <property name="placeholderText">
-             <string>The console's /dev_flash2/etc/xRegistry.sys</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="button_xreg_browse">
-            <property name="text">
-             <string>Browse...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="button_xreg_read">
-            <property name="text">
-             <string>Read registry</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="button_xreg_write">
-            <property name="text">
-             <string>Write registry...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_xreg_region">
-            <property name="text">
-             <string>DVD region</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="edit_xreg_region">
-            <property name="placeholderText">
-             <string>Two letters, e.g. GB</string>
-            </property>
-            <property name="maxLength">
-             <number>2</number>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QPushButton" name="button_xreg_region">
-            <property name="text">
-             <string>Set region</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_xreg_key">
-            <property name="text">
-             <string>Setting</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="edit_xreg_key">
-            <property name="placeholderText">
-             <string>/setting/parental/dvdRegion</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QLineEdit" name="edit_xreg_value">
-            <property name="placeholderText">
-             <string>Value, as text or a number</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="3">
-           <widget class="QPushButton" name="button_xreg_value">
-            <property name="text">
-             <string>Set</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="4">
-           <widget class="QPlainTextEdit" name="text_xreg_list">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>120</height>
-             </size>
-            </property>
-            <property name="placeholderText">
-             <string>Read a registry to list its keys and their values.</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_dumps_hint">
-         <property name="text">
-          <string>A dump is 16 bytes: either the bytes themselves or the same 16 written as 32 hex characters. Leave a field empty to keep the IDPS or PSID from config.yml. The boot loader picks the pair the emulated console presents - metldr + lv0ldr before 3.60, metldr.2 + lv0ldr.2 from 3.60 - and the emulator logs it at boot.</string>
-         </property>
-         <property name="wordWrap">
+        <widget class="QTabWidget" name="dumpsTabPages">
+         <property name="documentMode">
           <bool>true</bool>
          </property>
+         <widget class="QWidget" name="dumpsPage1">
+          <attribute name="title">
+           <string>1</string>
+          </attribute>
+          <attribute name="toolTip">
+           <string>Console identity and the simulated brick</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="dumpsPage1Layout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          <item>
+           <widget class="QGroupBox" name="gb_dumps_identity">
+            <property name="title">
+             <string>Console identity</string>
+            </property>
+            <layout class="QGridLayout" name="gb_dumps_identity_layout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_idps_dump">
+               <property name="text">
+                <string>IDPS dump</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="edit_idps_dump">
+               <property name="placeholderText">
+                <string>16 bytes raw, or 32 hex characters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="button_idps_dump">
+               <property name="text">
+                <string>Browse...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_psid_dump">
+               <property name="text">
+                <string>PSID dump</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="edit_psid_dump">
+               <property name="placeholderText">
+                <string>16 bytes raw, or 32 hex characters</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QPushButton" name="button_psid_dump">
+               <property name="text">
+                <string>Browse...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_boot_loader">
+               <property name="text">
+                <string>Boot loader</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1" colspan="2">
+              <widget class="QComboBox" name="combo_boot_loader"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_firmware_mode">
+               <property name="text">
+                <string>Firmware</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1" colspan="2">
+              <widget class="QComboBox" name="combo_firmware_mode"/>
+             </item>
+             <item row="4" column="0" colspan="3">
+              <widget class="QCheckBox" name="check_factory_service_mode">
+               <property name="text">
+                <string>Factory Service Mode (syscon EEPROM 0x48C07)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_fan_curve">
+               <property name="text">
+                <string>Fan curve</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1" colspan="2">
+              <widget class="QComboBox" name="combo_fan_curve"/>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_rsx_type">
+               <property name="text">
+                <string>RSX</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1" colspan="2">
+              <widget class="QComboBox" name="combo_rsx_type"/>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="gb_dumps_brick">
+            <property name="title">
+             <string>Simulated brick</string>
+            </property>
+            <layout class="QHBoxLayout" name="gb_dumps_brick_layout">
+             <item>
+              <widget class="QPushButton" name="button_clear_brick">
+               <property name="text">
+                <string>Clear simulated brick</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="button_recovery_mode">
+               <property name="text">
+                <string>Recovery Mode...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="gb_dumps_brick_spacer">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+           <item>
+            <spacer name="dumpsPage1Spacer">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Policy::MinimumExpanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="dumpsPage2">
+          <attribute name="title">
+           <string>2</string>
+          </attribute>
+          <attribute name="toolTip">
+           <string>Flash and the HDD image</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="dumpsPage2Layout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          <item>
+           <widget class="QGroupBox" name="gb_dumps_flash">
+            <property name="title">
+             <string>Flash</string>
+            </property>
+            <layout class="QGridLayout" name="gb_dumps_flash_layout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_writer_mode">
+               <property name="text">
+                <string>Flash writer</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="combo_writer_mode"/>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="button_dump_flash">
+               <property name="text">
+                <string>Dump flash...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QLabel" name="label_flash_state">
+               <property name="text">
+                <string>CoreOS patch: none installed</string>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_flash_chip">
+               <property name="text">
+                <string>Chip</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1" colspan="2">
+              <widget class="QComboBox" name="combo_flash_chip"/>
+             </item>
+             <item row="3" column="0" colspan="3">
+              <widget class="QCheckBox" name="check_console_dex">
+               <property name="text">
+                <string>Debug console (DEX) - dev_flash is not sealed per console</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QPushButton" name="button_flash_coreos">
+               <property name="text">
+                <string>Install CoreOS patch...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0" colspan="3">
+              <widget class="QCheckBox" name="check_bar_backups">
+               <property name="text">
+                <string>BAR backups - read and write archive.dat from a backup directory</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_bar_dir">
+               <property name="text">
+                <string>Backup directory</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QLineEdit" name="edit_bar_dir">
+               <property name="placeholderText">
+                <string>The folder holding archive.dat and archive_XX.dat</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="2">
+              <widget class="QPushButton" name="button_bar_dir">
+               <property name="text">
+                <string>Browse...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0" colspan="2">
+              <widget class="QPushButton" name="button_bar_read">
+               <property name="text">
+                <string>Read backup index</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="2">
+              <widget class="QPushButton" name="button_bar_write">
+               <property name="text">
+                <string>Write index...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0" colspan="3">
+              <widget class="QPlainTextEdit" name="text_bar_list">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>140</height>
+                </size>
+               </property>
+               <property name="placeholderText">
+                <string>Read a backup directory to list what its archive.dat holds.</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0" colspan="3">
+              <widget class="QLabel" name="label_bar_hint">
+               <property name="text">
+                <string>archive.dat is the index of a PS3 backup and archive2.dat the index of its copy-protected content; the data lives in the archive_XX.dat files. The index names every file and directory, and only archive.dat carries a footer, with the console it was made on. Reading it here needs no key material beyond this console's own id.</string>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="gb_dumps_hdd">
+            <property name="title">
+             <string>HDD image</string>
+            </property>
+            <layout class="QGridLayout" name="gb_dumps_hdd_layout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_hdd_image">
+               <property name="text">
+                <string>Image</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" colspan="2">
+              <widget class="QLineEdit" name="edit_hdd_image">
+               <property name="placeholderText">
+                <string>A qcow2 image, created here if it does not exist</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QPushButton" name="button_hdd_image">
+               <property name="text">
+                <string>Browse...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_hdd_erk">
+               <property name="text">
+                <string>EID root key</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1" colspan="2">
+              <widget class="QLineEdit" name="edit_hdd_erk">
+               <property name="placeholderText">
+                <string>The 0x30-byte ERK a PS3 read out (raw or hex)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QPushButton" name="button_hdd_erk">
+               <property name="text">
+                <string>Browse...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_hdd_size">
+               <property name="text">
+                <string>Size (GB)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QSpinBox" name="spin_hdd_size">
+               <property name="minimum">
+                <number>20</number>
+               </property>
+               <property name="maximum">
+                <number>2000</number>
+               </property>
+               <property name="value">
+                <number>20</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QComboBox" name="combo_hdd_layer"/>
+             </item>
+             <item row="3" column="0" colspan="2">
+              <widget class="QCheckBox" name="check_hdd_physical">
+               <property name="text">
+                <string>Write to a physical device instead (advanced) (REQUIRES ADMIN / SUDO)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QPushButton" name="button_hdd_format">
+               <property name="text">
+                <string>Format image</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QPushButton" name="button_hdd_list">
+               <property name="text">
+                <string>Open and list</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_hdd_device">
+               <property name="text">
+                <string>Device (REQUIRES ADMIN / SUDO)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1" colspan="2">
+              <widget class="QComboBox" name="combo_hdd_device"/>
+             </item>
+             <item row="4" column="3">
+              <widget class="QPushButton" name="button_hdd_device">
+               <property name="text">
+                <string>Rescan</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0" colspan="4">
+              <widget class="QPlainTextEdit" name="text_hdd_list">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>120</height>
+                </size>
+               </property>
+               <property name="placeholderText">
+                <string>Format an image to see what was written, or open one to list the gameOS volume.</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+           <item>
+            <spacer name="dumpsPage2Spacer">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Policy::MinimumExpanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="dumpsPage3">
+          <attribute name="title">
+           <string>3</string>
+          </attribute>
+          <attribute name="toolTip">
+           <string>xRegistry and what these dumps are</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="dumpsPage3Layout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          <item>
+           <widget class="QGroupBox" name="gb_dumps_xreg">
+            <property name="title">
+             <string>xRegistry</string>
+            </property>
+            <layout class="QGridLayout" name="gb_dumps_xreg_layout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_xreg_path">
+               <property name="text">
+                <string>xRegistry.sys</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="edit_xreg_path">
+               <property name="placeholderText">
+                <string>The console's /dev_flash2/etc/xRegistry.sys</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="button_xreg_browse">
+               <property name="text">
+                <string>Browse...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="button_xreg_read">
+               <property name="text">
+                <string>Read registry</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="button_xreg_write">
+               <property name="text">
+                <string>Write registry...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_xreg_region">
+               <property name="text">
+                <string>DVD region</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="edit_xreg_region">
+               <property name="placeholderText">
+                <string>Two letters, e.g. GB</string>
+               </property>
+               <property name="maxLength">
+                <number>2</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QPushButton" name="button_xreg_region">
+               <property name="text">
+                <string>Set region</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_xreg_key">
+               <property name="text">
+                <string>Setting</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="edit_xreg_key">
+               <property name="placeholderText">
+                <string>/setting/parental/dvdRegion</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLineEdit" name="edit_xreg_value">
+               <property name="placeholderText">
+                <string>Value, as text or a number</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QPushButton" name="button_xreg_value">
+               <property name="text">
+                <string>Set</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0" colspan="4">
+              <widget class="QPlainTextEdit" name="text_xreg_list">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>120</height>
+                </size>
+               </property>
+               <property name="placeholderText">
+                <string>Read a registry to list its keys and their values.</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_dumps_hint">
+            <property name="text">
+             <string>A dump is 16 bytes: either the bytes themselves or the same 16 written as 32 hex characters. Leave a field empty to keep the IDPS or PSID from config.yml. The boot loader picks the pair the emulated console presents - metldr + lv0ldr before 3.60, metldr.2 + lv0ldr.2 from 3.60 - and the emulator logs it at boot.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+           <item>
+            <spacer name="dumpsPage3Spacer">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Policy::MinimumExpanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
         </widget>
-       </item>
-       <item>
-        <spacer name="dumpsTabSpacer">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Policy::MinimumExpanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>

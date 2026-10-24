@@ -2085,7 +2085,45 @@ void main_window::HandlePupInstallation(main_window* mw, const QString& file_pat
 		refresh_power_led(mw);
 	}
 
-	if (!boot.bootable() && dir_path.isEmpty())
+	// The firmware the console runs decides what it takes.  A CFW console is
+	// past the chain check - its patches replace the checks the loaders make -
+	// but those patches sit on the original metldr + lv0ldr pair, so an image
+	// carrying the 3.60+ .2 loaders is one it cannot be updated from.  Nothing
+	// is written and the console is left as it is: it is the installer that says
+	// no, not the console that fails to boot.
+	const bool cfw = g_cfg.sys.firmware_mode.get() == "CFW";
+
+	if (cfw && dir_path.isEmpty() && (boot.metldr.is_360() || boot.lv0ldr.is_360()))
+	{
+		std::string carried;
+
+		for (const ps3::boot::container* c : {&boot.metldr, &boot.lv0ldr})
+		{
+			if (c->is_360())
+			{
+				carried += carried.empty() ? "" : " + ";
+				carried += c->name;
+			}
+		}
+
+		gui_log.error("Firmware installation refused: this console runs CFW, whose patches sit on the original metldr + lv0ldr pair, and the image carries %s.\n%s",
+			carried, boot.summary());
+
+		if (mw)
+		{
+			mw->statusBar()->showMessage(tr("Firmware refused: this image carries the 3.60+ loaders a CFW console cannot patch."), 10000);
+
+			QMessageBox::warning(mw, tr("Firmware installation refused"),
+				tr("Firmware installation refused.\n\n"
+					"This console runs custom firmware. Its patches sit on the original metldr + lv0ldr pair, so it can only be "
+					"updated from an image that carries those loaders. This one carries %1.\n\n"
+					"Nothing was loaded and nothing was written.").arg(QString::fromStdString(carried)));
+		}
+
+		return;
+	}
+
+	if (!cfw && !boot.bootable() && dir_path.isEmpty())
 	{
 		gui_log.error("Firmware installation refused: the boot chain in this image does not boot.\n%s", boot.summary());
 

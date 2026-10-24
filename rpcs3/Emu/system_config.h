@@ -344,6 +344,12 @@ struct cfg_root : cfg::node
 		// The loader pair the emulated console presents: "metldr" for the
 		// pre-3.60 chain, anything else for metldr.2 + lv0ldr.2.
 		cfg::string boot_loader{this, "Boot loader", "metldr.2"};
+		// The firmware the emulated console runs: "OFW" for the one it shipped
+		// with, "CFW" for a custom one.  It decides what the installer accepts -
+		// an OFW console takes only a chain it would boot, while a CFW console
+		// takes any image but has to be given the loaders its patches sit on:
+		// the original metldr + lv0ldr pair, never the 3.60+ .2 set.
+		cfg::string firmware_mode{this, "Firmware mode", "OFW"};
 		// A console whose boot chain does not boot: three beeps and a dark power
 		// LED.  Set when an image with such a chain is chosen for installation -
 		// the state it would leave the console in - and kept across a reboot;

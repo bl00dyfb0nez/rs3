@@ -238,6 +238,7 @@ const std::map<emu_settings_type, cfg_location> settings_location =
 	{ emu_settings_type::IdpsDump,              get_cfg_location(local_cfg.sys.idps_dump) },
 	{ emu_settings_type::PsidDump,              get_cfg_location(local_cfg.sys.psid_dump) },
 	{ emu_settings_type::BootLoader,            get_cfg_location(local_cfg.sys.boot_loader) },
+	{ emu_settings_type::FirmwareMode,          get_cfg_location(local_cfg.sys.firmware_mode) },
 	{ emu_settings_type::FactoryServiceMode,    get_cfg_location(local_cfg.sys.factory_service_mode) },
 	{ emu_settings_type::FanCurve,              get_cfg_location(local_cfg.sys.fan_curve) },
 	{ emu_settings_type::RsxType,               get_cfg_location(local_cfg.sys.rsx_type) },

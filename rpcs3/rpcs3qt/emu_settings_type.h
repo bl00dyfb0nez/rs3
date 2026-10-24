@@ -228,6 +228,7 @@ enum class emu_settings_type
 	IdpsDump,
 	PsidDump,
 	BootLoader,
+	FirmwareMode,
 	FactoryServiceMode,
 	FanCurve,
 	RsxType,
