@@ -130,7 +130,8 @@ constexpr const char* recent_action_name = "shown_name";
 
 namespace
 {
-	// The power LED's state: green while the console runs, red in standby, dark
+	// The power LED's state: green while the console runs, and dark the rest of
+	// the time - in standby, because a console that is off has no light, and
 	// when its boot chain does not boot.
 	enum class led_state
 	{
@@ -264,8 +265,8 @@ void main_window::Init()
 	Q_EMIT RequestGlobalStylesheetChange();
 	ConfigureGuiFromSettings();
 
-	// The console's power LED: red in standby, dark if the boot chain it holds
-	// does not boot.
+	// The console's power LED: dark in standby, green once the console boots,
+	// and dark again if the boot chain it holds does not boot.
 	refresh_power_led(this);
 
 	// The power button starts where the console is: nothing is running, so it
@@ -273,9 +274,9 @@ void main_window::Init()
 	ui->sysPowerAct->setText(tr("Power &On"));
 	ui->sysPowerAct->setToolTip(tr("The console's power button: a short press turns it on from standby, or off into it."));
 
-	// The light is on the console's own window, and the console has no window
-	// event when its boot chain finishes: a tick keeps it in step - red while the
-	// console boots, green once it is up, and travelling with the game window.
+	// The console has no window event when its boot chain finishes: a tick keeps
+	// the light in step - dark while the console boots, green once it is up, and
+	// in the corner of whichever window it is drawn in.
 	QTimer* const led_tick = new QTimer(this);
 	led_tick->setObjectName(QStringLiteral("power_led_tick"));
 	led_tick->setInterval(250);
@@ -1592,7 +1593,7 @@ namespace
 	// the corner of the console's settings while they are open - never as a
 	// window of its own over the console's screen.  Green is the console having
 	// booted, not the emulator having started: Emulator::Run reports the boot
-	// before running it, so the light stays red while the boot chain is still
+	// before running it, so the light stays dark while the boot chain is still
 	// going, and a console that is off has no light at all.
 	enum class led_colour
 	{
@@ -1695,6 +1696,12 @@ namespace
 			g_power_led->setFixedSize(16, 16);
 			g_power_led->setMask(QRegion(QRect(0, 0, 16, 16), QRegion::Ellipse));
 			g_power_led->setAttribute(Qt::WA_TransparentForMouseEvents);
+
+			// Dark until a state says otherwise, and not put up before it has a
+			// parent: a light created with neither would come up as a window of
+			// its own, outside the console's.
+			g_power_led->setStyleSheet(led_css(led_colour::off, false));
+			g_power_led->hide();
 		}
 
 		return g_power_led;
@@ -1735,9 +1742,9 @@ namespace
 		// The distance from the corner is the same on every size of window, and
 		// never more than the window has room for.
 		const int margin = 8;
-		const int max_x = std::max(margin, host->width() - led->width() - margin);
-		const int max_y = std::max(margin, host->height() - led->height() - margin);
-		const int y = settings ? std::min(max_y, host->height() - led->height() - margin) : margin;
+		const int max_x = std::max(0, host->width() - led->width());
+		const int max_y = std::max(0, host->height() - led->height());
+		const int y = settings ? std::max(0, host->height() - led->height() - margin) : margin;
 
 		led->move(std::min(margin, max_x), std::min(y, max_y));
 		led->raise();
@@ -1972,6 +1979,10 @@ namespace
 		led->setStyleSheet(led_css(colour, true));
 		led->setProperty("led_state", -1);
 		led->setProperty("flashing", true);
+
+		// Placed in the window before it is shown: the light is part of the
+		// console's window, never a window of its own beside it.
+		place_power_led(window);
 		led->raise();
 		led->show();
 		led->setProperty("flash_step", 0);
@@ -5413,9 +5424,7 @@ void main_window::ShowRecoveryMenu()
 	screen->AddOption(tr("5. Restore PS3™ System"), [this, screen]()
 	{
 		if (QMessageBox::question(screen, tr("Restore PS3 System"),
-			tr("Restore the console's settings to their defaults and clear the simulated brick?
-
-"
+			tr("Restore the console's settings to their defaults and clear the simulated brick?\n\n"
 				"On a console this option formats the hard drive. Here the emulated drive and its saves are "
 				"kept - delete the dev_hdd0 folder yourself if you want them gone too."),
 			QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
