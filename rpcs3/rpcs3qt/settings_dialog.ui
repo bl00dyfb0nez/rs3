@@ -5047,6 +5047,16 @@
             <number>0</number>
            </property>
           <item>
+           <widget class="QLabel" name="label_dumpsPage1_desc">
+            <property name="text">
+             <string>The console's identity and its recorded state: the IDPS and PSID it reports, the boot loader and firmware it carries, and whether it is in Factory Service Mode or held back by a simulated brick.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QGroupBox" name="gb_dumps_identity">
             <property name="title">
              <string>Console identity</string>
@@ -5218,6 +5228,16 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
+          <item>
+           <widget class="QLabel" name="label_dumpsPage2_desc">
+            <property name="text">
+             <string>The console's storage: dump flash, install a CoreOS patch, read and write the BAR archive index, and format or list the HDD image.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QGroupBox" name="gb_dumps_flash">
             <property name="title">
@@ -5512,6 +5532,16 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
+          <item>
+           <widget class="QLabel" name="label_dumpsPage3_desc">
+            <property name="text">
+             <string>The console's xRegistry.sys: read it, write it back, and change the region and the individual values it holds.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QGroupBox" name="gb_dumps_xreg">
             <property name="title">

@@ -1727,7 +1727,11 @@ namespace
 			return;
 		}
 
-		if (led->parentWidget() != host)
+		// Moving between windows is the only time the light has to be put above
+		// the content it lands in; the tick only follows a resize.
+		const bool moved = led->parentWidget() != host;
+
+		if (moved)
 		{
 			led->hide();
 			led->setWindowFlags(Qt::Widget);
@@ -1744,8 +1748,12 @@ namespace
 		const int y = settings ? std::max(0, host->height() - led->height() - margin) : margin;
 
 		led->move(std::min(margin, max_x), std::min(y, max_y));
-		led->raise();
-		led->show();
+
+		if (moved || !led->isVisible())
+		{
+			led->raise();
+			led->show();
+		}
 	}
 
 	// Steady state: green while emulation runs (a paused game is still on), dark
@@ -4961,10 +4969,11 @@ namespace
 		{
 			setObjectName(QStringLiteral("recovery_screen"));
 			setWindowTitle(QStringLiteral("PS3 Recovery Menu"));
-			// The console's output is a 16:9 picture; the window is that
-			// picture and nothing else, so it is fixed to it like a screen.
-			setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-			setFixedSize(960, 540);
+			// An ordinary window: it opens at the console's 16:9 picture size but
+			// can be moved, resized and closed like any other, so it never pins
+			// itself over the rest of the desktop.
+			resize(960, 540);
+			setMinimumSize(640, 360);
 			setStyleSheet(QStringLiteral(
 				"QFrame#recovery_screen { background-color: #000000; }"
 				"QLabel#recovery_rule { background-color: #303030; }"
@@ -5245,23 +5254,14 @@ void main_window::ShowRecoveryMenu()
 	// keyboard - up and down move the bar, X/Enter picks the option.
 	if (g_recovery_screen)
 	{
+		g_recovery_screen->show();
 		g_recovery_screen->raise();
-		g_recovery_screen->activateWindow();
-		g_recovery_screen->setFocus();
 		return;
 	}
 
 	auto* const screen = new recovery_screen();
 	screen->setAttribute(Qt::WA_DeleteOnClose);
 	g_recovery_screen = screen;
-
-	// The screen is a picture of the console's output, so it is centred like
-	// one rather than parented to the window it was asked for from.
-	if (QScreen* const monitor = QGuiApplication::primaryScreen())
-	{
-		const QRect area = monitor->availableGeometry();
-		screen->move(area.center() - QPoint(screen->width() / 2, screen->height() / 2));
-	}
 
 	// 1. Restart System.  emer_init hands the console back to its firmware: the
 	// brick is the image it refused, not the console, so the restart clears it
