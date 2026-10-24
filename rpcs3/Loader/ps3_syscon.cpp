@@ -55,26 +55,6 @@ namespace ps3::syscon
 			return -1;
 		}
 
-		std::vector<std::uint8_t> from_hex(std::string_view text)
-		{
-			std::vector<std::uint8_t> out;
-
-			for (std::size_t i = 0; i + 1 < text.size(); i += 2)
-			{
-				const int hi = hex_value(text[i]);
-				const int lo = hex_value(text[i + 1]);
-
-				if (hi < 0 || lo < 0)
-				{
-					return {};
-				}
-
-				out.push_back(static_cast<std::uint8_t>((hi << 4) | lo));
-			}
-
-			return out;
-		}
-
 		std::string to_hex(const std::uint8_t* data, std::size_t size)
 		{
 			static constexpr char digits[] = "0123456789ABCDEF";
@@ -147,18 +127,41 @@ namespace ps3::syscon
 			return out;
 		}
 
+		// Decimal, or hexadecimal with the 0x prefix the terminal's readout uses.
+		// The emulator is built without exceptions, so this parses the digits
+		// itself rather than throwing out of a conversion.
 		bool parse_number(std::string_view text, std::uint32_t& out)
 		{
-			try
+			std::uint32_t base = 10;
+			std::size_t i = 0;
+
+			if (text.size() > 2 && text[0] == '0' && (text[1] == 'x' || text[1] == 'X'))
 			{
-				std::size_t used = 0;
-				out = static_cast<std::uint32_t>(std::stoul(std::string(text), &used, 0));
-				return used == text.size();
+				base = 16;
+				i = 2;
 			}
-			catch (...)
+
+			if (i >= text.size())
 			{
 				return false;
 			}
+
+			std::uint32_t value = 0;
+
+			for (; i < text.size(); i++)
+			{
+				const int digit = hex_value(text[i]);
+
+				if (digit < 0 || static_cast<std::uint32_t>(digit) >= base)
+				{
+					return false;
+				}
+
+				value = value * base + static_cast<std::uint32_t>(digit);
+			}
+
+			out = value;
+			return true;
 		}
 
 		std::vector<std::uint8_t> aes_cbc(bool encrypt, const std::array<std::uint8_t, 16>& key, const std::array<std::uint8_t, 16>& iv, const std::vector<std::uint8_t>& data)

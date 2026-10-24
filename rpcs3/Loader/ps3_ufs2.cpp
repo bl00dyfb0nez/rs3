@@ -370,11 +370,6 @@ namespace ps3::ufs2
 			put_be64(inode + 0x38, now);
 			put_be64(inode + 0x70, data_frag);        // di_db[0] at 0x70
 		}
-
-		std::uint32_t block_count(std::uint64_t size, std::uint32_t block)
-		{
-			return static_cast<std::uint32_t>((size + block - 1) / block);
-		}
 	}
 
 	bool erk::empty() const
