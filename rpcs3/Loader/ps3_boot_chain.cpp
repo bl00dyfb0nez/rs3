@@ -640,6 +640,24 @@ namespace ps3::boot
 			out.ros = find_bank(image);
 		}
 
+		// sdk_version is the one text file in the bank, and the only thing a
+		// dump says about the firmware the CoreOS was built for.
+		if (out.ros.found)
+		{
+			if (const bank_entry* const sdk = out.ros.entry("sdk_version"); sdk && sdk->present
+				&& out.ros.offset + sdk->offset + sdk->size <= image.size())
+			{
+				const char* const text = reinterpret_cast<const char*>(image.data() + out.ros.offset + sdk->offset);
+				out.sdk_version.assign(text, static_cast<std::size_t>(sdk->size));
+
+				while (!out.sdk_version.empty() && (out.sdk_version.back() == '\n' || out.sdk_version.back() == '\r'
+					|| out.sdk_version.back() == '\0' || out.sdk_version.back() == ' '))
+				{
+					out.sdk_version.pop_back();
+				}
+			}
+		}
+
 		judge(out);
 		return out;
 	}

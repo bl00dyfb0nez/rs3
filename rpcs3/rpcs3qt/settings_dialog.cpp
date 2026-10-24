@@ -1520,6 +1520,15 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		m_emu_settings->SetSetting(emu_settings_type::CoreosImage, coreos.bank);
 		refresh_coreos_state();
 
+		// What the dump says about itself goes to the log: the import itself
+		// answers with one word, and the detection has its own button.
+		const ps3::flash::detected found = ps3::flash::detect(path.toStdString());
+
+		if (found.found)
+		{
+			cfg_log.notice("Flash import: %s", found.summary());
+		}
+
 		QMessageBox::information(this, tr("CoreOS"), tr("Imported!"));
 	});
 
@@ -1528,6 +1537,80 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 			"lv2_kernel.self and the rest, written out as ros0.bin and ros1.bin. The firmware PUP does not carry "
 			"the bank - its CoreOS.PKG is the updater's program - so it comes from the dump. Importing one replaces "
 			"the bank the settings record."));
+
+	// What a dump says about the console it came from: the chain at the bottom
+	// of its flash, the chip that chain sits in, and the model family those
+	// belong to.  Applying it is optional - the detection is a separate step,
+	// so an import stays a one-word answer.
+	connect(ui->button_flash_detect, &QPushButton::clicked, this, [this]()
+	{
+		const QString path = QFileDialog::getOpenFileName(this, tr("Select the console's flash dump"), {},
+			tr("Flash images (*.bin *.img *.rom);;All files (*.*)"));
+
+		if (path.isEmpty())
+		{
+			return;
+		}
+
+		const ps3::flash::detected found = ps3::flash::detect(path.toStdString());
+
+		if (!found.found)
+		{
+			QMessageBox::warning(this, tr("Detect console"), tr("The console could not be read:\n\n%1").arg(QString::fromStdString(found.error)));
+			return;
+		}
+
+		QMessageBox box(this);
+		box.setWindowTitle(tr("Detect console"));
+		box.setIcon(QMessageBox::Question);
+		box.setText(tr("This dump describes the console below."));
+		box.setInformativeText(tr("Apply the settings that match it?"));
+		box.setDetailedText(QString::fromStdString(found.summary()));
+		QPushButton* const apply = box.addButton(tr("Apply the settings"), QMessageBox::AcceptRole);
+		box.addButton(tr("Close"), QMessageBox::RejectRole);
+		box.exec();
+
+		if (box.clickedButton() != apply)
+		{
+			return;
+		}
+
+		// The combo boxes are bound to the settings, so going through them also
+		// updates the dialog the way the user would.
+		if (const int index = ui->combo_boot_loader->findData(QString::fromStdString(found.boot_loader)); index >= 0)
+		{
+			ui->combo_boot_loader->setCurrentIndex(index);
+		}
+
+		if (const int index = ui->combo_flash_chip->findData(found.flash == ps3::flash::chip::emmc ? "emmc" : "nor"); index >= 0)
+		{
+			ui->combo_flash_chip->setCurrentIndex(index);
+		}
+
+		if (!found.rsx.empty())
+		{
+			if (const int index = ui->combo_rsx_type->findData(QString::fromStdString(found.rsx)); index >= 0)
+			{
+				ui->combo_rsx_type->setCurrentIndex(index);
+			}
+		}
+
+		if (!found.fan.empty())
+		{
+			if (const int index = ui->combo_fan_curve->findData(QString::fromStdString(found.fan)); index >= 0)
+			{
+				ui->combo_fan_curve->setCurrentIndex(index);
+			}
+		}
+	});
+
+	SubscribeTooltip(ui->button_flash_detect,
+		tr("Read the console out of a flash dump: whether its chain is metldr + lv0ldr (before 3.60) or "
+			"metldr.2 + lv0ldr.2 (3.60 and later), whether that chain sits in a 16 MiB NOR, the 256 MiB NAND of a "
+			"console before the CECHL, or a superslim's larger eMMC, and the model family that goes with them.\n\n"
+			"The model name itself is not stored in flash, so it comes from the dump's file name when it carries "
+			"one, and the settings that match - boot loader, chip, RSX and fan table - are only changed if you "
+			"accept them."));
 
 	// The fan is simulated: the emulator has no thermal sensors, it fabricates
 	// the temperature and runs the selected board's SYSCON thermal table over

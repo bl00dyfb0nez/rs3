@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <span>
 #include <string>
+#include <string_view>
 #include <vector>
 
 // The console's CoreOS, out of the flash image the console carries.
@@ -99,6 +100,19 @@ namespace ps3::coreos
 
 	verdict inspect(std::span<const std::uint8_t> bank);
 	verdict inspect_file(const std::string& path);
+
+	// One record of the bank, served to the emulator where it sits.
+	//
+	// The recovery environment is not booted from a copy written next to the
+	// bank: lv2 starts emer_init out of the ros area, so the boot is handed the
+	// SELF that is inside the bank itself.  Each record is the file behind a
+	// 0x10-byte bank prefix, and the SELF that follows it is what the loader
+	// gets - read-only, out of the image the console carries, with nothing
+	// extracted and no PARAM.SFO invented for it (a system self has none).
+	//
+	// Returns the path to boot, or an empty string with `error` set.
+	inline constexpr char bank_device_path[] = "/vfsv0_virtual_coreos_bank_fs_dev";
+	std::string serve(const image& img, std::string_view name, std::string& error);
 
 	// The emulator's copy of the console's CoreOS: `dir` holds ros0.bin and
 	// ros1.bin, carved out of the dump.  `bank` is the file the settings

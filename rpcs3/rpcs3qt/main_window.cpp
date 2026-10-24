@@ -867,45 +867,74 @@ void main_window::BootVSH()
 void main_window::BootRecovery()
 {
 	// emer_init.self is the console's recovery environment: a system self like
-	// vsh.self, booted by the console so that its own menu comes up on the
-	// screen.  It is not part of every installed firmware image, so a console
-	// without it is asked for the file rather than handed a menu of RPCS3's own.
+	// vsh.self, booted by lv2 so that its own menu comes up on the screen.  It is
+	// not part of dev_flash: the firmware update carries it in CORE_OS_PACKAGE
+	// and the console keeps it in the ros bank beside lv0, lv1.self and
+	// lv2_kernel.self (docs/cos.txt, docs/pup.txt, FLASH_LAYOUT.md).  lv2 runs it
+	// as the vflash recover process when the flash's filesystem does not mount;
+	// the installer never copies it into dev_flash.
+	//
+	// So the file comes from the bank the console carries - the CoreOS image
+	// carved out of its dump - and it is booted out of it: lv2 reads the SELF
+	// out of the ros area, so the emulator is served the record where it sits
+	// in ros0.bin instead of a copy written next to it.  A system self has no
+	// PARAM.SFO, and none is invented for it.  A console without a bank is
+	// asked for the file; dev_flash is looked at last, for a CFW that installed
+	// a copy there (stock firmware does not).
 	//
 	// It is the console's environment, not a generic one: emer_init reports the
-	// console's IDPS and PSID the way every system self does, and the dumps on
-	// the Advanced PS3 Tools page are what say what those are.  Without both of
-	// them there is no console for it to come up as.
-	const auto dump_present = [](const std::string& dump_path)
-	{
-		ps3::identity::dump value{};
-		return !dump_path.empty() && ps3::identity::read_dump(dump_path, value);
-	};
+	// console's IDPS and PSID the way every system self does.  Those come from
+	// the dumps or the values on Advanced PS3 Tools, with defaults when neither
+	// is set, so recovery does not stop on a console whose dumps are not there.
+	std::string path;
 
-	if (!dump_present(g_cfg.sys.idps_dump.get()) || !dump_present(g_cfg.sys.psid_dump.get()))
+	if (const std::string coreos_path = g_cfg.sys.coreos_image.get(); !coreos_path.empty())
 	{
-		QMessageBox::warning(this, tr("Recovery Mode"),
-			tr("Recovery mode runs the console's own emer_init, so it needs the console's dumps first.\n\n"
-				"Set the IDPS and PSID dump files on Advanced PS3 Tools > Console, then boot it again."));
-		return;
+		if (!fs::is_file(coreos_path))
+		{
+			gui_log.warning("Recovery mode: the CoreOS bank %s is not a file, so it is not read.", coreos_path);
+		}
+		else if (const ps3::coreos::image bank = ps3::coreos::read_bank(coreos_path); !bank.found)
+		{
+			gui_log.warning("Recovery mode: %s is not a CoreOS bank: %s", coreos_path, bank.error);
+		}
+		else
+		{
+			std::string error;
+
+			if (const std::string served = ps3::coreos::serve(bank, "emer_init.self", error); !served.empty())
+			{
+				path = served;
+				gui_log.notice("Recovery mode: booting the bank's emer_init.self out of %s", coreos_path);
+			}
+			else
+			{
+				gui_log.warning("Recovery mode: %s", error);
+			}
+		}
 	}
 
 	const std::string dev_flash = g_cfg_vfs.get_dev_flash();
 
-	std::string path;
-
-	for (const char* const candidate : {"/vsh/etc/emer_init.self", "/vsh/module/emer_init.self", "/emer_init.self"})
+	if (path.empty())
 	{
-		const std::string full = dev_flash + candidate;
-
-		if (fs::is_file(full))
+		for (const char* const candidate : {"/vsh/etc/emer_init.self", "/vsh/module/emer_init.self", "/emer_init.self"})
 		{
-			path = full;
-			break;
+			const std::string full = dev_flash + candidate;
+
+			if (fs::is_file(full))
+			{
+				path = full;
+				break;
+			}
 		}
 	}
 
 	if (path.empty())
 	{
+		// No bank on the console and no copy in dev_flash: the console's own file
+		// is the only thing that can be run, so it is asked for rather than
+		// replaced with a menu of RPCS3's own.
 		const QString last_dir = m_gui_settings->GetValue(gui::fd_boot_game).toString();
 		const QString chosen = QFileDialog::getOpenFileName(this, tr("Select emer_init.self"),
 			last_dir, tr("PlayStation 3 self files (*.self);;All files (*.*)"));

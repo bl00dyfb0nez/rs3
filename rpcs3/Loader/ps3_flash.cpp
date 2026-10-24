@@ -3,6 +3,7 @@
 #include "ps3_flash.h"
 
 #include <algorithm>
+#include <cctype>
 #include <cstring>
 #include <fstream>
 #include <iterator>
@@ -10,6 +11,7 @@
 #include "Crypto/sha1.h"
 
 #include "ps3_coreos.h"
+#include "ps3_boot_chain.h"
 
 namespace ps3::flash
 {
@@ -723,6 +725,197 @@ namespace ps3::flash
 			out += "\nCoreOS patch: installed from " + c.coreos_patch + ", " + std::to_string(c.coreos_patch_span) + " bytes written at bank 0x200.\n";
 		}
 
+		return out;
+	}
+
+	std::string detected::summary() const
+	{
+		if (!found)
+		{
+			return error.empty() ? "the dump cannot be read" : error;
+		}
+
+		std::string out = "Flash: " + medium + " (" + std::to_string(size / 0x100000) + " MiB)\n";
+		out += "Boot chain: " + (chain.empty() ? std::string{"none found"} : chain) + "\n";
+		out += "Console: " + (model.empty() ? family : model + " - " + family) + "\n";
+
+		if (!firmware.empty())
+		{
+			out += "CoreOS: " + firmware + "\n";
+		}
+
+		if (!rsx.empty())
+		{
+			out += "RSX: " + rsx + "\n";
+		}
+
+		if (!fan.empty())
+		{
+			out += "Fan table: " + fan + "\n";
+		}
+
+		if (!notes.empty())
+		{
+			out += notes;
+		}
+
+		return out;
+	}
+
+	detected detect(const std::string& dump_path)
+	{
+		detected out;
+
+		if (fs::stat_t info{}; fs::get_stat(dump_path, info))
+		{
+			out.size = info.size;
+		}
+
+		if (!out.size)
+		{
+			out.error = "the dump could not be read: " + dump_path;
+			return out;
+		}
+
+		// The chip is the size: 16 MiB is a NOR part, 256 MiB is the NAND of a
+		// console before the CECHL, and a superslim's eMMC is larger than that
+		// while sharing the NAND map.
+		if (out.size <= image_size)
+		{
+			out.flash = chip::nor;
+			out.medium = "NOR";
+		}
+		else if (out.size <= emmc_size)
+		{
+			out.flash = chip::emmc;
+			out.medium = "NAND";
+		}
+		else
+		{
+			out.flash = chip::emmc;
+			out.medium = "eMMC";
+		}
+
+		const ps3::boot::chain chain = ps3::boot::inspect_file(dump_path, out.flash == chip::nor ? ps3::boot::geometry::nor : ps3::boot::geometry::nand);
+
+		// The chain is the two loaders at the bottom of it.  A dump that carries
+		// only one of them is still worth reporting: that is what a bad write
+		// leaves behind, and the boot refuses it for the same reason.
+		std::vector<std::string> parts;
+
+		if (chain.metldr.usable())
+		{
+			parts.push_back(chain.metldr.name);
+			out.boot_loader = chain.metldr.name;
+		}
+
+		if (chain.lv0ldr.usable())
+		{
+			parts.push_back(chain.lv0ldr.name);
+		}
+
+		for (usz i = 0; i < parts.size(); i++)
+		{
+			out.chain += (i ? " + " : "") + parts[i];
+		}
+
+		// sdk_version is the only text file in the bank: "4.9300" on the
+		// consoles that carry one.
+		out.firmware = chain.sdk_version;
+
+		// The family follows from the chip and the generation the loaders name.
+		// metldr is the pre-3.60 chain: the consoles that shipped with it are the
+		// phats and the first slims, and metldr.2 is 3.60 and later, which is the
+		// slim and superslim.
+		const bool loader_2 = chain.metldr.name == "metldr.2" || chain.lv0ldr.name == "lv0ldr.2";
+
+		if (out.flash == chip::nor)
+		{
+			out.family = !chain.ros.found
+				? "CECH-40xx / CECH-43xx (superslim: the NOR carries the chain, /dev_flash lives on eMMC)"
+				: loader_2
+					? "CECH-25xx / CECH-30xx (slim)"
+					: "CECH-20xx / CECH-21xx (slim) or a NOR phat (CECHH..CECHQ)";
+		}
+		else if (out.medium == "NAND")
+		{
+			out.family = "CECHA..CECHK (phat: its NAND is the 256 MiB map) or a superslim's eMMC, which uses the same map";
+		}
+		else
+		{
+			out.family = "CECH-40xx / CECH-42xx / CECH-43xx (superslim)";
+		}
+
+		// A console does not write its model into its flash, so the name is
+		// taken from the dump's own file name when it carries one - dumps are
+		// named after the console they came from (CECH3001A_493.bin, 4301A.bin).
+		const std::string name = dump_path.substr(dump_path.find_last_of(fs::delim) + 1);
+
+		for (usz at = name.find("CECH"); at != std::string::npos; at = name.find("CECH", at + 1))
+		{
+			usz end = at + 4;
+
+			while (end < name.size() && (std::isalnum(static_cast<unsigned char>(name[end])) || name[end] == '-' || name[end] == '_'))
+			{
+				end++;
+			}
+
+			std::string model = name.substr(at, end - at);
+			std::replace(model.begin(), model.end(), '_', '-');
+
+			// CECH3001A is the console called CECH-3001A; CECHH04 keeps its
+			// shape, because the phat models have no dash after CECH.
+			if (model.size() > 4 && model[4] != '-' && std::isdigit(static_cast<unsigned char>(model[4])))
+			{
+				model.insert(4, "-");
+			}
+
+			if (model.size() >= 8)
+			{
+				out.model = model;
+				break;
+			}
+		}
+
+		// The RSX and the fan table each board carries (docs/rsxdef.txt,
+		// docs/thermal.txt), read off the model when it is known and off the
+		// family when only that is.
+		const std::string series = out.model.size() >= 6 ? out.model.substr(5, 2) : std::string{};
+
+		if (series == "20")
+		{
+			out.rsx = "CXD2991 (65nm)";
+			out.fan = "DYN-001";
+		}
+		else if (series == "21" || series == "25" || series == "30")
+		{
+			out.rsx = "CXD5302 (40nm)";
+			out.fan = "JTP-001";
+		}
+		else if (series == "40" || series == "42" || series == "43")
+		{
+			out.rsx = "D5305 (28nm)";
+		}
+		else if (out.medium == "NAND" || (out.flash == chip::nor && !loader_2))
+		{
+			out.rsx = "CXD2971 (90nm)";
+			out.fan = "COK-002";
+		}
+		else if (loader_2)
+		{
+			out.rsx = "CXD5302 (40nm)";
+			out.fan = "JTP-001";
+		}
+
+		if (!chain.failures.empty())
+		{
+			for (const std::string& failure : chain.failures)
+			{
+				out.notes += "Chain: " + failure + "\n";
+			}
+		}
+
+		out.found = true;
 		return out;
 	}
 }

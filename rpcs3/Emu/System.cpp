@@ -1774,7 +1774,16 @@ game_boot_result Emulator::Load(const std::string& title_id, bool is_disc_patch,
 		// Mount /app_home again since m_path might have changed due to savestates.
 		vfs::mount("/app_home", g_cfg_vfs.app_home.to_string().empty() ? elf_dir + '/' : g_cfg_vfs.get(g_cfg_vfs.app_home, rpcs3::utils::get_emu_dir()));
 
+		// A system self is not a title.  lv2 starts emer_init out of the ros
+		// bank as the vflash recover process and vsh.self as the initial
+		// process, and neither is given a PARAM.SFO: nothing names a title id
+		// or a category for them, and nothing may borrow one from whatever
+		// directory the file happens to sit in.  That is also what a program
+		// that asks _sys_process_get_paramsfo() sees - CELL_ENOENT.
+		const bool system_self = m_path.ends_with("emer_init.self"sv) || m_path.ends_with("vsh.self"sv);
+
 		// Load PARAM.SFO (TODO)
+		if (!system_self)
 		{
 			if (fs::is_dir(m_path))
 			{
@@ -1803,11 +1812,11 @@ game_boot_result Emulator::Load(const std::string& title_id, bool is_disc_patch,
 			}
 		}
 
-		const psf::registry _psf = psf::load_object(m_sfo_dir + "/PARAM.SFO");
+		const psf::registry _psf = system_self ? psf::registry{} : psf::load_object(m_sfo_dir + "/PARAM.SFO");
 
 		m_title = std::string(psf::get_string(_psf, "TITLE", std::string_view(m_path).substr(m_path.find_last_of(fs::delim) + 1)));
-		m_title_id = std::string(psf::get_string(_psf, "TITLE_ID"));
-		m_cat = std::string(psf::get_string(_psf, "CATEGORY"));
+		m_title_id = system_self ? std::string{} : std::string(psf::get_string(_psf, "TITLE_ID"));
+		m_cat = system_self ? std::string{} : std::string(psf::get_string(_psf, "CATEGORY"));
 
 		const auto version_app  = psf::get_string(_psf, "APP_VER", "Unknown");
 		const auto version_disc = psf::get_string(_psf, "VERSION", "Unknown");
@@ -2787,7 +2796,10 @@ game_boot_result Emulator::Load(const std::string& title_id, bool is_disc_patch,
 				else
 				{
 					// Use /app_home if /host_root is disabled
-					argv[0] = "/app_home/" + resolved_path.substr(resolved_path.find_last_of(fs::delim) + 1);
+					// A boot served out of a virtual device (an ISO, the CoreOS
+					// bank) has no host path to resolve, so its own path names it.
+					const std::string& source = resolved_path.empty() ? m_path : resolved_path;
+					argv[0] = "/app_home/" + source.substr(source.find_last_of(fs::delim) + 1);
 					m_dir = "/app_home/";
 				}
 

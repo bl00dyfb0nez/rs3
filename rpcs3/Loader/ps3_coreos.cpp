@@ -43,6 +43,162 @@ namespace ps3::coreos
 			return dir + "/" + name;
 		}
 
+		// One record, opened for reading where it sits in the bank: this is the
+		// file the loader decrypts, so no copy of it is written anywhere.
+		class record_stream final : public fs::file_base
+		{
+			const bytes m_data;
+			u64 m_pos = 0;
+
+		public:
+			explicit record_stream(bytes data)
+				: m_data(std::move(data))
+			{
+			}
+
+			bool trunc(u64) override
+			{
+				return false;
+			}
+
+			u64 read(void* buffer, u64 size) override
+			{
+				const u64 count = read_at(m_pos, buffer, size);
+				m_pos += count;
+				return count;
+			}
+
+			u64 read_at(u64 offset, void* buffer, u64 size) override
+			{
+				if (offset >= m_data.size())
+				{
+					return 0;
+				}
+
+				const u64 count = std::min<u64>(size, m_data.size() - offset);
+				std::memcpy(buffer, m_data.data() + offset, count);
+				return count;
+			}
+
+			u64 write(const void*, u64) override
+			{
+				return 0;
+			}
+
+			u64 seek(s64 offset, fs::seek_mode whence) override
+			{
+				const s64 base = whence == fs::seek_set ? 0 : whence == fs::seek_cur ? static_cast<s64>(m_pos) : static_cast<s64>(m_data.size());
+				const s64 pos = base + offset;
+
+				if (pos < 0)
+				{
+					fs::g_tls_error = fs::error::inval;
+					return m_pos;
+				}
+
+				m_pos = static_cast<u64>(pos);
+				return m_pos;
+			}
+
+			u64 size() override
+			{
+				return m_data.size();
+			}
+
+			fs::stat_t get_stat() override
+			{
+				fs::stat_t info{};
+				info.size = m_data.size();
+				return info;
+			}
+		};
+
+		// The bank as a filesystem holding the records it names, so a boot can
+		// take a file straight out of ros0.bin.
+		class bank_device final : public fs::device_base
+		{
+			std::string m_name;
+			bytes m_data;
+
+			std::string_view relative(std::string_view path) const
+			{
+				if (path.starts_with(fs_prefix))
+				{
+					path.remove_prefix(fs_prefix.size());
+				}
+
+				while (!path.empty() && (path.front() == '/' || path.front() == '\\'))
+				{
+					path.remove_prefix(1);
+				}
+
+				return path;
+			}
+
+		public:
+			bank_device(std::string name, bytes data)
+				: m_name(std::move(name))
+				, m_data(std::move(data))
+			{
+				fs_prefix = bank_device_path;
+			}
+
+			bool stat(const std::string& path, fs::stat_t& info) override
+			{
+				const std::string_view rel = relative(path);
+
+				if (rel.empty())
+				{
+					info = {};
+					info.is_directory = true;
+					return true;
+				}
+
+				if (rel != m_name)
+				{
+					fs::g_tls_error = fs::error::noent;
+					return false;
+				}
+
+				info = {};
+				info.size = m_data.size();
+				return true;
+			}
+
+			bool statfs(const std::string& path, fs::device_stat& info) override
+			{
+				if (!relative(path).empty() && relative(path) != m_name)
+				{
+					fs::g_tls_error = fs::error::noent;
+					return false;
+				}
+
+				info = {};
+				info.block_size = m_data.size();
+				info.total_size = m_data.size();
+				return true;
+			}
+
+			std::unique_ptr<fs::file_base> open(const std::string& path, bs_t<fs::open_mode> mode) override
+			{
+				if (relative(path) != m_name || (mode & fs::write))
+				{
+					fs::g_tls_error = fs::error::noent;
+					return nullptr;
+				}
+
+				return std::make_unique<record_stream>(m_data);
+			}
+
+			std::unique_ptr<fs::dir_base> open_dir(const std::string&) override
+			{
+				// The bank is a table, not a directory listing: a reader that asks
+				// for one finds nothing to list.
+				fs::g_tls_error = fs::error::noent;
+				return nullptr;
+			}
+		};
+
 		bool read_all(const std::string& path, bytes& out, std::string& error)
 		{
 			fs::file file(path);
@@ -345,6 +501,70 @@ namespace ps3::coreos
 			: "\nthe console would stop in it: " + error;
 
 		return out;
+	}
+
+	std::string serve(const image& img, std::string_view name, std::string& error)
+	{
+		if (!img.found)
+		{
+			error = img.error.empty() ? "the CoreOS bank cannot be read" : img.error;
+			return {};
+		}
+
+		const file* record = nullptr;
+
+		for (const file& entry : img.files)
+		{
+			if (entry.name == name)
+			{
+				record = &entry;
+				break;
+			}
+		}
+
+		if (!record)
+		{
+			error = "the bank names no " + std::string{name};
+			return {};
+		}
+
+		if (record->offset + record->size > img.bank.size())
+		{
+			error = fmt::format("the bank's %s record runs past the bank (%s + %s > %s)",
+				record->name, hex(record->offset), hex(record->size), hex(img.bank.size()));
+			return {};
+		}
+
+		// A record is the file behind a 0x10-byte bank prefix: the SELF starts
+		// with "SCE\0", and that is the extent lv2 hands to the loader, so the
+		// prefix is not part of what is served.
+		const std::uint8_t* const begin = img.bank.data() + record->offset;
+		const std::size_t span = static_cast<std::size_t>(record->size);
+		std::size_t start = 0;
+
+		for (; start + 4 <= span && start < 0x40; start++)
+		{
+			if (begin[start] == 0x53 && begin[start + 1] == 0x43 && begin[start + 2] == 0x45 && begin[start + 3] == 0x00)
+			{
+				break;
+			}
+		}
+
+		if (start + 4 > span || start == 0x40)
+		{
+			error = "the bank's " + record->name + " record holds no SELF";
+			return {};
+		}
+
+		bytes data(begin + start, begin + span);
+
+		fs::set_virtual_device("coreos_bank_fs_dev", stx::shared_ptr<fs::device_base>());
+		fs::set_virtual_device("coreos_bank_fs_dev", stx::make_shared<bank_device>(record->name, std::move(data)));
+
+		coreos_log.notice("CoreOS: serving %s (0x%llx bytes from 0x%llx of the bank) at %s/%s",
+			record->name, record->size, record->offset, bank_device_path, record->name);
+
+		return std::string{bank_device_path} + "/" + record->name;
 	}
 
 	installed install(const std::string& dump_path, const std::string& dir, ps3::flash::chip flash)

@@ -142,6 +142,7 @@ namespace ps3::boot
 		container lv0ldr;
 		bool has_loaders = false;  // both containers were found and usable
 		bank ros;                  // the CoreOS bank, when the image carries one
+		std::string sdk_version;   // the bank's sdk_version file, e.g. "4.9300"
 		stage lv0;                 // the three links below the loaders, in order
 		stage lv1;
 		stage lv2;

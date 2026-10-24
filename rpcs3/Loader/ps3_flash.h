@@ -73,6 +73,41 @@ namespace ps3::flash
 		std::uint32_t coreos_patch_span = 0; // bytes written into the bank
 	};
 
+	// What a dump answers about the console it came from: the boot chain it
+	// carries, the chip that chain sits in, and the model family that goes with
+	// them.  A console's model is not stored in its flash, so it is read out of
+	// what the flash does say - metldr or metldr.2, 16 MiB NOR against a 256 MiB
+	// NAND or the larger eMMC - and the model name, when one is known, comes
+	// from the image's own name (a dump of a CECH-3001A is called that).
+	//
+	// The NAND of a console before the CECHL is smaller than the eMMC of a
+	// superslim, which is what tells the two apart when both use the same map:
+	// a 16 MiB image is a NOR chip, 256 MiB is that NAND, and anything larger is
+	// an eMMC.
+	struct detected
+	{
+		bool found = false;
+		std::uint64_t size = 0;
+		std::string chain;        // "metldr.2 + lv0ldr.2"
+		std::string boot_loader;  // "metldr.2" or "metldr"
+		std::string firmware;     // the CoreOS sdk_version, when the image carries one
+		chip flash = chip::nor;
+		std::string medium;       // "NOR", "NAND" or "eMMC"
+		std::string family;       // "CECH-25xx / CECH-30xx (slim)"
+		std::string model;        // "CECH-3001A", when the image or its name names one
+		std::string rsx;          // the RSX part the family carries (docs/rsxdef.txt)
+		std::string fan;          // the fan table that goes with it
+		std::string notes;        // what the dump says, line by line
+		std::string error;
+
+		std::string summary() const;
+	};
+
+	// The chain, the chip and the family a dump describes.  Only what the image
+	// itself says is reported; the model name is the one thing taken from the
+	// file's name, because a console does not write it into its flash.
+	detected detect(const std::string& dump_path);
+
 	struct region
 	{
 		std::string name;

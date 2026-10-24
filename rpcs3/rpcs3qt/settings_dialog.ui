@@ -5141,10 +5141,17 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="1" colspan="2">
+             <item row="5" column="1">
               <widget class="QPushButton" name="button_coreos_extract">
                <property name="text">
                 <string>Carve from flash dump...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="2">
+              <widget class="QPushButton" name="button_flash_detect">
+               <property name="text">
+                <string>Detect console...</string>
                </property>
               </widget>
              </item>

@@ -389,15 +389,18 @@ error_code sys_ss_secure_rtc(u64 cmd, u64 a2, u64 a3, u64 a4)
 	return 0x80010500; // bad packet id
 }
 
-error_code sys_ss_get_cache_of_flash_ext_flag(vm::ptr<u64> flag)
+error_code sys_ss_get_cache_of_flash_ext_flag(vm::ptr<u8> flag)
 {
-	sys_ss.todo("sys_ss_get_cache_of_flash_ext_flag(flag=*0x%x)", flag);
+	sys_ss.trace("sys_ss_get_cache_of_flash_ext_flag(flag=*0x%x)", flag);
 
 	if (!flag)
 	{
 		return CELL_EFAULT;
 	}
 
+	// The syscall's out is one byte (docs/lv2calls.txt, 0x36A), not a word:
+	// writing eight bytes here overran the caller's local by seven bytes, which
+	// emer_init reads back as its recover mode and crashes on.
 	*flag = 0xFE; // nand vs nor from lsb
 
 	return CELL_OK;
