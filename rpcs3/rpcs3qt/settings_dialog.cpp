@@ -35,11 +35,13 @@
 #include "input_dialog.h"
 #include "emu_settings_type.h"
 #include "render_creator.h"
+#include "Loader/ps3_coreos.h"
 #include "Loader/ps3_flash.h"
 #include "Loader/ps3_bar.h"
 #include "Loader/ps3_xreg.h"
 #include "Loader/ps3_ufs2.h"
 #include "Loader/ps3_qcow2.h"
+#include "Utilities/File.h"
 #include "microphone_creator.h"
 #include "log_level_dialog.h"
 #include "anaglyph_settings_dialog.h"
@@ -1436,6 +1438,94 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 			"A CFW console installs any image, because its patches replace the checks the loaders make - but those patches "
 			"sit on the original metldr + lv0ldr pair, so an image carrying the 3.60+ metldr.2/lv0ldr.2 loaders is refused."));
 
+	// Which boot the console performs.  Advanced PS3 Tools is the emulated
+	// console: it carries the CoreOS extracted from the firmware it was
+	// installed from and runs its chain through the bank.  Stock is RPCS3's own
+	// emulation, which starts vsh.self directly and has no bank to read.
+	ui->combo_boot_source->addItem(tr("Advanced PS3 Tools - the CoreOS and the console's boot chain"), "advanced");
+	ui->combo_boot_source->addItem(tr("Stock - original RPCS3 emulation, straight to vsh.self"), "stock");
+
+	const auto select_boot_source = [this](const std::string& source)
+	{
+		const int index = ui->combo_boot_source->findData(QString::fromStdString(source));
+		ui->combo_boot_source->setCurrentIndex(index < 0 ? 0 : index);
+	};
+
+	select_boot_source(m_emu_settings->GetSetting(emu_settings_type::BootSource));
+
+	connect(ui->combo_boot_source, &QComboBox::currentIndexChanged, this, [this](int index)
+	{
+		m_emu_settings->SetSetting(emu_settings_type::BootSource, ui->combo_boot_source->itemData(index).toString().toStdString());
+	});
+
+	connect(m_emu_settings.get(), &emu_settings::RestoreDefaultsSignal, ui->combo_boot_source, [this, select_boot_source]()
+	{
+		select_boot_source(m_emu_settings->GetSettingDefault(emu_settings_type::BootSource));
+	});
+
+	SubscribeTooltip(ui->combo_boot_source,
+		tr("Which boot the console performs.\n\n"
+			"Advanced PS3 Tools runs the emulated console: installing firmware extracts its CoreOS - lv0, lv1.self, "
+			"lv2_kernel.self and the rest of the ros bank - and boot stops when the bank does not carry those stages, "
+			"the way the console stops. The flash dump then carries that bank too.\n\n"
+			"Stock is original RPCS3: the firmware is installed to dev_flash as before, no CoreOS is extracted, and a "
+			"boot starts /dev_flash/vsh/module/vsh.self directly."));
+
+	// The console's CoreOS: the bank the boot chain runs, extracted from the
+	// firmware PUP.  The label says whether a bank is there and whether the
+	// console could run it - the same verdict boot applies.
+	const auto refresh_coreos_state = [this]()
+	{
+		const QString image = QString::fromStdString(m_emu_settings->GetSetting(emu_settings_type::CoreosImage));
+
+		if (image.isEmpty())
+		{
+			ui->label_coreos_state->setText(tr("CoreOS: none extracted. Installing firmware extracts it from the image; the bank is what the boot chain runs."));
+			return;
+		}
+
+		const ps3::coreos::verdict bank = ps3::coreos::inspect_file(image.toStdString());
+
+		ui->label_coreos_state->setText(bank.runs()
+			? tr("CoreOS: %1 - %2 files, lv0, lv1.self and lv2_kernel.self present (sdk_version %3).")
+				.arg(QFileInfo(image).fileName(), QString::number(bank.count), QString::fromStdString(bank.sdk_version))
+			: tr("CoreOS: %1 - the console would stop in it: %2")
+				.arg(QFileInfo(image).fileName(), QString::fromStdString(bank.error)));
+	};
+
+	refresh_coreos_state();
+
+	connect(ui->button_coreos_extract, &QPushButton::clicked, this, [this, refresh_coreos_state]()
+	{
+		const QString path = QFileDialog::getOpenFileName(this, tr("Select the firmware the CoreOS is extracted from"), {},
+			tr("Firmware images (*.PUP *.pup);;All files (*.*)"));
+
+		if (path.isEmpty())
+		{
+			return;
+		}
+
+		const ps3::coreos::installed coreos = ps3::coreos::install(path.toStdString(), fs::get_config_dir() + "coreos/");
+
+		if (!coreos.ok)
+		{
+			QMessageBox::warning(this, tr("CoreOS"), tr("The CoreOS could not be extracted:\n\n%1").arg(QString::fromStdString(coreos.error)));
+			return;
+		}
+
+		m_emu_settings->SetSetting(emu_settings_type::CoreosImage, coreos.bank);
+		refresh_coreos_state();
+
+		QMessageBox::information(this, tr("CoreOS"),
+			tr("The console's CoreOS is extracted to %1.\n\n%2")
+				.arg(QString::fromStdString(coreos.bank), QString::fromStdString(coreos.summary)));
+	});
+
+	SubscribeTooltip(ui->button_coreos_extract,
+		tr("Extract the CoreOS.PKG of a firmware PUP into the ros bank the console boots from. Installing firmware "
+			"does this already; this is the same read for a PUP that is not installed, and it replaces the bank the "
+			"settings record."));
+
 	// The fan is simulated: the emulator has no thermal sensors, it fabricates
 	// the temperature and runs the selected board's SYSCON thermal table over
 	// it (docs/thermal.txt).  Like the boot loader this is a config string, so
@@ -1544,6 +1634,7 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		out.hdd_serial = m_emu_settings->GetSetting(emu_settings_type::HDDSerialNumber);
 		out.flash = m_emu_settings->GetSetting(emu_settings_type::FlashChip) == "emmc" ? ps3::flash::chip::emmc : ps3::flash::chip::nor;
 		out.dex = m_emu_settings->GetSetting(emu_settings_type::ConsoleDex) == "true";
+		out.coreos_image = m_emu_settings->GetSetting(emu_settings_type::CoreosImage);
 		out.coreos_patch = m_emu_settings->GetSetting(emu_settings_type::CoreosPatch);
 		out.coreos_patch_span = static_cast<std::uint32_t>(std::strtoul(m_emu_settings->GetSetting(emu_settings_type::CoreosPatchSpan).c_str(), nullptr, 10));
 
@@ -1562,8 +1653,10 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		return out;
 	};
 
-	const auto refresh_flash_state = [this]()
+	const auto refresh_flash_state = [this, refresh_coreos_state]()
 	{
+		refresh_coreos_state();
+
 		const QString patch = QString::fromStdString(m_emu_settings->GetSetting(emu_settings_type::CoreosPatch));
 
 		ui->label_flash_state->setText(patch.isEmpty()

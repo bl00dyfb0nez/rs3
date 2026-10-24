@@ -813,6 +813,9 @@
     <ClCompile Include="Loader\ps3_boot_chain.cpp">
       <Filter>Loader</Filter>
     </ClCompile>
+    <ClCompile Include="Loader\ps3_coreos.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
     <ClCompile Include="Loader\ps3_identity.cpp">
       <Filter>Loader</Filter>
     </ClCompile>
@@ -2143,6 +2146,9 @@
       <Filter>Loader</Filter>
     </ClInclude>
     <ClInclude Include="Loader\ps3_boot_chain.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader\ps3_coreos.h">
       <Filter>Loader</Filter>
     </ClInclude>
     <ClInclude Include="Loader\ps3_identity.h">

@@ -84,6 +84,7 @@
 
 #include "Loader/PUP.h"
 #include "Loader/ps3_boot_chain.h"
+#include "Loader/ps3_coreos.h"
 #include "Loader/ps3_identity.h"
 #include "Loader/TAR.h"
 #include "Loader/PSF.h"
@@ -593,6 +594,26 @@ void main_window::Boot(const std::string& path, const std::string& title_id, boo
 		answer_boot_refusal(this, failure_yellow());
 		statusBar()->showMessage(tr("This console is bricked: its boot chain does not boot, so the firmware cannot start. Install firmware whose chain boots, or boot emer_init.self from the Boot menu."), 12000);
 		return;
+	}
+
+	// The console's own CoreOS, in Advanced PS3 Tools.  The console does not
+	// start vsh.self on its own: lv0ldr hands over to lv0, lv0 runs lv1ldr and
+	// lv2ldr out of the bank, and appldr starts the VSH.  A bank that does not
+	// carry those stages is one it stops in, so nothing is started - the same
+	// answer a console gives.  Stock keeps RPCS3's own boot, which has no bank
+	// to read; recovery is the environment that is reached from here.
+	if (!recovery_boot && g_cfg.sys.boot_source.get() != "stock" && !g_cfg.sys.coreos_image.get().empty())
+	{
+		const ps3::coreos::verdict coreos = ps3::coreos::inspect_file(g_cfg.sys.coreos_image.get());
+
+		gui_log.notice("Console CoreOS:\n%s", coreos.summary());
+
+		if (!coreos.runs())
+		{
+			gui_log.error("Boot refused: the console's CoreOS does not run.\n%s", coreos.summary());
+			statusBar()->showMessage(tr("Boot refused: the CoreOS the console carries cannot run. Install firmware again, or set the boot source to stock in Advanced PS3 Tools."), 12000);
+			return;
+		}
 	}
 
 	if (!m_gui_settings->GetBootConfirmation(this, gui::ib_confirm_boot))
@@ -2522,6 +2543,31 @@ void main_window::HandlePupInstallation(main_window* mw, const QString& file_pat
 	if (progress == update_filenames.size())
 	{
 		gui_log.success("Successfully installed PS3 firmware version %s.", version_string);
+
+		// The console's CoreOS.  The firmware keeps its dev_flash as files, but
+		// the boot chain stands on a ros bank, and that is CoreOS.PKG: lv0,
+		// lv1.self, lv2_kernel.self and the rest of what the bank names.  It is
+		// extracted next to the emulator's config and recorded, so the boot
+		// chain and the flash dump carry the firmware that was installed.  Stock
+		// is RPCS3's own emulation and has no bank to carry.
+		if (g_cfg.sys.boot_source.get() == "stock")
+		{
+			gui_log.notice("CoreOS: not extracted (stock boot, which starts vsh.self directly).");
+		}
+		else
+		{
+			const ps3::coreos::installed coreos = ps3::coreos::install(path, fs::get_config_dir() + "coreos/");
+
+			if (coreos.ok)
+			{
+				g_cfg.sys.coreos_image.set(coreos.bank);
+				gui_log.success("CoreOS extracted for the boot chain:\n%s", coreos.summary);
+			}
+			else
+			{
+				gui_log.error("CoreOS: not extracted (%s).", coreos.error);
+			}
+		}
 
 		if (mw)
 		{

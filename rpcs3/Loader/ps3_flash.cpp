@@ -9,6 +9,8 @@
 
 #include "Crypto/sha1.h"
 
+#include "ps3_coreos.h"
+
 namespace ps3::flash
 {
 	namespace
@@ -274,6 +276,31 @@ namespace ps3::flash
 			}
 		}
 
+		// The CoreOS the console runs, when it was extracted from the firmware it
+		// was installed from: both banks then carry its files instead of the
+		// empty table written above, so the dump's chain is the one the console
+		// actually boots.  The bank is what ps3::coreos lays out (one ros bank,
+		// 0x700000 bytes), and ros1 is its second copy.
+		void install_coreos(bytes& image, const console& c, std::uint32_t bank0, std::uint32_t bank1)
+		{
+			if (c.coreos_image.empty())
+			{
+				return;
+			}
+
+			std::ifstream file(c.coreos_image, std::ios::binary);
+
+			bytes bank(ros_size, 0);
+
+			if (!file || !file.read(reinterpret_cast<char*>(bank.data()), ros_size))
+			{
+				return;
+			}
+
+			std::copy(bank.begin(), bank.end(), image.begin() + bank0);
+			std::copy(bank.begin(), bank.end(), image.begin() + bank1);
+		}
+
 		void write_extnor(bytes& image, const console& c)
 		{
 			// CELL_EXTNOR_AREA: a marker, the length of the hashed block and its
@@ -399,9 +426,12 @@ namespace ps3::flash
 		write_extnor(image, c);
 
 		// Both CoreOS banks carry a header and a table; the bodies are the
-		// firmware, which the emulator keeps as files, so they stay erased.
+		// firmware, which the emulator keeps as files, so they stay erased - 
+		// unless the firmware's CoreOS was extracted, in which case both banks
+		// carry it.
 		write_ros_bank(image, ros0_offset);
 		write_ros_bank(image, ros1_offset);
+		install_coreos(image, c, ros0_offset, ros1_offset);
 
 		// bootldr (lv0ldr): the last 256 KiB of the chip.  It is the other half
 		// of the chain, sealed in the same update and so carrying the same nonce.
@@ -474,6 +504,7 @@ namespace ps3::flash
 			// Both CoreOS banks inside the one ros region.
 			write_ros_bank(image, emmc_ros);
 			write_ros_bank(image, emmc_ros + ros_size);
+			install_coreos(image, c, emmc_ros, emmc_ros + ros_size);
 
 			// The eFlash area: the second magic header, and - on a debug console
 			// - the cell_ext_os_area marker that says the console has one.
@@ -641,9 +672,20 @@ namespace ps3::flash
 			"names metldr, the SCE records of trvk_prg0/1, the ros0/ros1 bank headers with their entry tables, the\n"
 			"CELL_EXTNOR_AREA block with this console's HDD name and serial and its SHA-1, and the bootldr header.\n";
 
-		out += "\nReserved, left erased: eEID, cISD, cCSD, the revoke packages, the CoreOS file bodies, cvtrm and the\n"
-			"four revocation blocks. The emulator keeps the firmware as files and has no ciphertext, so there is\n"
-			"nothing to copy into them; the layout says where each one sits.\n";
+		out += "\nReserved, left erased: eEID, cISD, cCSD, the revoke packages, cvtrm and the four revocation\n"
+			"blocks.";
+
+		if (c.coreos_image.empty())
+		{
+			out += " The CoreOS file bodies as well: the emulator keeps the firmware as files and has no\n"
+				"ciphertext, so there is nothing to copy into them; the layout says where each one sits.";
+		}
+		else
+		{
+			out += " The CoreOS bodies are not left erased: they are the bank extracted from the firmware.\n";
+		}
+
+		out += "\n";
 
 		if (c.flash == chip::emmc)
 		{
@@ -651,6 +693,12 @@ namespace ps3::flash
 				"the VSH lives (vsh.self is also the last entry of each ros bank's table) - plus the second magic\n"
 				"header and, on a debug console, the cell_ext_os_area marker. Those regions stay erased for the same\n"
 				"reason: the files they would hold are the emulator's dev_flash directory, not a flash image.\n";
+		}
+
+		if (!c.coreos_image.empty())
+		{
+			const ps3::coreos::verdict bank = ps3::coreos::inspect_file(c.coreos_image);
+			out += "\nCoreOS: extracted from the installed firmware, " + c.coreos_image + ".\n" + bank.summary() + "\n";
 		}
 
 		if (c.coreos_patch.empty())

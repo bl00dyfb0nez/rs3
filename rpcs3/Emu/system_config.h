@@ -355,6 +355,16 @@ struct cfg_root : cfg::node
 		// the state it would leave the console in - and kept across a reboot;
 		// installing an image whose chain boots clears it.
 		cfg::_bool boot_bricked{this, "Boot bricked", false};
+		// Which boot the console performs.  "advanced" is the emulated console:
+		// it carries the CoreOS extracted from the firmware it was installed
+		// from, runs its chain, and refuses to start when the bank cannot.  That
+		// is what Advanced PS3 Tools works on.  "stock" is RPCS3's own
+		// emulation: no CoreOS, no chain, straight to /dev_flash/vsh/module/vsh.self.
+		cfg::string boot_source{this, "Boot source", "advanced"};
+		// The console's CoreOS: the ros bank extracted from the firmware PUP it
+		// was installed from, and the files the bank names.  Empty when none was
+		// extracted, which is every install before this was added.
+		cfg::string coreos_image{this, "CoreOS image", ""};
 		// Factory Service Mode, the flag the console keeps in its System Controller
 		// EEPROM at 0x48C07 (docs/fsm.txt): anything but 0xFF means the console
 		// boots into service mode, where lv2 runs dev_usb000/Lv2diag.self instead

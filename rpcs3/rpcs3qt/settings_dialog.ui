@@ -5124,31 +5124,65 @@
              <item row="3" column="1" colspan="2">
               <widget class="QComboBox" name="combo_firmware_mode"/>
              </item>
-             <item row="4" column="0" colspan="3">
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_boot_source">
+               <property name="text">
+                <string>Boot</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1" colspan="2">
+              <widget class="QComboBox" name="combo_boot_source"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_coreos">
+               <property name="text">
+                <string>CoreOS</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1" colspan="2">
+              <widget class="QPushButton" name="button_coreos_extract">
+               <property name="text">
+                <string>Extract from firmware...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0" colspan="3">
+              <widget class="QLabel" name="label_coreos_state">
+               <property name="text">
+                <string>CoreOS: none extracted</string>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0" colspan="3">
               <widget class="QCheckBox" name="check_factory_service_mode">
                <property name="text">
                 <string>Factory Service Mode (syscon EEPROM 0x48C07)</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
+             <item row="8" column="0">
               <widget class="QLabel" name="label_fan_curve">
                <property name="text">
                 <string>Fan curve</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="1" colspan="2">
+             <item row="8" column="1" colspan="2">
               <widget class="QComboBox" name="combo_fan_curve"/>
              </item>
-             <item row="6" column="0">
+             <item row="9" column="0">
               <widget class="QLabel" name="label_rsx_type">
                <property name="text">
                 <string>RSX</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="1" colspan="2">
+             <item row="9" column="1" colspan="2">
               <widget class="QComboBox" name="combo_rsx_type"/>
              </item>
             </layout>

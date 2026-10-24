@@ -138,6 +138,7 @@ target_sources(rpcs3_emu PRIVATE
     ../Loader/PSF.cpp
     ../Loader/PUP.cpp
     ../Loader/ps3_boot_chain.cpp
+    ../Loader/ps3_coreos.cpp
     ../Loader/ps3_identity.cpp
     ../Loader/ps3_flash.cpp
     ../Loader/ps3_bar.cpp
