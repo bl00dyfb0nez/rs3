@@ -1677,7 +1677,6 @@ namespace
 	// The light itself, and the window it belongs to: it has to survive the game
 	// window coming and going, so it is held here rather than in a parent.
 	QPointer<QLabel> g_power_led;
-	QPointer<QMainWindow> g_console_window;
 
 	QLabel* power_led(QMainWindow* window, bool create)
 	{
@@ -1685,8 +1684,6 @@ namespace
 		{
 			return nullptr;
 		}
-
-		g_console_window = window;
 
 		if (!g_power_led && create)
 		{
@@ -1994,7 +1991,10 @@ namespace
 			timer = new QTimer(led);
 			timer->setObjectName(QStringLiteral("power_led_timer"));
 			timer->setInterval(200);
-			QObject::connect(timer, &QTimer::timeout, led, [led, timer, colour]()
+
+			const QPointer<QMainWindow> owner = window;
+
+			QObject::connect(timer, &QTimer::timeout, led, [led, timer, colour, owner]()
 			{
 				// Lit for the 200 ms of each beep (0, 400, 800 ms), dark between
 				// them, then back to standby - nothing booted.
@@ -2008,7 +2008,7 @@ namespace
 					// Back to whatever the console is now: standby, or dark if the
 					// image it was given is a brick.
 					led->setProperty("flashing", false);
-					refresh_power_led(g_console_window);
+					refresh_power_led(owner);
 					return;
 				}
 
