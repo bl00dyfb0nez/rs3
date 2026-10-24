@@ -882,6 +882,23 @@ namespace ps3::flash
 		// family when only that is.
 		const std::string series = out.model.size() >= 6 ? out.model.substr(5, 2) : std::string{};
 
+		// A dump that has lost its loaders still names itself by its model: the
+		// generation the model shipped with is the chain it boots.  metldr.2 is
+		// 3.60, so the CECH-2501 and every 30xx carry it; the CECH-20xx/21xx and
+		// the phats shipped before it, with metldr.
+		if (out.boot_loader.empty() && !series.empty())
+		{
+			const bool is_360 = series == "25" || series == "30" || series == "40" || series == "42" || series == "43";
+			const bool is_old = series == "20" || series == "21";
+
+			if (is_360 || is_old)
+			{
+				out.boot_loader = is_360 ? "metldr.2" : "metldr";
+				out.chain = out.boot_loader + (is_360 ? " + lv0ldr.2 (from the model)" : " + lv0ldr (from the model)");
+				out.notes += "Chain: the dump names no loaders, so the model's generation fills the chain in.\n";
+			}
+		}
+
 		if (series == "20")
 		{
 			out.rsx = "CXD2991 (65nm)";
