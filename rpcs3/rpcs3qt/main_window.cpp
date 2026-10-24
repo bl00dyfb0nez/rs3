@@ -604,15 +604,27 @@ void main_window::Boot(const std::string& path, const std::string& title_id, boo
 	// to read; recovery is the environment that is reached from here.
 	if (!recovery_boot && g_cfg.sys.boot_source.get() != "stock" && !g_cfg.sys.coreos_image.get().empty())
 	{
-		const ps3::coreos::verdict coreos = ps3::coreos::inspect_file(g_cfg.sys.coreos_image.get());
+		const std::string coreos_path = g_cfg.sys.coreos_image.get();
 
-		gui_log.notice("Console CoreOS:\n%s", coreos.summary());
-
-		if (!coreos.runs())
+		if (!fs::is_file(coreos_path))
 		{
-			gui_log.error("Boot refused: the console's CoreOS does not run.\n%s", coreos.summary());
-			statusBar()->showMessage(tr("Boot refused: the CoreOS the console carries cannot run. Install firmware again, or set the boot source to stock in Advanced PS3 Tools."), 12000);
-			return;
+			// The setting names a bank that is no longer there - an install moved
+			// or a config carried over.  There is nothing the console carries, so
+			// there is nothing to judge: boot as the firmware RPCS3 has.
+			gui_log.warning("Console CoreOS: %s is not a file, so the bank is not read. Installing firmware extracts it again.", coreos_path);
+		}
+		else
+		{
+			const ps3::coreos::verdict coreos = ps3::coreos::inspect_file(coreos_path);
+
+			gui_log.notice("Console CoreOS:\n%s", coreos.summary());
+
+			if (!coreos.runs())
+			{
+				gui_log.error("Boot refused: the console's CoreOS does not run.\n%s", coreos.summary());
+				statusBar()->showMessage(tr("Boot refused: the CoreOS the console carries cannot run. Install firmware again, or set the boot source to stock in Advanced PS3 Tools."), 12000);
+				return;
+			}
 		}
 	}
 
